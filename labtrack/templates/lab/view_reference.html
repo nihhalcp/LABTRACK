@@ -1,0 +1,1685 @@
+{#<!DOCTYPE html>#}
+{#<html>#}
+{#<head>#}
+{#    <title>View References</title>#}
+{#</head>#}
+{#<body>#}
+{##}
+{#<h2>Reference Materials</h2>#}
+{##}
+{#<table border="1" cellpadding="10">#}
+{#    <tr>#}
+{#        <th>Sl No</th>#}
+{#        <th>Subject</th>#}
+{#        <th>Subject Code</th>#}
+{#        <th>Reference Name</th>#}
+{#        <th>Description</th>#}
+{#        <th>Reference File</th>#}
+{#        <th>Date</th>#}
+{#    </tr>#}
+{##}
+{#    {% for i in data %}#}
+{#    <tr>#}
+{#        <td>{{ forloop.counter }}</td>#}
+{#        <td>{{ i.SUBJECT.subject_name }}</td>#}
+{#        <td>{{ i.SUBJECT.subject_code }}</td>#}
+{#        <td>{{ i.reference_name }}</td>#}
+{#        <td>{{ i.description }}</td>#}
+{#        <td>#}
+{#            <a href="{{ i.reference_file.url }}" target="_blank">View File</a>#}
+{#        </td>#}
+{#        <td>{{ i.date }}</td>#}
+{#    </tr>#}
+{#    {% empty %}#}
+{#    <tr>#}
+{#        <td colspan="7">No references found.</td>#}
+{#    </tr>#}
+{#    {% endfor %}#}
+{#</table>#}
+{##}
+{#<br>#}
+{#<a href="/myapp/lab_add_reference/">Add Reference</a>#}
+{#<br><br>#}
+{#<a href="/myapp/lab_home/">Back to Home</a>#}
+{##}
+{#</body>#}
+{#</html>#}
+{##}
+{##}
+{#<!DOCTYPE html>#}
+{#<html lang="en">#}
+{#<head>#}
+{#    <meta charset="UTF-8">#}
+{#    <meta name="viewport" content="width=device-width, initial-scale=1">#}
+{#    <title>View References - LabTrack</title>#}
+{##}
+{#    <link rel="preconnect" href="https://fonts.googleapis.com">#}
+{#    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>#}
+{#    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">#}
+{##}
+{#    <style>#}
+{#        :root {#}
+{#            --bg-top: #164a63; --bg-mid: #0d3048; --bg-deep: #08203a;#}
+{#            --cyan: #5cd0ee; --teal: #0b84a8; --teal-dark: #086a89;#}
+{#            --heading: #0d2b3e; --text: #14283a; --muted: #5d7183;#}
+{#            --surface: #ffffff; --canvas: #f1f6fb; --border: #dae6f1;#}
+{#            --field: #e9f1fc; --field-line: #c8d9ee; --tile: #e2f4fa;#}
+{#            --danger: #c0291f; --danger-bg: #fdeceb;#}
+{#            --ok: #1c7c54; --ok-bg: #e3f6ec; --gold: #fbbf24; --nav-h: 68px;#}
+{#        }#}
+{#        *, *::before, *::after { box-sizing: border-box; }#}
+{#        body { margin: 0; min-height: 100vh; font-family: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; color: var(--text); background: var(--canvas); -webkit-font-smoothing: antialiased; }#}
+{#        a { color: inherit; text-decoration: none; }#}
+{##}
+{#        /* NAVBAR */#}
+{#        .navbar { position: sticky; top: 0; z-index: 100; color: #fff;#}
+{#            background: radial-gradient(ellipse at 90% -40%, rgba(92,208,238,.28), transparent 55%), linear-gradient(100deg, var(--bg-top) 0%, var(--bg-mid) 45%, var(--bg-deep) 100%);#}
+{#            box-shadow: 0 6px 20px rgba(8,32,58,.25); }#}
+{#        .nav-inner { max-width: 1280px; height: var(--nav-h); margin: 0 auto; padding: 0 clamp(16px, 3vw, 36px); display: flex; align-items: center; gap: 28px; }#}
+{#        .brand { display: flex; align-items: center; gap: 12px; font-size: 1.3rem; font-weight: 800; letter-spacing: -0.02em; color: #fff; flex: none; }#}
+{#        .brand-mark { width: 40px; height: 40px; display: grid; place-items: center; border-radius: 11px; background: var(--cyan); transition: transform .25s ease; }#}
+{#        .brand:hover .brand-mark { transform: rotate(-8deg) scale(1.06); }#}
+{#        .menu { flex: 1; display: flex; align-items: center; gap: 4px; height: 100%; }#}
+{#        .nav-link { position: relative; display: inline-flex; align-items: center; gap: 7px; height: 42px; padding: 0 14px; font: inherit; font-size: .92rem; font-weight: 600; color: #cfe3ef; background: transparent; border: 0; border-radius: 10px; cursor: pointer; white-space: nowrap; transition: background .2s, color .2s; }#}
+{#        .nav-link:hover, .dd.open > .nav-link { background: rgba(255,255,255,.11); color: #fff; }#}
+{#        .nav-link:focus-visible { outline: 2px solid var(--cyan); outline-offset: 1px; }#}
+{#        .nav-link.active { color: #fff; background: rgba(92,208,238,.16); }#}
+{#        .nav-link.active::after { content: ""; position: absolute; left: 14px; right: 14px; bottom: -13px; height: 3px; border-radius: 3px 3px 0 0; background: var(--cyan); }#}
+{#        .caret { width: 14px; height: 14px; transition: transform .2s; }#}
+{#        .dd.open .caret { transform: rotate(180deg); }#}
+{#        .dd { position: relative; display: flex; align-items: center; }#}
+{#        .dd-panel { position: absolute; top: calc(100% + 12px); left: 0; min-width: 240px; padding: 8px; background: #fff; color: var(--text); border: 1px solid var(--border); border-radius: 14px; box-shadow: 0 22px 44px rgba(8,32,58,.22); opacity: 0; visibility: hidden; transform: translateY(8px); transition: opacity .18s, transform .18s, visibility .18s; }#}
+{#        .dd-panel::before { content: ""; position: absolute; left: 0; right: 0; top: -14px; height: 14px; }#}
+{#        .dd.open > .dd-panel { opacity: 1; visibility: visible; transform: translateY(0); }#}
+{#        @media (hover: hover) and (min-width: 961px) {#}
+{#            .dd:hover > .dd-panel { opacity: 1; visibility: visible; transform: translateY(0); }#}
+{#            .dd:hover > .nav-link { background: rgba(255,255,255,.11); color: #fff; }#}
+{#            .dd:hover .caret { transform: rotate(180deg); }#}
+{#        }#}
+{#        .dd.right .dd-panel { left: auto; right: 0; }#}
+{#        .dd-panel a { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 9px; font-size: .92rem; font-weight: 600; color: var(--heading); transition: background .15s, color .15s, padding .15s; }#}
+{#        .dd-panel a svg { width: 18px; height: 18px; flex: none; color: var(--teal); transition: color .15s; }#}
+{#        .dd-panel a:hover { background: var(--tile); color: var(--teal-dark); padding-left: 16px; }#}
+{#        .dd-panel a:focus-visible { outline: 2px solid var(--teal); outline-offset: -2px; }#}
+{#        .dd-panel a.active { background: var(--tile); color: var(--teal-dark); }#}
+{#        .dd-panel a.logout { color: var(--danger); }#}
+{#        .dd-panel a.logout svg { color: var(--danger); }#}
+{#        .dd-panel a.logout:hover { background: var(--danger-bg); color: var(--danger); }#}
+{#        .dd-sep { height: 1px; margin: 6px 4px; background: var(--border); }#}
+{#        .user { margin-left: auto; }#}
+{#        .avatar { width: 30px; height: 30px; display: grid; place-items: center; border-radius: 50%; background: var(--cyan); color: var(--bg-deep); font-size: .82rem; font-weight: 800; }#}
+{#        .burger { display: none; margin-left: auto; width: 44px; height: 44px; place-items: center; border: 0; border-radius: 11px; background: rgba(255,255,255,.1); color: #fff; cursor: pointer; }#}
+{#        .burger:hover { background: rgba(255,255,255,.18); }#}
+{#        .burger:focus-visible { outline: 2px solid var(--cyan); }#}
+{#        .burger svg { width: 22px; height: 22px; }#}
+{##}
+{#        /* PAGE */#}
+{#        .container { max-width: 1280px; margin: 0 auto; padding: 36px clamp(16px, 3vw, 36px) 56px; }#}
+{#        .page-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 24px; }#}
+{#        .page-head h1 { margin: 0 0 4px; font-size: 1.8rem; font-weight: 800; letter-spacing: -0.03em; color: var(--heading); }#}
+{#        .page-head p { margin: 0; color: var(--muted); }#}
+{##}
+{#        .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 46px; padding: 0 22px; font: inherit; font-size: .95rem; font-weight: 700; border-radius: 11px; border: 1.5px solid transparent; cursor: pointer; transition: background .2s, transform .15s, box-shadow .2s, border-color .2s; }#}
+{#        .btn:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }#}
+{#        .btn-primary { background: var(--teal); color: #fff; box-shadow: 0 8px 16px rgba(11,132,168,.25); }#}
+{#        .btn-primary:hover { background: var(--teal-dark); transform: translateY(-2px); box-shadow: 0 12px 22px rgba(11,132,168,.32); }#}
+{#        .btn-ghost { background: #fff; color: var(--heading); border-color: var(--border); }#}
+{#        .btn-ghost:hover { background: var(--canvas); border-color: #b8cde0; }#}
+{#        .btn-danger { background: var(--danger); color: #fff; }#}
+{#        .btn-danger:hover { background: #a11f17; transform: translateY(-2px); }#}
+{##}
+{#        .panel { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 24px; }#}
+{##}
+{#        .field { margin-bottom: 18px; }#}
+{#        .field label { display: block; margin-bottom: 8px; font-size: .88rem; font-weight: 700; color: var(--heading); }#}
+{#        .field input, .field select, .field textarea { width: 100%; padding: 0 16px; height: 52px; font: inherit; color: var(--text); background: var(--field); border: 1.5px solid var(--field-line); border-radius: 12px; transition: border-color .2s, box-shadow .2s, background .2s; }#}
+{#        .field textarea { height: auto; min-height: 110px; padding: 14px 16px; resize: vertical; }#}
+{#        .field input:hover, .field select:hover, .field textarea:hover { border-color: #8fb4d2; }#}
+{#        .field input:focus, .field select:focus, .field textarea:focus { outline: none; background: #fff; border-color: var(--teal); box-shadow: 0 0 0 4px rgba(11,132,168,.16); }#}
+{#        .field .hint { min-height: 1.2em; margin: 6px 0 0; font-size: .83rem; color: var(--danger); }#}
+{##}
+{#        /* Django messages (toasts) */#}
+{#        .toasts { position: fixed; top: calc(var(--nav-h) + 16px); right: 16px; z-index: 200; display: grid; gap: 10px; width: min(92vw, 360px); }#}
+{#        .toast { display: flex; align-items: flex-start; gap: 12px; padding: 14px 16px; background: #fff; border: 1px solid var(--border); border-left: 4px solid var(--teal); border-radius: 12px; box-shadow: 0 16px 34px rgba(8,32,58,.18); font-size: .92rem; line-height: 1.45; animation: toast-in .3s ease both; }#}
+{#        .toast.error, .toast.danger { border-left-color: var(--danger); }#}
+{#        .toast.success { border-left-color: var(--ok); }#}
+{#        .toast.warning { border-left-color: var(--gold); }#}
+{#        .toast .t-icon { width: 20px; height: 20px; flex: none; margin-top: 1px; color: var(--teal); }#}
+{#        .toast.error .t-icon, .toast.danger .t-icon { color: var(--danger); }#}
+{#        .toast.success .t-icon { color: var(--ok); }#}
+{#        .toast.warning .t-icon { color: #b7791f; }#}
+{#        .toast button { margin-left: auto; border: 0; background: transparent; color: var(--muted); font-size: 1.2rem; line-height: 1; cursor: pointer; }#}
+{#        @keyframes toast-in { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }#}
+{##}
+{#        /* Logout dialog */#}
+{#        dialog { width: min(92vw, 400px); padding: 28px; border: 0; border-radius: 18px; color: var(--text); box-shadow: 0 30px 70px rgba(8,32,58,.35); }#}
+{#        dialog::backdrop { background: rgba(6,19,40,.55); backdrop-filter: blur(2px); }#}
+{#        dialog h2 { margin: 0 0 8px; font-size: 1.3rem; font-weight: 800; color: var(--heading); }#}
+{#        dialog p { margin: 0 0 24px; color: var(--muted); line-height: 1.55; }#}
+{#        .dialog-actions { display: flex; gap: 10px; justify-content: flex-end; }#}
+{##}
+{#        /* FORM */#}
+{#        .container.narrow { max-width: 860px; }#}
+{#        .form-panel { padding: clamp(22px, 3vw, 38px); }#}
+{#        .req-note { margin: 0 0 24px; color: var(--muted); font-size: .86rem; }#}
+{#        .req { color: var(--danger); margin-left: 3px; }#}
+{#        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 24px; }#}
+{#        .form-grid .full { grid-column: 1 / -1; }#}
+{#        .help-text { margin: 6px 0 0; font-size: .82rem; color: var(--muted); }#}
+{#        .field .valid { border-color: #7cc9a6; }#}
+{#        .field .invalid { border-color: var(--danger); background: #fffafa; }#}
+{#        .field .invalid:focus { box-shadow: 0 0 0 4px rgba(192,41,31,.14); }#}
+{#        .field select { appearance: none; -webkit-appearance: none; padding-right: 44px; cursor: pointer;#}
+{#            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%235d7183' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");#}
+{#            background-repeat: no-repeat; background-position: right 16px center; }#}
+{#        .field-meta { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }#}
+{#        .field-meta .hint { flex: 1; }#}
+{#        .counter { margin-top: 6px; font-size: .8rem; color: var(--muted); white-space: nowrap; }#}
+{#        .counter.over { color: var(--danger); font-weight: 700; }#}
+{#        .form-error { margin-bottom: 22px; padding: 13px 16px; background: var(--danger-bg); color: var(--danger); border: 1px solid #f1c3bf; border-left: 4px solid var(--danger); border-radius: 10px; font-size: .92rem; font-weight: 600; }#}
+{#        .form-error[hidden] { display: none; }#}
+{#        .form-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 12px; padding-top: 24px; border-top: 1px solid var(--border); }#}
+{#        .form-actions .btn-primary { min-width: 190px; }#}
+{#        .btn[disabled] { opacity: .75; cursor: progress; transform: none; }#}
+{#        .back-link { display: inline-block; margin-top: 22px; font-size: .92rem; font-weight: 700; color: var(--teal); background: linear-gradient(currentColor, currentColor) 0 100% / 0 2px no-repeat; padding-bottom: 2px; transition: background-size .25s ease, color .2s; }#}
+{#        .back-link:hover { background-size: 100% 2px; color: var(--teal-dark); }#}
+{#        .back-link:focus-visible { outline: 2px solid var(--teal); outline-offset: 3px; border-radius: 3px; }#}
+{##}
+{#        /* MOBILE */#}
+{#        @media (max-width: 960px) {#}
+{#            .burger { display: grid; }#}
+{#            .nav-inner { gap: 12px; }#}
+{#            .menu { position: absolute; top: var(--nav-h); left: 0; right: 0; flex-direction: column; align-items: stretch; gap: 2px; height: auto; max-height: calc(100vh - var(--nav-h)); overflow-y: auto; padding: 12px 16px 20px; background: var(--bg-deep); border-top: 1px solid rgba(255,255,255,.1); box-shadow: 0 24px 40px rgba(0,0,0,.3); display: none; }#}
+{#            .navbar.open .menu { display: flex; }#}
+{#            .nav-link { height: 48px; width: 100%; justify-content: flex-start; }#}
+{#            .nav-link.active::after { display: none; }#}
+{#            .dd { flex-direction: column; align-items: stretch; }#}
+{#            .dd > .nav-link .caret { margin-left: auto; }#}
+{#            .dd-panel { position: static; display: none; min-width: 0; margin: 2px 0 6px 12px; padding: 4px; background: rgba(255,255,255,.06); border: 0; border-left: 2px solid rgba(92,208,238,.4); border-radius: 0 10px 10px 0; box-shadow: none; opacity: 1; visibility: visible; transform: none; }#}
+{#            .dd-panel::before { display: none; }#}
+{#            .dd.open > .dd-panel { display: block; }#}
+{#            .dd-panel a { color: #d3e6f2; }#}
+{#            .dd-panel a svg { color: var(--cyan); }#}
+{#            .dd-panel a:hover, .dd-panel a.active { background: rgba(255,255,255,.1); color: #fff; padding-left: 12px; }#}
+{#            .dd-panel a.logout, .dd-panel a.logout svg { color: #ffb4ac; }#}
+{#            .dd-panel a.logout:hover { background: rgba(255,120,110,.16); color: #ffd7d2; }#}
+{#            .dd-sep { background: rgba(255,255,255,.12); }#}
+{#            .user { margin-left: 0; margin-top: 8px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,.12); }#}
+{#        }#}
+{#        @media (max-width: 720px) {#}
+{#            .form-grid { grid-template-columns: 1fr; }#}
+{#            .form-actions .btn { width: 100%; }#}
+{#        }#}
+{#        @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }#}
+{##}
+{#        /* VIEW LABS */#}
+{#        .container.wide { max-width: 1280px; }#}
+{#        .btn-sm { height: 36px; padding: 0 14px; font-size: .85rem; border-radius: 9px; }#}
+{#        .toolbar { display: flex; flex-wrap: wrap; gap: 14px; align-items: flex-start; margin-bottom: 18px; }#}
+{#        .toolbar .field { margin: 0; }#}
+{#        .toolbar .search { flex: 1 1 280px; position: relative; }#}
+{#        .toolbar .filter { flex: 0 0 200px; }#}
+{#        .toolbar .search svg { position: absolute; left: 16px; top: 16px; width: 20px; height: 20px; color: var(--muted); pointer-events: none; }#}
+{#        .toolbar .search input { padding-left: 46px; }#}
+{#        .count { margin: 0 0 12px; font-size: .88rem; color: var(--muted); }#}
+{#        .count strong { color: var(--heading); }#}
+{##}
+{#        .table-wrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; }#}
+{#        table.data { width: 100%; border-collapse: collapse; font-size: .92rem; }#}
+{#        table.data th { text-align: left; padding: 14px 18px; font-weight: 700; color: var(--heading); background: #f6f9fd; border-bottom: 1px solid var(--border); white-space: nowrap; }#}
+{#        table.data td { padding: 14px 18px; border-bottom: 1px solid #edf2f8; color: var(--text); vertical-align: top; }#}
+{#        table.data tbody tr { transition: background .15s; }#}
+{#        table.data tbody tr:hover { background: #f4f9fd; }#}
+{#        table.data tbody tr:last-child td { border-bottom: 0; }#}
+{#        td.name { font-weight: 700; color: var(--heading); }#}
+{#        td.desc { max-width: 260px; color: var(--muted); }#}
+{#        td.desc span { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }#}
+{#        .lc-name { font-weight: 600; color: var(--heading); }#}
+{#        .lc-ph { display: block; margin-top: 2px; font-size: .84rem; color: var(--muted); }#}
+{#        .room { display: inline-block; padding: 4px 10px; border-radius: 8px; background: var(--tile); color: var(--teal-dark); font-weight: 700; font-size: .85rem; white-space: nowrap; }#}
+{##}
+{#        .link { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; font-size: .88rem; color: var(--teal); white-space: nowrap; transition: color .2s; }#}
+{#        .link svg { width: 16px; height: 16px; }#}
+{#        .link:hover { color: var(--teal-dark); text-decoration: underline; }#}
+{#        .link:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; border-radius: 4px; }#}
+{##}
+{#        .badge { display: inline-block; padding: 4px 11px; border-radius: 999px; font-size: .8rem; font-weight: 700; background: #eef2f7; color: var(--muted); white-space: nowrap; }#}
+{#        .badge.active, .badge.available, .badge.open { background: var(--ok-bg); color: var(--ok); }#}
+{#        .badge.inactive, .badge.closed, .badge.unavailable, .badge.blocked { background: var(--danger-bg); color: var(--danger); }#}
+{#        .badge.maintenance, .badge.pending { background: #fff4d6; color: #8a6112; }#}
+{##}
+{#        .actions { display: flex; gap: 8px; white-space: nowrap; }#}
+{#        .btn-edit { background: var(--tile); color: var(--teal-dark); }#}
+{#        .btn-edit:hover { background: #cfeaf4; }#}
+{#        .btn-del { background: var(--danger-bg); color: var(--danger); }#}
+{#        .btn-del:hover { background: var(--danger); color: #fff; }#}
+{##}
+{#        .empty { padding: 48px 20px !important; text-align: center; color: var(--muted); }#}
+{#        .empty strong { display: block; margin-bottom: 6px; font-size: 1.05rem; color: var(--heading); }#}
+{#        .empty .btn { margin-top: 16px; }#}
+{#        tr.no-match td { text-align: center; padding: 36px 20px; color: var(--muted); }#}
+{#        tr[hidden] { display: none; }#}
+{##}
+{#        #deleteDialog .target { display: block; margin: -8px 0 20px; padding: 10px 14px; border-radius: 10px; background: var(--danger-bg); color: var(--danger); font-weight: 700; }#}
+{##}
+{#        /* MY ASSIGNED LAB */#}
+{#        .container.narrow { max-width: 980px; }#}
+{#        .lab-card { overflow: hidden; background: var(--surface); border: 1px solid var(--border); border-radius: 22px; box-shadow: 0 14px 30px rgba(8,32,58,.08); }#}
+{#        .lab-top { position: relative; display: flex; align-items: center; gap: 18px; flex-wrap: wrap; padding: 28px clamp(20px, 3vw, 34px); color: #fff;#}
+{#            background: radial-gradient(ellipse at 95% 0%, rgba(92,208,238,.34), transparent 55%), linear-gradient(135deg, var(--bg-top), var(--bg-deep)); }#}
+{#        .lab-top::before { content: ""; position: absolute; inset: 0; background-image: radial-gradient(rgba(255,255,255,.09) 1px, transparent 1px); background-size: 24px 24px; pointer-events: none; }#}
+{#        .lab-top > * { position: relative; z-index: 1; }#}
+{#        .lab-ic { width: 66px; height: 66px; flex: none; display: grid; place-items: center; border-radius: 20px; background: linear-gradient(145deg, var(--cyan), var(--teal)); box-shadow: 0 14px 26px rgba(0,0,0,.28); transform: rotate(-6deg); transition: transform .3s; }#}
+{#        .lab-card:hover .lab-ic { transform: rotate(0) scale(1.05); }#}
+{#        .lab-ic svg { width: 34px; height: 34px; }#}
+{#        .lab-top h2 { margin: 0 0 8px; font-size: clamp(1.3rem, 2.4vw, 1.8rem); font-weight: 800; letter-spacing: -0.03em; line-height: 1.15; word-break: break-word; }#}
+{#        .lab-top .tags { display: flex; flex-wrap: wrap; gap: 8px; }#}
+{#        .lab-top .chip { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 999px; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.22); font-size: .8rem; font-weight: 700; }#}
+{#        .lab-body { padding: clamp(20px, 3vw, 34px); }#}
+{#        .lab-body h3 { margin: 0 0 8px; font-size: .78rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }#}
+{#        .lab-desc { margin: 0 0 26px; font-size: 1rem; line-height: 1.7; color: var(--text); white-space: pre-line; word-break: break-word; }#}
+{#        .lab-desc.none { color: var(--muted); font-style: italic; }#}
+{#        .info-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin-bottom: 28px; }#}
+{#        .info { display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: var(--canvas); border: 1px solid var(--border); border-radius: 14px; transition: border-color .2s, transform .2s; }#}
+{#        .info:hover { border-color: var(--teal); transform: translateY(-3px); }#}
+{#        .info .ic { width: 42px; height: 42px; flex: none; display: grid; place-items: center; border-radius: 12px; background: var(--tile); color: var(--teal); }#}
+{#        .info .ic svg { width: 21px; height: 21px; }#}
+{#        .info small { display: block; font-size: .72rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }#}
+{#        .info b { display: block; font-size: .95rem; color: var(--heading); word-break: break-word; }#}
+{#        .lab-actions { display: flex; flex-wrap: wrap; gap: 12px; padding-top: 24px; border-top: 1px solid var(--border); }#}
+{##}
+{#        /* SHARED LAB COORDINATOR LIST/PROFILE PAGES */#}
+{#        .badge.active, .badge.upcoming { background: var(--ok-bg); color: var(--ok); }#}
+{#        .badge.today { background: var(--tile); color: var(--teal-dark); }#}
+{#        .badge.past { background: #eef2f7; color: var(--muted); }#}
+{#        .badge.warn { background: #fff4d6; color: #8a6112; }#}
+{#        .cell-stack { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }#}
+{#        .muted-txt { color: var(--muted); font-weight: 600; }#}
+{#        .sub-count { display: inline-block; margin-left: 4px; }#}
+{#        .lab-top .avatar-lg { width: 92px; height: 92px; flex: none; border-radius: 50%; object-fit: cover; border: 3px solid rgba(255,255,255,.55); box-shadow: 0 14px 26px rgba(0,0,0,.3); background: var(--cyan); }#}
+{#        .lab-top .avatar-lg.ph { display: grid; place-items: center; font-size: 2.4rem; font-weight: 800; color: var(--bg-deep); }#}
+{#        .info.wide { grid-column: 1 / -1; }#}
+{#        .info b a { color: var(--teal); }#}
+{#        .info b a:hover { text-decoration: underline; }#}
+{#        .info b .flag { margin-left: 8px; padding: 2px 8px; border-radius: 999px; background: #fff4d6; color: #8a6112; font-size: .72rem; font-weight: 700; }#}
+{#        .info-grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }#}
+{#        .info-grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }#}
+{#        @media (max-width: 720px) { .info-grid.two, .info-grid.three { grid-template-columns: 1fr; } }#}
+{#    </style>#}
+{#</head>#}
+{#<body>#}
+{##}
+{#<header class="navbar" id="navbar">#}
+{#    <div class="nav-inner">#}
+{##}
+{#        <a class="brand" href="/myapp/lab_home/" aria-label="LabTrack lab coordinator home">#}
+{#            <span class="brand-mark">#}
+{#                <svg width="23" height="23" viewBox="0 0 24 24" fill="none" aria-hidden="true">#}
+{#                    <path d="M12 2.5l8 3v6c0 5-3.3 8.6-8 10-4.7-1.4-8-5-8-10v-6l8-3z" stroke="#08203a" stroke-width="1.9" stroke-linejoin="round"/>#}
+{#                    <path d="M10.5 8.5h3M11 8.5v3l-2 3.6a.9.9 0 0 0 .8 1.3h4.4a.9.9 0 0 0 .8-1.3l-2-3.6v-3" stroke="#08203a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>#}
+{#                </svg>#}
+{#            </span>#}
+{#            LabTrack#}
+{#        </a>#}
+{##}
+{#        <button type="button" class="burger" id="burger" aria-label="Open menu" aria-controls="menu" aria-expanded="false">#}
+{#            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>#}
+{#        </button>#}
+{##}
+{#        <nav class="menu" id="menu" aria-label="Main">#}
+{##}
+{#            <a class="nav-link" href="/myapp/lab_home/" data-match="lab_home">Home</a>#}
+{##}
+{#            <div class="dd">#}
+{#                <button type="button" class="nav-link dd-btn" aria-expanded="false" aria-haspopup="true">#}
+{#                    My Lab#}
+{#                    <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>#}
+{#                </button>#}
+{#                <div class="dd-panel">#}
+{#                    <a href="/myapp/lab_view_assigned_lab/" data-match="assigned_lab,lab_view_schedules">#}
+{#                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.8 3h10.4a2 2 0 0 0 1.8-3l-5-9V3"/><path d="M7.5 15h9"/></svg>#}
+{#                        View Assigned Lab#}
+{#                    </a>#}
+{#                    <a href="/myapp/lab_view_exercises/" data-match="exercises">#}
+{#                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>#}
+{#                        View Lab Exercises#}
+{#                    </a>#}
+{#                </div>#}
+{#            </div>#}
+{##}
+{#            <div class="dd">#}
+{#                <button type="button" class="nav-link dd-btn" aria-expanded="false" aria-haspopup="true">#}
+{#                    References#}
+{#                    <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>#}
+{#                </button>#}
+{#                <div class="dd-panel">#}
+{#                    <a href="/myapp/lab_view_references/" data-match="lab_view_references">#}
+{#                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2V5z"/><path d="M8 7h7M8 11h5"/></svg>#}
+{#                        View References#}
+{#                    </a>#}
+{#                    <a href="/myapp/lab_add_reference/" data-match="lab_add_reference">#}
+{#                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>#}
+{#                        Add Reference#}
+{#                    </a>#}
+{#                </div>#}
+{#            </div>#}
+{##}
+{#            <a class="nav-link" href="/myapp/lab_view_equipment_requests/" data-match="equipment_requests,lab_assign_equipment,lab_fine_damage">Equipment</a>#}
+{##}
+{#            <a class="nav-link" href="/myapp/lab_send_notification/" data-match="send_notification">Notifications</a>#}
+{##}
+{#            <div class="dd right user">#}
+{#                <button type="button" class="nav-link dd-btn" aria-expanded="false" aria-haspopup="true">#}
+{#                    <span class="avatar" aria-hidden="true">L</span>#}
+{#                    Coordinator#}
+{#                    <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>#}
+{#                </button>#}
+{#                <div class="dd-panel">#}
+{#                    <a href="/myapp/lab_view_profile/" data-match="lab_view_profile">#}
+{#                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.2-4 4-6 8-6s6.8 2 8 6"/></svg>#}
+{#                        View Profile#}
+{#                    </a>#}
+{#                    <a href="/myapp/change_password_get/" data-match="change_password">#}
+{#                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>#}
+{#                        Change Password#}
+{#                    </a>#}
+{#                    <div class="dd-sep"></div>#}
+{#                    <a href="/myapp/logout_get/" class="logout" id="logoutLink">#}
+{#                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>#}
+{#                        Logout#}
+{#                    </a>#}
+{#                </div>#}
+{#            </div>#}
+{##}
+{#        </nav>#}
+{#    </div>#}
+{#</header>#}
+{##}
+{#<!-- Django messages -->#}
+{#<div class="toasts" id="toasts" role="status" aria-live="polite">#}
+{#    {% if messages %}#}
+{#    {% for i in messages %}#}
+{#    <div class="toast {{ i.tags }}">#}
+{#        <svg class="t-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.01"/></svg>#}
+{#        <span>{{ i }}</span>#}
+{#        <button type="button" aria-label="Dismiss" data-dismiss>&times;</button>#}
+{#    </div>#}
+{#    {% endfor %}#}
+{#    {% endif %}#}
+{#</div>#}
+{##}
+{#<main class="container wide">#}
+{#    <div class="page-head">#}
+{#        <div>#}
+{#            <h1>Reference Materials</h1>#}
+{#            <p>Study material shared with students, grouped by subject.</p>#}
+{#        </div>#}
+{#        <a class="btn btn-primary" href="/myapp/lab_add_reference/">+ Add Reference</a>#}
+{#    </div>#}
+{##}
+{#    {% if data %}#}
+{#    <div class="toolbar">#}
+{#        <div class="field search">#}
+{#            <label for="search" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">Search</label>#}
+{#            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>#}
+{#            <input type="search" id="search" placeholder="Search by subject, code or reference name" maxlength="60" autocomplete="off" aria-describedby="searchHint">#}
+{#            <p class="hint" id="searchHint" aria-live="polite"></p>#}
+{#        </div>#}
+{#        <div class="field filter">#}
+{#            <label for="statusFilter" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">All subjects</label>#}
+{#            <select id="statusFilter" aria-label="All subjects">#}
+{#                <option value="">All subjects</option>#}
+{#            </select>#}
+{#        </div>#}
+{#        <button type="button" class="btn btn-ghost" id="resetBtn" hidden>Reset</button>#}
+{#    </div>#}
+{#    <p class="count" id="count" aria-live="polite"></p>#}
+{#    {% endif %}#}
+{##}
+{#    <div class="table-wrap">#}
+{#        <table class="data">#}
+{#            <thead>#}
+{#                <tr>#}
+{#                    <th>Sl No</th>#}
+{#                    <th>Subject</th>#}
+{#                    <th>Subject Code</th>#}
+{#                    <th>Reference Name</th>#}
+{#                    <th>Description</th>#}
+{#                    <th>Reference File</th>#}
+{#                    <th>Date</th>#}
+{#                </tr>#}
+{#            </thead>#}
+{#            <tbody>#}
+{#                {% for i in data %}#}
+{#                <tr data-row data-hay="{{ i.SUBJECT.subject_name }} {{ i.SUBJECT.subject_code }} {{ i.reference_name }} {{ i.description }}" data-subject="{{ i.SUBJECT.subject_name }}">#}
+{#                    <td>{{ forloop.counter }}</td>#}
+{#                    <td class="name">{{ i.SUBJECT.subject_name|default:"-" }}</td>#}
+{#                    <td><span class="room">{{ i.SUBJECT.subject_code|default:"-" }}</span></td>#}
+{#                    <td class="name">{{ i.reference_name|default:"Untitled" }}</td>#}
+{#                    <td class="desc"><span title="{{ i.description }}">{{ i.description|default:"No description" }}</span></td>#}
+{#                    <td>{% if i.reference_file %}<a class="link" data-file href="{{ i.reference_file.url }}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg>View File</a>{% else %}<span class="muted-txt">No file</span>{% endif %}</td>#}
+{#                    <td>{{ i.date|default:"-" }}</td>#}
+{#                </tr>#}
+{#                {% empty %}#}
+{#                <tr>#}
+{#                    <td colspan="7" class="empty">#}
+{#                        <strong>No references found.</strong>#}
+{#                        Add a reference so students can find study material here.#}
+{#                    </td>#}
+{#                </tr>#}
+{#                {% endfor %}#}
+{#                <tr class="no-match" id="noMatch" hidden>#}
+{#                    <td colspan="7">Nothing matches your search or filter.</td>#}
+{#                </tr>#}
+{#            </tbody>#}
+{#        </table>#}
+{#    </div>#}
+{##}
+{#    <a class="back-link" href="/myapp/lab_home/">Back to Home</a>#}
+{#</main>#}
+{##}
+{#<!-- Logout confirmation -->#}
+{#<dialog id="logoutDialog" aria-labelledby="logoutTitle">#}
+{#    <h2 id="logoutTitle">Log out of LabTrack?</h2>#}
+{#    <p>You will need to sign in again to use the lab coordinator panel.</p>#}
+{#    <div class="dialog-actions">#}
+{#        <button type="button" class="btn btn-ghost" id="cancelLogout">Stay signed in</button>#}
+{#        <button type="button" class="btn btn-primary" id="confirmLogout">Log out</button>#}
+{#    </div>#}
+{#</dialog>#}
+{##}
+{#<script>#}
+{#(function () {#}
+{#    var navbar = document.getElementById('navbar');#}
+{#    var burger = document.getElementById('burger');#}
+{#    var dds = Array.prototype.slice.call(document.querySelectorAll('.dd'));#}
+{##}
+{#    function closeAll(except) {#}
+{#        dds.forEach(function (d) {#}
+{#            if (d !== except) {#}
+{#                d.classList.remove('open');#}
+{#                d.querySelector('.dd-btn').setAttribute('aria-expanded', 'false');#}
+{#            }#}
+{#        });#}
+{#    }#}
+{##}
+{#    dds.forEach(function (d) {#}
+{#        var btn = d.querySelector('.dd-btn');#}
+{#        btn.addEventListener('click', function (e) {#}
+{#            e.stopPropagation();#}
+{#            var open = !d.classList.contains('open');#}
+{#            closeAll(d);#}
+{#            d.classList.toggle('open', open);#}
+{#            btn.setAttribute('aria-expanded', open ? 'true' : 'false');#}
+{#        });#}
+{#    });#}
+{##}
+{#    document.addEventListener('click', function (e) { if (!e.target.closest('.dd')) closeAll(); });#}
+{##}
+{#    document.addEventListener('keydown', function (e) {#}
+{#        if (e.key === 'Escape') {#}
+{#            closeAll();#}
+{#            navbar.classList.remove('open');#}
+{#            burger.setAttribute('aria-expanded', 'false');#}
+{#        }#}
+{#    });#}
+{##}
+{#    burger.addEventListener('click', function () {#}
+{#        var open = !navbar.classList.contains('open');#}
+{#        navbar.classList.toggle('open', open);#}
+{#        burger.setAttribute('aria-expanded', open ? 'true' : 'false');#}
+{#        burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');#}
+{#    });#}
+{##}
+{#    // Mark current page in navbar#}
+{#    var path = window.location.pathname;#}
+{#    var links = document.querySelectorAll('.menu a[data-match]');#}
+{#    var matched = false;#}
+{#    Array.prototype.forEach.call(links, function (a) {#}
+{#        if (matched) return;#}
+{#        var tokens = a.getAttribute('data-match').split(',');#}
+{#        if (tokens.some(function (t) { return path.indexOf(t) !== -1; })) {#}
+{#            matched = true;#}
+{#            a.classList.add('active');#}
+{#            a.setAttribute('aria-current', 'page');#}
+{#            var parent = a.closest('.dd');#}
+{#            if (parent) parent.querySelector('.dd-btn').classList.add('active');#}
+{#        }#}
+{#    });#}
+{##}
+{#    // Toasts: dismiss + auto-hide (shared with JS-created toasts)#}
+{#    window.bindToast = function (t) {#}
+{#        var remove = function () { if (t.parentNode) t.parentNode.removeChild(t); };#}
+{#        var x = t.querySelector('[data-dismiss]');#}
+{#        if (x) x.addEventListener('click', remove);#}
+{#        setTimeout(remove, 6000);#}
+{#    };#}
+{#    Array.prototype.forEach.call(document.querySelectorAll('.toast'), window.bindToast);#}
+{##}
+{#    // Logout confirmation#}
+{#    var link = document.getElementById('logoutLink');#}
+{#    var dlg = document.getElementById('logoutDialog');#}
+{#    var cancel = document.getElementById('cancelLogout');#}
+{#    var confirmBtn = document.getElementById('confirmLogout');#}
+{#    link.addEventListener('click', function (e) {#}
+{#        if (typeof dlg.showModal !== 'function') return;#}
+{#        e.preventDefault();#}
+{#        closeAll();#}
+{#        navbar.classList.remove('open');#}
+{#        dlg.showModal();#}
+{#        cancel.focus();#}
+{#    });#}
+{#    cancel.addEventListener('click', function () { dlg.close(); });#}
+{#    confirmBtn.addEventListener('click', function () { window.location.href = link.getAttribute('href'); });#}
+{#    dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });#}
+{#})();#}
+{#</script>#}
+{#<script>#}
+{#(function () {#}
+{#    var rows = Array.prototype.slice.call(document.querySelectorAll('[data-row]'));#}
+{##}
+{#    var toasts = document.getElementById('toasts');#}
+{#    function toast(type, text) {#}
+{#        var el = document.createElement('div');#}
+{#        el.className = 'toast ' + type;#}
+{#        el.innerHTML = '<svg class="t-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.01"/></svg><span></span><button type="button" aria-label="Dismiss" data-dismiss>&times;</button>';#}
+{#        el.querySelector('span').textContent = text;#}
+{#        toasts.appendChild(el);#}
+{#        window.bindToast(el);#}
+{#    }#}
+{#    function parseISO(s) {#}
+{#        var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s || '');#}
+{#        if (!m) return null;#}
+{#        var d = new Date(+m[1], +m[2] - 1, +m[3]);#}
+{#        return d.getMonth() === +m[2] - 1 ? d : null;#}
+{#    }#}
+{#    var today = new Date(); today.setHours(0, 0, 0, 0);#}
+{#    function dayDiff(d) { return Math.round((d - today) / 86400000); }#}
+{##}
+{#    // Only keep file links that point to a safe URL#}
+{#    Array.prototype.forEach.call(document.querySelectorAll('a[data-file]'), function (a) {#}
+{#        var href = (a.getAttribute('href') || '').trim();#}
+{#        if (!/^(\/|https?:\/\/)[^\s<>"]+$/.test(href) || /^javascript:/i.test(href)) {#}
+{#            var s = document.createElement('span');#}
+{#            s.className = 'muted-txt';#}
+{#            s.textContent = 'File unavailable';#}
+{#            a.parentNode.replaceChild(s, a);#}
+{#        }#}
+{#    });#}
+{##}
+{#    rows.forEach(function (r) { r.dataset.cat = (r.dataset.subject || '').trim(); });#}
+{##}
+{##}
+{#    if (!rows.length) return;#}
+{##}
+{#    var search = document.getElementById('search');#}
+{#    var hint = document.getElementById('searchHint');#}
+{#    var filter = document.getElementById('statusFilter');#}
+{#    var reset = document.getElementById('resetBtn');#}
+{#    var count = document.getElementById('count');#}
+{#    var noMatch = document.getElementById('noMatch');#}
+{##}
+{#    var seen = {};#}
+{#    rows.forEach(function (r) {#}
+{#        var c = (r.dataset.cat || '').trim();#}
+{#        if (c && !seen[c.toLowerCase()]) {#}
+{#            seen[c.toLowerCase()] = true;#}
+{#            var o = document.createElement('option');#}
+{#            o.value = c.toLowerCase();#}
+{#            o.textContent = c;#}
+{#            filter.appendChild(o);#}
+{#        }#}
+{#    });#}
+{#    if (!Object.keys(seen).length) filter.parentNode.hidden = true;#}
+{##}
+{#    function checkSearch(v) {#}
+{#        if (v.length > 60) return 'Search must be 60 characters or fewer.';#}
+{#        if (v && !/^[A-Za-z0-9 &().,'\/\-@+_:]+$/.test(v)) return "Use letters, numbers, spaces and & ( ) . , ' / - : only.";#}
+{#        return '';#}
+{#    }#}
+{##}
+{#    function apply() {#}
+{#        var raw = search.value.trim();#}
+{#        var v = raw.toLowerCase();#}
+{#        var msg = checkSearch(raw);#}
+{#        hint.textContent = msg;#}
+{#        search.classList.toggle('invalid', !!msg);#}
+{#        if (msg) search.setAttribute('aria-invalid', 'true'); else search.removeAttribute('aria-invalid');#}
+{#        if (msg) return;#}
+{##}
+{#        var st = filter.value, shown = 0;#}
+{#        rows.forEach(function (r) {#}
+{#            var ok = (!v || (r.dataset.hay || '').toLowerCase().indexOf(v) !== -1) &&#}
+{#                     (!st || (r.dataset.cat || '').trim().toLowerCase() === st);#}
+{#            r.hidden = !ok;#}
+{#            if (ok) { shown++; r.firstElementChild.textContent = shown; }#}
+{#        });#}
+{#        noMatch.hidden = shown !== 0;#}
+{#        count.innerHTML = 'Showing <strong>' + shown + '</strong> of <strong>' + rows.length + '</strong> references';#}
+{#        reset.hidden = !(v || st);#}
+{#    }#}
+{##}
+{#    search.addEventListener('input', apply);#}
+{#    filter.addEventListener('change', apply);#}
+{#    reset.addEventListener('click', function () { search.value = ''; filter.value = ''; apply(); search.focus(); });#}
+{#    apply();#}
+{#{)();#}
+{#</script>#}
+{#</body>#}
+{#</html>#}
+
+
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>View References | LabTrack</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-top: #164a63;
+            --bg-mid: #0d3048;
+            --bg-deep: #08203a;
+            --cyan: #5cd0ee;
+            --teal: #0b84a8;
+            --teal-dark: #086a89;
+            --heading: #0d2b3e;
+            --text: #14283a;
+            --muted: #5d7183;
+            --surface: #ffffff;
+            --canvas: #f1f6fb;
+            --border: #dae6f1;
+            --tile: #e2f4fa;
+            --danger: #c0291f;
+            --danger-bg: #fdeceb;
+            --success: #1c7c54;
+            --nav-h: 68px;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+            color: var(--text);
+            background:
+                radial-gradient(900px 420px at 100% 0%, rgba(92,208,238,.14), transparent 60%),
+                radial-gradient(700px 380px at 0% 40%, rgba(11,132,168,.07), transparent 60%),
+                var(--canvas);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a { text-decoration: none; color: inherit; }
+        button, input, select, textarea { font-family: inherit; }
+
+        /* NAVBAR */
+
+        .navbar {
+            position: sticky; top: 0; z-index: 100; color: #fff;
+            background:
+                radial-gradient(ellipse at 90% -40%, rgba(92,208,238,.28), transparent 55%),
+                linear-gradient(100deg, var(--bg-top), var(--bg-mid) 45%, var(--bg-deep));
+            box-shadow: 0 6px 20px rgba(8,32,58,.25);
+        }
+
+        .nav-inner {
+            max-width: 1280px; height: var(--nav-h); margin: auto;
+            padding: 0 clamp(16px, 3vw, 36px);
+            display: flex; align-items: center; gap: 28px;
+        }
+
+        .brand {
+            display: flex; align-items: center; gap: 12px; flex: none;
+            font-size: 1.3rem; font-weight: 800; color: #fff; letter-spacing: -.02em;
+        }
+
+        .brand-mark {
+            width: 40px; height: 40px; display: grid; place-items: center;
+            border-radius: 11px; background: var(--cyan); transition: transform .25s;
+        }
+
+        .brand:hover .brand-mark { transform: rotate(-8deg) scale(1.06); }
+
+        .menu { flex: 1; height: 100%; display: flex; align-items: center; gap: 4px; }
+
+        .nav-link {
+            position: relative; height: 42px; padding: 0 14px;
+            display: inline-flex; align-items: center; gap: 7px;
+            border: 0; border-radius: 10px; background: transparent;
+            color: #cfe3ef; font-size: .92rem; font-weight: 600;
+            cursor: pointer; white-space: nowrap; transition: background .2s, color .2s;
+        }
+
+        .nav-link:hover, .dd.open > .nav-link { background: rgba(255,255,255,.11); color: #fff; }
+        .nav-link.active { color: #fff; background: rgba(92,208,238,.16); }
+
+        .nav-link.active::after {
+            content: ""; position: absolute; left: 14px; right: 14px; bottom: -13px;
+            height: 3px; border-radius: 3px 3px 0 0; background: var(--cyan);
+        }
+
+        .nav-link:focus-visible, .dd-panel a:focus-visible, .burger:focus-visible {
+            outline: 2px solid var(--cyan); outline-offset: 2px;
+        }
+
+        .dd { position: relative; display: flex; align-items: center; }
+        .caret { width: 14px; height: 14px; transition: transform .2s; }
+        .dd.open .caret { transform: rotate(180deg); }
+
+        .dd-panel {
+            position: absolute; top: calc(100% + 12px); left: 0; min-width: 240px; padding: 8px;
+            background: #fff; color: var(--text);
+            border: 1px solid var(--border); border-radius: 14px;
+            box-shadow: 0 22px 44px rgba(8,32,58,.22);
+            opacity: 0; visibility: hidden; transform: translateY(8px);
+            transition: opacity .18s, transform .18s, visibility .18s;
+        }
+
+        .dd-panel::before { content: ""; position: absolute; left: 0; right: 0; top: -14px; height: 14px; }
+
+        .dd.open > .dd-panel { opacity: 1; visibility: visible; transform: translateY(0); }
+
+        @media (hover: hover) and (min-width: 961px) {
+            .dd:hover > .dd-panel { opacity: 1; visibility: visible; transform: translateY(0); }
+            .dd:hover > .nav-link { background: rgba(255,255,255,.11); color: #fff; }
+            .dd:hover .caret { transform: rotate(180deg); }
+        }
+
+        .dd.right .dd-panel { left: auto; right: 0; }
+
+        .dd-panel a {
+            display: flex; align-items: center; gap: 12px; padding: 10px 12px;
+            border-radius: 9px; color: var(--heading); font-size: .92rem; font-weight: 600;
+            transition: background .15s, color .15s, padding .15s;
+        }
+
+        .dd-panel a svg { width: 18px; height: 18px; flex: none; color: var(--teal); }
+
+        .dd-panel a:hover, .dd-panel a.active {
+            background: var(--tile); color: var(--teal-dark); padding-left: 16px;
+        }
+
+        .dd-sep { height: 1px; margin: 6px 4px; background: var(--border); }
+
+        .user { margin-left: auto; }
+
+        .avatar {
+            width: 30px; height: 30px; display: grid; place-items: center; border-radius: 50%;
+            background: var(--cyan); color: var(--bg-deep); font-size: .82rem; font-weight: 800;
+        }
+
+        .burger {
+            display: none; margin-left: auto; width: 44px; height: 44px; place-items: center;
+            border: 0; border-radius: 11px; background: rgba(255,255,255,.1); color: #fff; cursor: pointer;
+        }
+
+        .burger svg { width: 22px; height: 22px; }
+
+        /* PAGE LAYOUT */
+
+        .container { max-width: 1280px; margin: 0 auto; padding: 32px clamp(16px, 3vw, 36px) 56px; }
+
+        .page-heading {
+            display: flex; align-items: flex-end; justify-content: space-between;
+            flex-wrap: wrap; gap: 18px; margin-bottom: 25px;
+        }
+
+        .breadcrumb {
+            display: flex; flex-wrap: wrap; align-items: center; gap: 9px; margin-bottom: 14px;
+            font-size: .85rem; font-weight: 600; color: var(--muted);
+        }
+
+        .breadcrumb a { color: var(--teal-dark); }
+        .breadcrumb a:hover { text-decoration: underline; }
+        .breadcrumb .separator { color: #9aafbf; }
+
+        .page-heading h1 {
+            margin: 0 0 8px; font-size: clamp(1.7rem, 3vw, 2.35rem);
+            font-weight: 800; letter-spacing: -.035em; color: var(--heading);
+        }
+
+        .page-heading p { margin: 0; color: var(--muted); font-size: .96rem; line-height: 1.7; }
+
+        /* DJANGO MESSAGES */
+
+        .messages { display: grid; gap: 10px; margin-bottom: 22px; }
+
+        .alert {
+            display: flex; align-items: flex-start; gap: 12px; padding: 14px 16px;
+            border: 1px solid var(--border); border-left: 4px solid var(--teal);
+            border-radius: 12px; background: #fff;
+            box-shadow: 0 6px 18px rgba(8,32,58,.05); font-size: .9rem; line-height: 1.55;
+        }
+
+        .alert.success { border-left-color: var(--success); background: #f0fdf6; color: #176542; }
+        .alert.error, .alert.danger { border-left-color: var(--danger); background: #fff5f4; color: #a32119; }
+        .alert.warning { border-left-color: #e08a0b; background: #fffbeb; color: #92400e; }
+        .alert.info { border-left-color: var(--teal); background: #f0faff; color: #075985; }
+
+        .alert button {
+            margin-left: auto; border: 0; background: transparent;
+            color: currentColor; font-size: 1.2rem; cursor: pointer;
+        }
+
+        /* BUTTONS */
+
+        .btn {
+            display: inline-flex; align-items: center; justify-content: center; gap: 9px;
+            min-height: 47px; padding: 0 21px; border: 1.5px solid transparent; border-radius: 11px;
+            font-size: .91rem; font-weight: 700; cursor: pointer;
+            transition: background .2s, transform .15s, box-shadow .2s, border-color .2s;
+        }
+
+        .btn svg { width: 18px; height: 18px; }
+        .btn:focus-visible { outline: 3px solid #fbbf24; outline-offset: 2px; }
+
+        .btn-primary { color: #fff; background: var(--teal); box-shadow: 0 8px 16px rgba(11,132,168,.23); }
+        .btn-primary:hover {
+            background: var(--teal-dark); transform: translateY(-2px);
+            box-shadow: 0 12px 22px rgba(11,132,168,.3);
+        }
+
+        .btn-secondary { color: var(--heading); background: #fff; border-color: var(--border); }
+        .btn-secondary:hover { background: var(--canvas); border-color: #b8cde0; }
+
+        .btn-danger { color: #fff; background: var(--danger); }
+        .btn-danger:hover { background: #a11f17; transform: translateY(-2px); }
+
+        .btn-sm { min-height: 38px; padding: 0 14px; font-size: .84rem; border-radius: 9px; }
+
+        /* FILTER CARD */
+
+        .filter-card {
+            display: flex; flex-wrap: wrap; align-items: flex-start; gap: 14px;
+            margin-bottom: 18px; padding: 20px;
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 19px; box-shadow: 0 10px 28px rgba(8,32,58,.05);
+        }
+
+        .filter-card .field { margin: 0; }
+        .filter-card .search { flex: 1 1 280px; }
+        .filter-card .filter { flex: 0 0 220px; }
+
+        .field label {
+            display: block; margin-bottom: 9px; color: var(--heading);
+            font-size: .9rem; font-weight: 700;
+        }
+
+        .input-wrap { position: relative; }
+
+        .input-wrap > svg {
+            position: absolute; top: 16px; left: 15px; width: 19px; height: 19px;
+            color: #7790a4; pointer-events: none;
+        }
+
+        .form-control {
+            display: block; width: 100%; min-height: 50px; padding: 13px 15px;
+            border: 1.5px solid #d5e1ec; border-radius: 11px; outline: none;
+            background: #fbfdff; color: var(--text); font-size: .93rem;
+            transition: border-color .2s, box-shadow .2s, background .2s;
+        }
+
+        .input-wrap .form-control { padding-left: 45px; }
+        .form-control:hover { border-color: #a9c4d8; }
+        .form-control:focus { border-color: var(--teal); background: #fff; box-shadow: 0 0 0 4px rgba(11,132,168,.12); }
+        select.form-control { cursor: pointer; }
+
+        .filter-actions { align-self: flex-end; }
+
+        .count { margin: 0 0 16px; font-size: .88rem; color: var(--muted); }
+        .count strong { color: var(--heading); }
+
+        /* REFERENCE CARDS */
+
+        .reference-grid {
+            display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px;
+        }
+
+        .reference-card {
+            display: flex; flex-direction: column; min-width: 0; padding: 23px;
+            background: var(--surface); border: 1px solid var(--border); border-radius: 22px;
+            box-shadow: 0 14px 35px rgba(8,32,58,.07);
+            transition: transform .25s, box-shadow .25s, border-color .25s;
+        }
+
+        .reference-card:hover {
+            transform: translateY(-4px); border-color: #b9dfe9;
+            box-shadow: 0 20px 40px rgba(8,32,58,.12);
+        }
+
+        .card-top {
+            display: flex; align-items: flex-start; gap: 14px;
+            padding-bottom: 18px; margin-bottom: 18px; border-bottom: 1px solid var(--border);
+        }
+
+        .heading-icon {
+            width: 50px; height: 50px; flex: none; display: grid; place-items: center;
+            border-radius: 15px; color: #fff;
+            background: linear-gradient(135deg, #38bdf8, #0b84a8);
+            box-shadow: 0 10px 18px rgba(11,132,168,.2);
+        }
+
+        .heading-icon svg { width: 25px; height: 25px; }
+
+        .card-title { min-width: 0; }
+
+        .card-title h3 {
+            margin: 2px 0 6px; color: var(--heading); font-size: 1.02rem;
+            font-weight: 800; line-height: 1.4; overflow-wrap: anywhere;
+        }
+
+        .date { color: var(--muted); font-size: .79rem; font-weight: 600; }
+
+        .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+
+        .chip {
+            display: inline-block; padding: 4px 10px; border-radius: 8px;
+            background: var(--tile); color: var(--teal-dark);
+            font-size: .78rem; font-weight: 700; overflow-wrap: anywhere;
+        }
+
+        .description {
+            margin: 0 0 18px; color: var(--muted); font-size: .86rem; line-height: 1.7;
+            overflow-wrap: anywhere;
+            display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+        }
+
+        .file-box {
+            display: flex; align-items: center; gap: 12px; margin-top: auto; padding: 13px;
+            border: 1px solid var(--border); border-radius: 14px; background: #f8fbfe;
+        }
+
+        .file-icon {
+            width: 40px; height: 40px; flex: none; display: grid; place-items: center;
+            border-radius: 12px; background: var(--tile); color: var(--teal);
+        }
+
+        .file-icon svg { width: 20px; height: 20px; }
+
+        .file-info { min-width: 0; flex: 1; }
+        .file-info strong { display: block; margin-bottom: 3px; color: var(--heading); font-size: .84rem; }
+        .file-info span { display: block; color: var(--muted); font-size: .77rem; }
+
+        .view-file {
+            display: inline-flex; align-items: center; justify-content: center; flex: none; gap: 6px;
+            padding: 8px 11px; border: 1px solid #b9dfe9; border-radius: 9px;
+            background: #fff; color: var(--teal-dark); font-size: .8rem; font-weight: 700;
+            transition: background .2s, border-color .2s;
+        }
+
+        .view-file:hover { background: var(--tile); border-color: var(--teal); }
+        .view-file svg { width: 14px; height: 14px; }
+
+        .no-file {
+            margin-top: auto; padding: 14px; border: 1px dashed #c7d5e1;
+            border-radius: 12px; color: var(--muted); background: #f8fbfe; font-size: .84rem;
+        }
+
+        .card-actions {
+            display: flex; gap: 10px; margin-top: 18px; padding-top: 18px;
+            border-top: 1px solid var(--border);
+        }
+
+        .card-actions .btn { flex: 1; }
+
+        .btn-edit { background: var(--tile); color: var(--teal-dark); border-color: #cfe9f2; }
+        .btn-edit:hover { background: #cfeaf4; transform: translateY(-2px); }
+
+        .btn-del { background: var(--danger-bg); color: var(--danger); border-color: #f3cdca; }
+        .btn-del:hover { background: var(--danger); color: #fff; transform: translateY(-2px); }
+
+        /* EMPTY STATE */
+
+        .empty-state {
+            grid-column: 1 / -1; padding: 56px 20px; text-align: center;
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 22px; box-shadow: 0 14px 35px rgba(8,32,58,.07);
+        }
+
+        .empty-icon {
+            width: 64px; height: 64px; margin: 0 auto 18px; display: grid; place-items: center;
+            border-radius: 18px; background: var(--tile); color: var(--teal);
+        }
+
+        .empty-icon svg { width: 30px; height: 30px; }
+
+        .empty-state h3 { margin: 0 0 8px; color: var(--heading); font-size: 1.1rem; font-weight: 800; }
+        .empty-state p { margin: 0 0 20px; color: var(--muted); font-size: .88rem; line-height: 1.7; }
+
+        .no-results {
+            display: none; margin-top: 22px; padding: 26px; text-align: center;
+            border: 1px dashed #c7d5e1; border-radius: 16px; background: #fff;
+            color: var(--muted); font-size: .9rem;
+        }
+
+        .back-link {
+            display: inline-flex; align-items: center; gap: 8px; margin-top: 28px;
+            padding: 13px 16px; border: 1px solid var(--border); border-radius: 13px;
+            background: #f8fbfe; color: var(--heading); font-size: .87rem; font-weight: 700;
+            transition: border-color .2s, background .2s, transform .2s;
+        }
+
+        .back-link svg { width: 19px; height: 19px; color: var(--teal); }
+        .back-link:hover { background: var(--tile); border-color: var(--teal); transform: translateX(-3px); }
+
+        /* FOOTER */
+
+        .footer {
+            display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px;
+            margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border);
+            color: #8196a8; font-size: .82rem;
+        }
+
+        /* DIALOGS */
+
+        dialog {
+            width: min(92vw, 400px); padding: 28px; border: 0; border-radius: 18px;
+            color: var(--text); box-shadow: 0 30px 70px rgba(8,32,58,.35);
+        }
+
+        dialog::backdrop { background: rgba(6,19,40,.55); backdrop-filter: blur(2px); }
+        dialog h2 { margin: 0 0 8px; font-size: 1.3rem; color: var(--heading); }
+        dialog p { margin: 0 0 24px; color: var(--muted); line-height: 1.6; }
+        dialog .target {
+            display: block; margin: -10px 0 22px; padding: 10px 14px; border-radius: 10px;
+            background: var(--danger-bg); color: var(--danger); font-weight: 700; overflow-wrap: anywhere;
+        }
+        .dialog-actions { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 10px; }
+
+        /* RESPONSIVE */
+
+        @media (max-width: 1050px) {
+            .reference-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        }
+
+        @media (max-width: 960px) {
+            .burger { display: grid; }
+            .nav-inner { gap: 12px; }
+
+            .menu {
+                position: absolute; top: var(--nav-h); left: 0; right: 0; display: none;
+                flex-direction: column; align-items: stretch; gap: 2px; height: auto;
+                max-height: calc(100vh - var(--nav-h)); overflow-y: auto;
+                padding: 12px 16px 20px; background: var(--bg-deep);
+                border-top: 1px solid rgba(255,255,255,.1); box-shadow: 0 24px 40px rgba(0,0,0,.3);
+            }
+
+            .navbar.open .menu { display: flex; }
+            .nav-link { width: 100%; height: 48px; justify-content: flex-start; }
+            .nav-link.active::after { display: none; }
+            .dd { flex-direction: column; align-items: stretch; }
+            .dd > .nav-link .caret { margin-left: auto; }
+
+            .dd-panel {
+                position: static; display: none; min-width: 0; margin: 2px 0 6px 12px; padding: 4px;
+                background: rgba(255,255,255,.06); border: 0; border-left: 2px solid rgba(92,208,238,.4);
+                border-radius: 0 10px 10px 0; box-shadow: none; opacity: 1; visibility: visible; transform: none;
+            }
+
+            .dd-panel::before { display: none; }
+            .dd.open > .dd-panel { display: block; }
+            .dd-panel a { color: #d3e6f2; }
+            .dd-panel a svg { color: var(--cyan); }
+            .dd-panel a:hover, .dd-panel a.active { background: rgba(255,255,255,.1); color: #fff; padding-left: 12px; }
+            .dd-sep { background: rgba(255,255,255,.12); }
+
+            .user {
+                margin-left: 0; margin-top: 8px; padding-top: 10px;
+                border-top: 1px solid rgba(255,255,255,.12);
+            }
+        }
+
+        @media (max-width: 680px) {
+            .container { padding-top: 24px; }
+            .reference-grid { grid-template-columns: 1fr; }
+            .page-heading .btn { width: 100%; }
+            .filter-card .filter { flex: 1 1 100%; }
+            .filter-actions { width: 100%; }
+            .filter-actions .btn { width: 100%; }
+            .footer { flex-direction: column; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                scroll-behavior: auto !important; transition: none !important; animation: none !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+
+<header class="navbar" id="navbar">
+    <div class="nav-inner">
+
+        <a class="brand" href="/myapp/lab_home/" aria-label="LabTrack home">
+            <span class="brand-mark">
+                <svg width="23" height="23" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M12 2.5l8 3v6c0 5-3.3 8.6-8 10-4.7-1.4-8-5-8-10v-6l8-3z"
+                          stroke="#08203a" stroke-width="1.9" stroke-linejoin="round"/>
+                    <path d="M10.5 8.5h3M11 8.5v3l-2 3.6a.9.9 0 0 0 .8 1.3h4.4a.9.9 0 0 0 .8-1.3l-2-3.6v-3"
+                          stroke="#08203a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </span>
+            LabTrack
+        </a>
+
+        <button type="button" class="burger" id="burger"
+                aria-label="Open menu" aria-controls="menu" aria-expanded="false">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2" stroke-linecap="round" aria-hidden="true">
+                <path d="M4 7h16M4 12h16M4 17h16"/>
+            </svg>
+        </button>
+
+        <nav class="menu" id="menu" aria-label="Main navigation">
+
+            <a class="nav-link" href="/myapp/lab_home/" data-match="lab_home">Home</a>
+
+            <div class="dd">
+                <button type="button" class="nav-link dd-btn" aria-expanded="false" aria-haspopup="true">
+                    My Lab
+                    <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
+                         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+                </button>
+
+                <div class="dd-panel">
+                    <a href="/myapp/lab_view_assigned_lab/" data-match="lab_view_assigned_lab,lab_view_schedules">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.8 3h10.4a2 2 0 0 0 1.8-3l-5-9V3"/>
+                            <path d="M7.5 15h9"/>
+                        </svg>
+                        View Assigned Lab
+                    </a>
+
+                    <a href="/myapp/lab_view_exercises/" data-match="lab_view_exercises">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <rect x="4" y="3" width="16" height="18" rx="2"/>
+                            <path d="M8 8h8M8 12h8M8 16h5"/>
+                        </svg>
+                        View Lab Exercises
+                    </a>
+                </div>
+            </div>
+
+            <div class="dd">
+                <button type="button" class="nav-link dd-btn active" aria-expanded="false" aria-haspopup="true">
+                    References
+                    <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
+                         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+                </button>
+
+                <div class="dd-panel">
+                    <a href="/myapp/lab_view_references/" data-match="lab_view_references">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2V5z"/>
+                            <path d="M8 7h7M8 11h5"/>
+                        </svg>
+                        View References
+                    </a>
+
+                    <a href="/myapp/lab_add_reference/" data-match="lab_add_reference">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M12 5v14M5 12h14"/>
+                        </svg>
+                        Add Reference
+                    </a>
+                </div>
+            </div>
+
+            <a class="nav-link" href="/myapp/lab_view_equipment_requests/"
+               data-match="lab_view_equipment_requests,lab_assign_equipment,lab_fine_damage">Equipment</a>
+
+            <a class="nav-link" href="/myapp/lab_send_notification/"
+               data-match="lab_send_notification">Notifications</a>
+
+            <div class="dd right user">
+                <button type="button" class="nav-link dd-btn" aria-expanded="false" aria-haspopup="true">
+                    <span class="avatar" aria-hidden="true">L</span>
+                    Coordinator
+                    <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
+                         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+                </button>
+
+                <div class="dd-panel">
+                    <a href="/myapp/lab_view_profile/" data-match="lab_view_profile">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <circle cx="12" cy="8" r="4"/><path d="M4 21c1.2-4 4-6 8-6s6.8 2 8 6"/>
+                        </svg>
+                        View Profile
+                    </a>
+
+                    <a href="/myapp/change_password_get/" data-match="change_password_get">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/>
+                        </svg>
+                        Change Password
+                    </a>
+
+                    <div class="dd-sep"></div>
+
+                    <a href="/myapp/logout_get/" id="logoutLink">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                            <path d="M16 17l5-5-5-5M21 12H9"/>
+                        </svg>
+                        Logout
+                    </a>
+                </div>
+            </div>
+
+        </nav>
+    </div>
+</header>
+
+<!-- MAIN PAGE -->
+
+<main class="container">
+
+    <div class="page-heading">
+        <div>
+            <div class="breadcrumb">
+                <a href="/myapp/lab_home/">Home</a>
+                <span class="separator">/</span>
+                <span>References</span>
+            </div>
+
+            <h1>Reference Library</h1>
+            <p>Manage your laboratory reference materials and learning resources.</p>
+        </div>
+
+        <a href="/myapp/lab_add_reference/" class="btn btn-primary">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+            Add Reference
+        </a>
+    </div>
+
+    <!-- DJANGO MESSAGES -->
+
+    {% if messages %}
+    <div class="messages" role="status" aria-live="polite">
+        {% for message in messages %}
+        <div class="alert {{ message.tags }}">
+            <span>{{ message }}</span>
+            <button type="button" aria-label="Dismiss message" data-dismiss>&times;</button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if data %}
+    <!-- SEARCH + FILTER -->
+
+    <div class="filter-card">
+        <div class="field search">
+            <label for="referenceSearch">Search References</label>
+            <div class="input-wrap">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/>
+                </svg>
+                <input type="search" id="referenceSearch" class="form-control"
+                       placeholder="Search by subject, code, name or description"
+                       maxlength="60" autocomplete="off">
+            </div>
+        </div>
+
+        <div class="field filter" id="filterField">
+            <label for="subjectFilter">Subject</label>
+            <select id="subjectFilter" class="form-control">
+                <option value="">All subjects</option>
+            </select>
+        </div>
+
+        <div class="filter-actions">
+            <button type="button" class="btn btn-secondary" id="resetBtn" hidden>Reset</button>
+        </div>
+    </div>
+
+    <p class="count" id="count" aria-live="polite"></p>
+    {% endif %}
+
+    <!-- REFERENCE CARDS -->
+
+    <div class="reference-grid" id="referenceGrid">
+
+        {% for i in data %}
+        <article class="reference-card"
+                 data-card
+                 data-subject="{{ i.SUBJECT.subject_name }}"
+                 data-hay="{{ i.SUBJECT.subject_name }} {{ i.SUBJECT.subject_code }} {{ i.reference_name }} {{ i.description }}">
+
+            <div class="card-top">
+                <div class="heading-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2V5z"/>
+                        <path d="M8 7h7M8 11h5"/>
+                    </svg>
+                </div>
+
+                <div class="card-title">
+                    <h3>{{ i.reference_name|default:"Untitled" }}</h3>
+                    <div class="date">Added on {{ i.date|date:"d M Y" }}</div>
+                </div>
+            </div>
+
+            <div class="chips">
+                <span class="chip">{{ i.SUBJECT.subject_name|default:"-" }}</span>
+                <span class="chip">{{ i.SUBJECT.subject_code|default:"-" }}</span>
+            </div>
+
+            <p class="description">{{ i.description|default:"No description provided." }}</p>
+
+            {% if i.reference_file %}
+            <div class="file-box">
+                <div class="file-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                        <path d="M14 2v6h6M8 13h8M8 17h8"/>
+                    </svg>
+                </div>
+
+                <div class="file-info">
+                    <strong>Reference file</strong>
+                    <span>Study material attached</span>
+                </div>
+
+                <a class="view-file" data-file href="{{ i.reference_file.url }}"
+                   target="_blank" rel="noopener noreferrer">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M15 3h6v6M10 14 21 3"/>
+                        <path d="M19 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h6"/>
+                    </svg>
+                    View
+                </a>
+            </div>
+            {% else %}
+            <div class="no-file">No reference file attached.</div>
+            {% endif %}
+
+            <div class="card-actions">
+                <a href="/myapp/lab_edit_reference/{{ i.id }}/" class="btn btn-sm btn-edit">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L8 18l-4 1 1-4Z"/>
+                    </svg>
+                    Edit
+                </a>
+
+                <a href="/myapp/lab_delete_reference/{{ i.id }}/"
+                   class="btn btn-sm btn-del"
+                   data-delete
+                   data-name="{{ i.reference_name }}">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/>
+                    </svg>
+                    Delete
+                </a>
+            </div>
+        </article>
+        {% empty %}
+        <div class="empty-state" id="emptyState">
+            <div class="empty-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2V5z"/>
+                    <path d="M8 7h7M8 11h5"/>
+                </svg>
+            </div>
+            <h3>No References Yet</h3>
+            <p>Your reference materials will appear here once added.</p>
+            <a href="/myapp/lab_add_reference/" class="btn btn-primary">Add First Reference</a>
+        </div>
+        {% endfor %}
+
+    </div>
+
+    <div class="no-results" id="noResults">Nothing matches your search or filter.</div>
+
+    <a href="/myapp/lab_home/" class="back-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+        Back to Home
+    </a>
+
+    <footer class="footer">
+        <span>&copy; LabTrack &middot; College Lab, Subject &amp; Management System</span>
+        <span>Lab Coordinator Panel</span>
+    </footer>
+
+</main>
+
+<!-- LOGOUT CONFIRMATION -->
+
+<dialog id="logoutDialog" aria-labelledby="logoutTitle">
+    <h2 id="logoutTitle">Log out of LabTrack?</h2>
+    <p>You will need to sign in again to use the lab coordinator panel.</p>
+    <div class="dialog-actions">
+        <button type="button" class="btn btn-secondary" id="cancelLogout">Stay signed in</button>
+        <button type="button" class="btn btn-primary" id="confirmLogout">Log out</button>
+    </div>
+</dialog>
+
+<!-- DELETE CONFIRMATION -->
+
+<dialog id="deleteDialog" aria-labelledby="deleteTitle">
+    <h2 id="deleteTitle">Delete this reference?</h2>
+    <span class="target" id="deleteTarget"></span>
+    <p>This action cannot be undone. Students will no longer be able to open this material.</p>
+    <div class="dialog-actions">
+        <button type="button" class="btn btn-secondary" id="cancelDelete">Keep it</button>
+        <button type="button" class="btn btn-danger" id="confirmDelete">Delete</button>
+    </div>
+</dialog>
+
+<script>
+(function () {
+    var navbar = document.getElementById('navbar');
+    var burger = document.getElementById('burger');
+    var dropdowns = Array.prototype.slice.call(document.querySelectorAll('.dd'));
+
+    function closeDropdowns(except) {
+        dropdowns.forEach(function (dropdown) {
+            if (dropdown !== except) {
+                dropdown.classList.remove('open');
+                var button = dropdown.querySelector('.dd-btn');
+                if (button) { button.setAttribute('aria-expanded', 'false'); }
+            }
+        });
+    }
+
+    dropdowns.forEach(function (dropdown) {
+        var button = dropdown.querySelector('.dd-btn');
+        button.addEventListener('click', function (event) {
+            event.stopPropagation();
+            var shouldOpen = !dropdown.classList.contains('open');
+            closeDropdowns(dropdown);
+            dropdown.classList.toggle('open', shouldOpen);
+            button.setAttribute('aria-expanded', shouldOpen ? 'true' : 'false');
+        });
+    });
+
+    document.addEventListener('click', function (event) {
+        if (!event.target.closest('.dd')) { closeDropdowns(); }
+    });
+
+    burger.addEventListener('click', function () {
+        var isOpen = !navbar.classList.contains('open');
+        navbar.classList.toggle('open', isOpen);
+        burger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        burger.setAttribute('aria-label', isOpen ? 'Close menu' : 'Open menu');
+    });
+
+    document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape') {
+            closeDropdowns();
+            navbar.classList.remove('open');
+            burger.setAttribute('aria-expanded', 'false');
+            burger.setAttribute('aria-label', 'Open menu');
+        }
+    });
+
+    // Highlight the current navbar page.
+    var currentPath = window.location.pathname;
+    Array.prototype.forEach.call(document.querySelectorAll('.menu a[data-match]'), function (link) {
+        var tokens = link.getAttribute('data-match').split(',');
+        var matched = tokens.some(function (token) { return currentPath.indexOf(token) !== -1; });
+
+        if (matched) {
+            link.classList.add('active');
+            link.setAttribute('aria-current', 'page');
+            var parentDropdown = link.closest('.dd');
+            if (parentDropdown) {
+                var parentButton = parentDropdown.querySelector('.dd-btn');
+                if (parentButton) { parentButton.classList.add('active'); }
+            }
+        }
+    });
+
+    // Dismiss + auto-hide Django messages.
+    Array.prototype.forEach.call(document.querySelectorAll('.alert'), function (alertBox) {
+        var close = alertBox.querySelector('[data-dismiss]');
+        function remove() { if (alertBox.parentNode) { alertBox.parentNode.removeChild(alertBox); } }
+        if (close) { close.addEventListener('click', remove); }
+        setTimeout(remove, 6000);
+    });
+
+    // Logout confirmation.
+    var logoutLink = document.getElementById('logoutLink');
+    var logoutDialog = document.getElementById('logoutDialog');
+
+    logoutLink.addEventListener('click', function (event) {
+        if (typeof logoutDialog.showModal !== 'function') { return; }
+        event.preventDefault();
+        closeDropdowns();
+        navbar.classList.remove('open');
+        logoutDialog.showModal();
+        document.getElementById('cancelLogout').focus();
+    });
+
+    document.getElementById('cancelLogout').addEventListener('click', function () { logoutDialog.close(); });
+    document.getElementById('confirmLogout').addEventListener('click', function () {
+        window.location.href = logoutLink.getAttribute('href');
+    });
+    logoutDialog.addEventListener('click', function (event) { if (event.target === logoutDialog) { logoutDialog.close(); } });
+
+    // Delete confirmation.
+    var deleteDialog = document.getElementById('deleteDialog');
+    var deleteTarget = document.getElementById('deleteTarget');
+    var deleteUrl = '';
+
+    Array.prototype.forEach.call(document.querySelectorAll('[data-delete]'), function (link) {
+        link.addEventListener('click', function (event) {
+            deleteUrl = link.getAttribute('href');
+
+            if (typeof deleteDialog.showModal !== 'function') {
+                if (!window.confirm('Are you sure you want to delete this reference?')) {
+                    event.preventDefault();
+                }
+                return;
+            }
+
+            event.preventDefault();
+            deleteTarget.textContent = link.getAttribute('data-name') || 'This reference';
+            deleteDialog.showModal();
+            document.getElementById('cancelDelete').focus();
+        });
+    });
+
+    document.getElementById('cancelDelete').addEventListener('click', function () { deleteDialog.close(); });
+    document.getElementById('confirmDelete').addEventListener('click', function () {
+        if (deleteUrl) { window.location.href = deleteUrl; }
+    });
+    deleteDialog.addEventListener('click', function (event) { if (event.target === deleteDialog) { deleteDialog.close(); } });
+
+    // Only keep file links that point to a safe URL.
+    Array.prototype.forEach.call(document.querySelectorAll('a[data-file]'), function (link) {
+        var href = (link.getAttribute('href') || '').trim();
+        if (!/^(\/|https?:\/\/)[^\s<>"]+$/.test(href)) {
+            var span = document.createElement('span');
+            span.className = 'chip';
+            span.textContent = 'File unavailable';
+            link.parentNode.replaceChild(span, link);
+        }
+    });
+
+    // Search + subject filter.
+    var cards = Array.prototype.slice.call(document.querySelectorAll('[data-card]'));
+    if (!cards.length) { return; }
+
+    var search = document.getElementById('referenceSearch');
+    var filter = document.getElementById('subjectFilter');
+    var resetBtn = document.getElementById('resetBtn');
+    var count = document.getElementById('count');
+    var noResults = document.getElementById('noResults');
+    var seen = {};
+
+    cards.forEach(function (card) {
+        var name = (card.getAttribute('data-subject') || '').trim();
+        var key = name.toLowerCase();
+        if (name && !seen[key]) {
+            seen[key] = true;
+            var option = document.createElement('option');
+            option.value = key;
+            option.textContent = name;
+            filter.appendChild(option);
+        }
+    });
+
+    if (!Object.keys(seen).length) { document.getElementById('filterField').hidden = true; }
+
+    function apply() {
+        var query = search.value.trim().toLowerCase();
+        var subject = filter.value;
+        var shown = 0;
+
+        cards.forEach(function (card) {
+            var okText = !query || (card.getAttribute('data-hay') || '').toLowerCase().indexOf(query) !== -1;
+            var okSubject = !subject || (card.getAttribute('data-subject') || '').trim().toLowerCase() === subject;
+            var visible = okText && okSubject;
+            card.style.display = visible ? '' : 'none';
+            if (visible) { shown++; }
+        });
+
+        noResults.style.display = shown === 0 ? 'block' : 'none';
+        count.innerHTML = 'Showing <strong>' + shown + '</strong> of <strong>' + cards.length + '</strong> references';
+        resetBtn.hidden = !(query || subject);
+    }
+
+    search.addEventListener('input', apply);
+    filter.addEventListener('change', apply);
+    resetBtn.addEventListener('click', function () {
+        search.value = '';
+        filter.value = '';
+        apply();
+        search.focus();
+    });
+
+    apply();
+})();
+</script>
+
+</body>
+</html>

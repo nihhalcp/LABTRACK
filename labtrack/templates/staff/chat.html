@@ -1,0 +1,1029 @@
+{##}
+{#<!--<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">-->#}
+{#<link href="/static/chat_style/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">#}
+{#<!--<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>-->#}
+{#<script src="/static/chat_style/bootstrap.min.js"></script>#}
+{#<!--<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>-->#}
+{#<script src="/static/chat_style/jquery.min.js"></script>#}
+{#<!------ Include the above in your HEAD tag ---------->#}
+{##}
+{#<!DOCTYPE html>#}
+{#<html>#}
+{#	<head>#}
+{#		<style>#}
+{#			.clearfix:after {#}
+{#display: block;#}
+{#clear: both;#}
+{#content: "";#}
+{#}#}
+{#.clearfix:after {#}
+{#    visibility: hidden;#}
+{#    font-size: 0;#}
+{#    content: " ";#}
+{#    height:0#}
+{#}#}
+{##}
+{#		</style>#}
+{#		<title>Chat</title>#}
+{#		<!--<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">-->#}
+{#		<link rel="stylesheet" href="/static/chatstyle/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">#}
+{#		<!--<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">-->#}
+{#		<link rel="stylesheet" href="/static/chatstyle/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">#}
+{#		<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>-->#}
+{#		<script src="/static/chatstyle/jquery.min.js"></script>#}
+{#		<!--<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">-->#}
+{#		<link rel="stylesheet" type="text/css" href="/static/chatstyle/jquery.mCustomScrollbar.min.css">#}
+{#		<!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.js"></script>-->#}
+{#		<script type="text/javascript" src="/static/chatstyle/jquery.mCustomScrollbar.min.js"></script>#}
+{#	</head>#}
+{#	<!--Coded With Love By Mutiullah Samim-->#}
+{#	<body>#}
+{##}
+{#		<div class="container-fluid h-100">#}
+{#			<div class="row justify-content-center h-100">#}
+{#<!--				<div class="col-md-4 col-xl-3 chat"><div class="card mb-sm-3 mb-md-0 contacts_card">-->#}
+{#<!--					contacts_card<div class="card-header">-->#}
+{#<!--						<div class="input-group">-->#}
+{#<!--							<a href="/student" style="color: white">Go to Home</a>-->#}
+{#<!--							&lt;!&ndash;<input type="text" placeholder="Search..." name="" class="form-control search">&ndash;&gt;-->#}
+{#<!--							&lt;!&ndash;<div class="input-group-prepend">&ndash;&gt;-->#}
+{#<!--								&lt;!&ndash;<span class="input-group-text search_btn"><i class="fas fa-search"></i></span>&ndash;&gt;-->#}
+{#<!--							&lt;!&ndash;</div>&ndash;&gt;-->#}
+{#<!--						</div>-->#}
+{#<!--					</div>-->#}
+{#<!--                    <div id="tb1">-->#}
+{#<!--                        <input type="hidden" name="d" id="d" value="{{ toid }}" />-->#}
+{#<!--           <input type="hidden" name="textfield2" id="rece" />-->#}
+{##}
+{#<!--                    </div>-->#}
+{#<!--					&lt;!&ndash;<div class="card-body contacts_body">&ndash;&gt;-->#}
+{#<!--						&lt;!&ndash;<ui class="contacts">&ndash;&gt;-->#}
+{#<!--						&lt;!&ndash;<li class="active">&ndash;&gt;-->#}
+{#<!--							&lt;!&ndash;<div class="d-flex bd-highlight">&ndash;&gt;-->#}
+{#<!--								<div class="img_cont">-->#}
+{#<!--									<img src="https://static.turbosquid.com/Preview/001292/481/WV/_D.jpg" class="rounded-circle user_img">-->#}
+{#<!--									<span class="online_icon"></span>-->#}
+{#<!--								</div>-->#}
+{#<!--								&lt;!&ndash;<div class="user_info" id="tb1">&ndash;&gt;-->#}
+{#<!--									&lt;!&ndash;&lt;!&ndash;<span>Khalid</span>&ndash;&gt;&ndash;&gt;-->#}
+{#<!--									&lt;!&ndash;&lt;!&ndash;<p>Kalid is online</p>&ndash;&gt;&ndash;&gt;-->#}
+{#<!--                                   &lt;!&ndash;&lt;!&ndash;id="tb1" name="tb1"&ndash;&gt;&ndash;&gt;-->#}
+{#<!--								&lt;!&ndash;</div>&ndash;&gt;-->#}
+{#<!--							&lt;!&ndash;</div>&ndash;&gt;-->#}
+{#<!--						&lt;!&ndash;</li>&ndash;&gt;-->#}
+{#<!--                        &lt;!&ndash;</ui>&ndash;&gt;-->#}
+{#<!--					&lt;!&ndash;</div>&ndash;&gt;-->#}
+{#<!--					<div class="card-footer"></div>-->#}
+{#<!--				</div></div>-->#}
+{##}
+{#				<div class="col-md-8 col-xl-6 chat">#}
+{#												<a href="/student" style="color: white">Go to Home</a>#}
+{##}
+{#					<div class="card">#}
+{#						<div class="card-header msg_head">#}
+{##}
+{#							<div class="d-flex bd-highlight">#}
+{##}
+{#								<div class="img_cont" id="iiim" align="right" onclick="test()">#}
+{#									<div>#}
+{##}
+{#									<img src="https://static.turbosquid.com/Preview/001292/481/WV/_D.jpg" class="rounded-circle user_img">#}
+{##}
+{##}
+{#<!--										<div class="chat-about"><h6 class="mb-0">Eliza</h6><small>I love to listen and help. 😍</small></div>-->#}
+{##}
+{##}
+{#									</div>#}
+{#<!--									<div class="chat-about"><h6 class="mb-0">Eliza</h6><small>I love to listen and help. 😍</small></div>-->#}
+{#										<span class="online_icon"></span></p></div>#}
+{#								<div class="user_info" id="nnnm" >#}
+{#									                        <input type="hidden" name="d" id="d" value="{{ toid }}" />#}
+{##}
+{#	<p align="left">	<div ><h6 >Eliza</h6>#}
+{#									<small>I love to listen and help. 😍</small></div> <span ></span></p>#}
+{#									<!--<p>1767 Messages</p>-->#}
+{#								</div>#}
+{#								</div>#}
+{##}
+{#								<!--<div class="video_cam">-->#}
+{#									<!--<span><i class="fas fa-video"></i></span>-->#}
+{#									<!--<span><i class="fas fa-phone"></i></span>-->#}
+{#								<!--</div>-->#}
+{#							</div>#}
+{#							<span id="action_menu_btn"><i class="fas fa-ellipsis-v"></i></span>#}
+{#							<!--<div class="action_menu">-->#}
+{#								<!--<ul>-->#}
+{#									<!--<li><i class="fas fa-user-circle"></i> View profile</li>-->#}
+{#									<!--<li><i class="fas fa-users"></i> Add to close friends</li>-->#}
+{#									<!--<li><i class="fas fa-plus"></i> Add to group</li>-->#}
+{#									<!--<li><i class="fas fa-ban"></i> Block</li>-->#}
+{#								<!--</ul>-->#}
+{#							<!--</div>-->#}
+{##}
+{#						<div class="card-body msg_card_body" >#}
+{##}
+{#                            <div id="send1">#}
+{##}
+{#                            </div>#}
+{#							<!--<div class="d-flex justify-content-start mb-4">-->#}
+{#								<!--<div class="img_cont_msg">-->#}
+{#									<!--<img src="https://static.turbosquid.com/Preview/001292/481/WV/_D.jpg" class="rounded-circle user_img_msg">-->#}
+{#								<!--</div>-->#}
+{#								<!--<div class="msg_cotainer">-->#}
+{#									<!--Hi, how are you samim?-->#}
+{#									<!--<span class="msg_time">8:40 AM, Today</span>-->#}
+{#								<!--</div>-->#}
+{#							<!--</div>-->#}
+{#							<!--<div class="d-flex justify-content-end mb-4">-->#}
+{#								<!--<div class="msg_cotainer_send">-->#}
+{#									<!--Hi Khalid i am good tnx how about you?-->#}
+{#									<!--<span class="msg_time_send">8:55 AM, Today</span>-->#}
+{#								<!--</div>-->#}
+{#								<!--<div class="img_cont_msg">-->#}
+{#							<!--<img src="data:image/jpeg;base64,#}
+{#								<!--</div>-->#}
+{#							<!--</div>-->#}
+{##}
+{#					</div>#}
+{#                        <div class="card-footer">#}
+{##}
+{#							<div class="input-group">#}
+{#								<div class="input-group-append">#}
+{#									<span class="input-group-text attach_btn"><i class="fas fa-paperclip"></i></span>#}
+{#								</div>#}
+{#								<textarea name="" id="textfield"class="form-control type_msg" placeholder="Type your message..."></textarea>#}
+{#								<div class="input-group-append">#}
+{#									<!--<span class="input-group-text send_btn"><i class="fas fa-location-arrow"></i></span>-->#}
+{#                                    <input type="submit"class="input-group-text send_btn" value="send" id="button">#}
+{#								</div>#}
+{#							</div>#}
+{#						</div>#}
+{#				</div>#}
+{#			</div>#}
+{#		</div>#}
+{#	</div>#}
+{#	</body>#}
+{#</html>#}
+{#<style>#}
+{#    	body,html{#}
+{#			height: 100%;#}
+{#			margin: 0;#}
+{#			background: #7F7FD5;#}
+{#	       background: -webkit-linear-gradient(to right, #91EAE4, #86A8E7, #7F7FD5);#}
+{#	        background: linear-gradient(to right, #91EAE4, #86A8E7, #7F7FD5);#}
+{#		}#}
+{##}
+{#		.chat{#}
+{#			margin-top: auto;#}
+{#			margin-bottom: auto;#}
+{#		}#}
+{#		.card{#}
+{#			height: 500px;#}
+{#			border-radius: 15px !important;#}
+{#			background-color: rgba(0,0,0,0.4) !important;#}
+{#		}#}
+{#		.contacts_body{#}
+{#			padding:  0.75rem 0 !important;#}
+{#			overflow-y: auto;#}
+{#			white-space: nowrap;#}
+{#		}#}
+{#		.msg_card_body{#}
+{#			overflow-y: auto;#}
+{#		}#}
+{#		.card-header{#}
+{#			border-radius: 15px 15px 0 0 !important;#}
+{#			border-bottom: 0 !important;#}
+{#		}#}
+{#	 .card-footer{#}
+{#		border-radius: 0 0 15px 15px !important;#}
+{#			border-top: 0 !important;#}
+{#	}#}
+{#		.container{#}
+{#			align-content: center;#}
+{#		}#}
+{#		.search{#}
+{#			border-radius: 15px 0 0 15px !important;#}
+{#			background-color: rgba(0,0,0,0.3) !important;#}
+{#			border:0 !important;#}
+{#			color:white !important;#}
+{#		}#}
+{#		.search:focus{#}
+{#		     box-shadow:none !important;#}
+{#           outline:0px !important;#}
+{#		}#}
+{#		.type_msg{#}
+{#			background-color: rgba(0,0,0,0.3) !important;#}
+{#			border:0 !important;#}
+{#			color:white !important;#}
+{#			height: 60px !important;#}
+{#			overflow-y: auto;#}
+{#		}#}
+{#			.type_msg:focus{#}
+{#		     box-shadow:none !important;#}
+{#           outline:0px !important;#}
+{#		}#}
+{#		.attach_btn{#}
+{#	border-radius: 15px 0 0 15px !important;#}
+{#	background-color: rgba(0,0,0,0.3) !important;#}
+{#			border:0 !important;#}
+{#			color: white !important;#}
+{#			cursor: pointer;#}
+{#		}#}
+{#		.send_btn{#}
+{#	border-radius: 0 15px 15px 0 !important;#}
+{#	background-color: rgba(0,0,0,0.3) !important;#}
+{#			border:0 !important;#}
+{#			color: white !important;#}
+{#			cursor: pointer;#}
+{#		}#}
+{#		.search_btn{#}
+{#			border-radius: 0 15px 15px 0 !important;#}
+{#			background-color: rgba(0,0,0,0.3) !important;#}
+{#			border:0 !important;#}
+{#			color: white !important;#}
+{#			cursor: pointer;#}
+{#		}#}
+{#		.contacts{#}
+{#			list-style: none;#}
+{#			padding: 0;#}
+{#		}#}
+{#		.contacts li{#}
+{#			width: 100% !important;#}
+{#			padding: 5px 10px;#}
+{#			margin-bottom: 15px !important;#}
+{#		}#}
+{#	.active{#}
+{#			background-color: rgba(0,0,0,0.3);#}
+{#	}#}
+{#		.user_img{#}
+{#			height: 70px;#}
+{#			width: 70px;#}
+{#			border:1.5px solid #f5f6fa;#}
+{##}
+{#		}#}
+{#		.user_img_msg{#}
+{#			height: 40px;#}
+{#			width: 40px;#}
+{#			border:1.5px solid #f5f6fa;#}
+{##}
+{#		}#}
+{#	.img_cont{#}
+{#			position: relative;#}
+{#			height: 70px;#}
+{#			width: 70px;#}
+{#	}#}
+{#	.img_cont_msg{#}
+{#			height: 40px;#}
+{#			width: 40px;#}
+{#	}#}
+{#	.online_icon{#}
+{#		position: absolute;#}
+{#		height: 15px;#}
+{#		width:15px;#}
+{#		background-color: #4cd137;#}
+{#		border-radius: 50%;#}
+{#		bottom: 0.2em;#}
+{#		right: 0.4em;#}
+{#		border:1.5px solid white;#}
+{#	}#}
+{#	.offline{#}
+{#		background-color: #c23616 !important;#}
+{#	}#}
+{#	.user_info{#}
+{#		margin-top: auto;#}
+{#		margin-bottom: auto;#}
+{#		margin-left: 15px;#}
+{#	}#}
+{#	.user_info span{#}
+{#		font-size: 20px;#}
+{#		color: white;#}
+{#	}#}
+{#	.user_info p{#}
+{#	font-size: 10px;#}
+{#	color: rgba(255,255,255,0.6);#}
+{#	}#}
+{#	.video_cam{#}
+{#		margin-left: 50px;#}
+{#		margin-top: 5px;#}
+{#	}#}
+{#	.video_cam span{#}
+{#		color: white;#}
+{#		font-size: 20px;#}
+{#		cursor: pointer;#}
+{#		margin-right: 20px;#}
+{#	}#}
+{#	.msg_cotainer{#}
+{#		margin-top: auto;#}
+{#		margin-bottom: auto;#}
+{#		margin-left: 10px;#}
+{#		border-radius: 25px;#}
+{#		background-color: #82ccdd;#}
+{#		padding: 10px;#}
+{#		position: relative;#}
+{#	}#}
+{#	.msg_cotainer_send{#}
+{#		margin-top: auto;#}
+{#		margin-bottom: auto;#}
+{#		margin-right: 10px;#}
+{#		border-radius: 25px;#}
+{#		background-color: #78e08f;#}
+{#		padding: 10px;#}
+{#		position: relative;#}
+{#	}#}
+{#	.msg_time{#}
+{#		position: absolute;#}
+{#		left: 0;#}
+{#		bottom: -15px;#}
+{#		color: rgba(255,255,255,0.5);#}
+{#		font-size: 10px;#}
+{#	}#}
+{#	.msg_time_send{#}
+{#		position: absolute;#}
+{#		right:0;#}
+{#		bottom: -15px;#}
+{#		color: rgba(255,255,255,0.5);#}
+{#		font-size: 10px;#}
+{#	}#}
+{#	.msg_head{#}
+{#		position: relative;#}
+{#	}#}
+{#	#action_menu_btn{#}
+{#		position: absolute;#}
+{#		right: 10px;#}
+{#		top: 10px;#}
+{#		color: white;#}
+{#		cursor: pointer;#}
+{#		font-size: 20px;#}
+{#	}#}
+{#	.action_menu{#}
+{#		z-index: 1;#}
+{#		position: absolute;#}
+{#		padding: 15px 0;#}
+{#		background-color: rgba(0,0,0,0.5);#}
+{#		color: white;#}
+{#		border-radius: 15px;#}
+{#		top: 30px;#}
+{#		right: 15px;#}
+{#		display: none;#}
+{#	}#}
+{#	.action_menu ul{#}
+{#		list-style: none;#}
+{#		padding: 0;#}
+{#	margin: 0;#}
+{#	}#}
+{#	.action_menu ul li{#}
+{#		width: 100%;#}
+{#		padding: 10px 15px;#}
+{#		margin-bottom: 5px;#}
+{#	}#}
+{#	.action_menu ul li i{#}
+{#		padding-right: 10px;#}
+{##}
+{#	}#}
+{#	.action_menu ul li:hover{#}
+{#		cursor: pointer;#}
+{#		background-color: rgba(0,0,0,0.2);#}
+{#	}#}
+{#	@media(max-width: 576px){#}
+{#	.contacts_card{#}
+{#		margin-bottom: 15px !important;#}
+{#	}#}
+{#	}#}
+{#</style>#}
+{#<script>#}
+{#    	$(document).ready(function(){#}
+{#//    	    alert("hoi");#}
+{#//$('#action_menu_btn').click(function(){#}
+{#//	$('.action_menu').toggle();#}
+{#//	$('.iim').click;#}
+{#//});#}
+{#repeatEverySecond();#}
+{#$.ajax({#}
+{#            url: "/coinup/chat_view/{{ toid }}",#}
+{#            url: "/myapp/chat_view/",#}
+{#            type: "GET",#}
+{#            data: {#}
+{##}
+{##}
+{#            },#}
+{#            contentType: "application/json;charset=utf-8",#}
+{#            dataType: "json",#}
+{#            success: function(dat) {#}
+{##}
+{##}
+{##}
+{##}
+{#                  var data=dat["data"];#}
+{#                 var name=dat["name"];#}
+{#                 var photo=dat["photo"];#}
+{#                 var user_lid=dat["toid"];#}
+{# $("#iiim").text("")#}
+{#                $("#nnnm").text("")#}
+{#                $("#iiim").append("<img src='"+photo+"' class='rounded-circle user_img'>")#}
+{#                $("#nnnm").append("<span>Chat with "+name+"</span>")#}
+{##}
+{#             //////////////////#}
+{##}
+{#                $("#send1").text("");#}
+{#				var len=data.length;#}
+{#				for(var i=0;i<len;i++) {#}
+{#                    var rid = data[i]['id'];#}
+{#                    var type = data[i]['from']#}
+{#                    var mesg = data[i]['message'];#}
+{#                    var sendid = data[i]['date'];#}
+{##}
+{#                    if (type !=user_lid ) {#}
+{#//                        $("#send1").append("<div align='center'><table id=tb1'' style='width:300px;'<tr border=0><td><div align='right'><div  class='container darker'><div>" + mesg + "</div></td></tr></table></div>")#}
+{##}
+{#                    $("#send1").append("<div class='d-flex justify-content-end mb-4'><div class='msg_cotainer_send'>"+mesg+"</div></div></div>")#}
+{#                    }#}
+{#                    else  {#}
+{##}
+{#//                        $("#send1").append("<div align='center'><table id=tb1'' style='width:300px;'<tr border=0><td><div align='left'><div><div class='container darker'>" + mesg + "</div></td></tr></table></div>")#}
+{##}
+{#                    $("#send1").append("<div class='d-flex justify-content-start mb-4'><div class=img_cont_msg'></div><div class='msg_cotainer'>"+mesg+"</div></div>")#}
+{##}
+{##}
+{#                    }#}
+{##}
+{#                }#}
+{##}
+{##}
+{#                /////////////////////////////////#}
+{##}
+{#            },#}
+{#            error: function(ts) {#}
+{#//{#                alert(ts);#}
+{#            }#}
+{#        });#}
+{##}
+{#	});#}
+{#</script>#}
+{##}
+{#<script src="/static/jquery.js"></script>#}
+{#<script>#}
+{##}
+{#    function test() {#}
+{##}
+{#           $("#button").show();#}
+{#        $("#textfield").show();#}
+{##}
+{##}
+{#$.ajax({#}
+{#            url: "/coinup/chat_view/{{ toid }}",#}
+{#            url: "/myapp/chat_view/",#}
+{#            type: "GET",#}
+{#            data: {#}
+{##}
+{##}
+{#            },#}
+{#            contentType: "application/json;charset=utf-8",#}
+{#            dataType: "json",#}
+{#            success: function(dat) {#}
+{##}
+{##}
+{##}
+{#                 var data=dat["data"];#}
+{#                 var name=dat["name"];var photo=dat["photo"];#}
+{#                 var user_lid=dat["toid"];#}
+{#                   $("#iiim").text("")#}
+{#                $("#nnnm").text("")#}
+{#                $("#iiim").append("<img src="+photo+" class='rounded-circle user_img'>")#}
+{#                $("#nnnm").append("<span>Chat with "+name+"</span>")#}
+{##}
+{#             //////////////////#}
+{##}
+{#                $("#send1").text("");#}
+{#				var len=data.length;#}
+{#				for(var i=0;i<len;i++) {#}
+{#                    var rid = data[i]['id'];#}
+{#                    var type = data[i]['from']#}
+{#                    var mesg = data[i]['message'];#}
+{#                    var sendid = data[i]['date'];#}
+{##}
+{#                    if (type !=user_lid ) {#}
+{#//                        $("#send1").append("<div align='center'><table id=tb1'' style='width:300px;'<tr border=0><td><div align='right'><div  class='container darker'><div>" + mesg + "</div></td></tr></table></div>")#}
+{#                    $("#send1").append("<div class='d-flex justify-content-end mb-4'><div class='msg_cotainer_send'>"+mesg+"</div></div></div>")#}
+{##}
+{#                    }#}
+{#                    else  {#}
+{##}
+{#                    $("#send1").append("<div class='d-flex justify-content-start mb-4'><div class=img_cont_msg'></div><div class='msg_cotainer'>"+mesg+"</div></div>")#}
+{#//                        $("#send1").append("<div align='center'><table id=tb1'' style='width:300px;'<tr border=0><td><div align='left'><div><div class='container darker'>" + mesg + "</div></td></tr></table></div>")#}
+{##}
+{##}
+{##}
+{#                    }#}
+{##}
+{#                }#}
+{##}
+{##}
+{#                /////////////////////////////////#}
+{##}
+{#            },#}
+{#            error: function(ts) {#}
+{#//{#                alert(ts);#}
+{#            }#}
+{#        });#}
+{##}
+{##}
+{#    }#}
+{##}
+{##}
+{##}
+{##}
+{##}
+{##}
+{##}
+{##}
+{##}
+{##}
+{#		$("#button").click(function()#}
+{#		{#}
+{##}
+{#			var msg=$("#textfield").val();#}
+{##}
+{##}
+{##}
+{##}
+{##}
+{#  $.ajax({#}
+{#            url: "/coinup/chat_send/"+msg+"/"+{{ toid }},#}
+{#            url: "/myapp/chat_send/"+msg,#}
+{#            type: "GET",#}
+{#            data: {#}
+{##}
+{##}
+{#            },#}
+{#            contentType: "application/json;charset=utf-8",#}
+{#            dataType: "json",#}
+{#            success: function(dat) {#}
+{##}
+{##}
+{#                $("#textfield").val("");#}
+{##}
+{#            },#}
+{#            error: function(ts) {#}
+{#			}#}
+{##}
+{#        });#}
+{##}
+{##}
+{#		});#}
+{##}
+{##}
+{##}
+{##}
+{#</script>#}
+{#<script>#}
+{##}
+{##}
+{#function repeatEverySecond() {#}
+{##}
+{#//{#    alert('hiii');#}
+{#  intervalID = setInterval(test, 1000);#}
+{##}
+{#</script>#}
+{##}
+{##}
+{##}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Chat - LabTrack</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-top: #164a63; --bg-mid: #0d3048; --bg-deep: #08203a;
+            --cyan: #5cd0ee; --teal: #0b84a8; --teal-dark: #086a89;
+            --heading: #0d2b3e; --text: #14283a; --muted: #5d7183;
+            --surface: #ffffff; --canvas: #f1f6fb; --border: #dae6f1;
+            --field: #e9f1fc; --field-line: #c8d9ee; --tile: #e2f4fa;
+            --danger: #c0291f; --danger-bg: #fdeceb;
+            --ok: #1c7c54; --gold: #fbbf24; --nav-h: 68px;
+        }
+        *, *::before, *::after { box-sizing: border-box; }
+        html, body { height: 100%; }
+        body {
+            margin: 0; display: flex; flex-direction: column; min-height: 100vh;
+            font-family: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+            color: var(--text); -webkit-font-smoothing: antialiased;
+            background:
+                radial-gradient(900px 420px at 100% 0%, rgba(92,208,238,.14), transparent 60%),
+                radial-gradient(700px 380px at 0% 40%, rgba(11,132,168,.07), transparent 60%),
+                var(--canvas);
+        }
+        a { color: inherit; text-decoration: none; }
+
+        /* TOP BAR */
+        .topbar {
+            position: sticky; top: 0; z-index: 50; color: #fff; flex: none;
+            background: radial-gradient(ellipse at 90% -40%, rgba(92,208,238,.28), transparent 55%), linear-gradient(100deg, var(--bg-top) 0%, var(--bg-mid) 45%, var(--bg-deep) 100%);
+            box-shadow: 0 6px 20px rgba(8,32,58,.25);
+        }
+        .topbar-inner { max-width: 1100px; height: var(--nav-h); margin: 0 auto; padding: 0 clamp(16px, 3vw, 36px); display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+        .brand { display: flex; align-items: center; gap: 12px; font-size: 1.3rem; font-weight: 800; letter-spacing: -0.02em; color: #fff; }
+        .brand-mark { width: 40px; height: 40px; display: grid; place-items: center; border-radius: 11px; background: var(--cyan); transition: transform .25s ease; }
+        .brand:hover .brand-mark { transform: rotate(-8deg) scale(1.06); }
+        .home-link { display: inline-flex; align-items: center; gap: 8px; height: 42px; padding: 0 16px; border-radius: 10px; font-size: .92rem; font-weight: 700; color: #fff; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.22); transition: background .2s, transform .15s; }
+        .home-link:hover { background: rgba(255,255,255,.22); transform: translateY(-2px); }
+        .home-link:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+        .home-link svg { width: 18px; height: 18px; }
+
+        /* PAGE */
+        .wrap { flex: 1; width: 100%; max-width: 1100px; margin: 0 auto; padding: 28px clamp(16px, 3vw, 36px) 36px; display: flex; justify-content: center; }
+        .chat {
+            position: relative; display: flex; flex-direction: column; width: 100%; max-width: 860px;
+            height: min(78vh, 720px); min-height: 460px;
+            background: var(--surface); border: 1px solid var(--border); border-radius: 24px; overflow: hidden;
+            box-shadow: 0 20px 50px rgba(8,32,58,.12);
+        }
+
+        /* HEADER */
+        .msg_head {
+            position: relative; display: flex; align-items: center; gap: 14px; padding: 18px 22px; color: #fff; flex: none;
+            background: radial-gradient(ellipse at 90% -30%, rgba(92,208,238,.32), transparent 55%), linear-gradient(135deg, var(--bg-top), var(--bg-deep));
+        }
+        .msg_head::before { content: ""; position: absolute; inset: 0; background-image: radial-gradient(rgba(255,255,255,.09) 1px, transparent 1px); background-size: 24px 24px; pointer-events: none; }
+        .msg_head > * { position: relative; }
+        .img_cont { position: relative; width: 54px; height: 54px; flex: none; border-radius: 50%; cursor: pointer; }
+        .img_cont:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+        .user_img, .avatar-ph { width: 54px; height: 54px; border-radius: 50%; object-fit: cover; border: 3px solid rgba(255,255,255,.9); background: var(--tile); display: block; }
+        .avatar-ph { display: grid; place-items: center; font-weight: 800; font-size: 1.3rem; color: var(--cyan); background: linear-gradient(135deg, var(--bg-top), var(--bg-deep)); } }
+        .user_info { min-width: 0; }
+        .user_info strong { display: block; font-size: 1.1rem; font-weight: 800; letter-spacing: -0.01em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+        .conn { flex: none; padding: 9px 22px; background: #fff4d6; color: #8a6112; border-bottom: 1px solid #f1deaa; font-size: .84rem; font-weight: 700; }
+        .conn[hidden] { display: none; }
+
+        /* MESSAGES */
+        .msg_card_body {
+            position: relative; flex: 1; min-height: 0; overflow-y: auto; padding: 22px;
+            background-color: #f6f9fd;
+            background-image: radial-gradient(rgba(11,132,168,.08) 1px, transparent 1px);
+            background-size: 22px 22px;
+            scroll-behavior: smooth;
+        }
+        .msg_card_body:focus-visible { outline: 3px solid var(--gold); outline-offset: -3px; }
+        .row { display: flex; align-items: flex-end; gap: 10px; margin-bottom: 14px; }
+        .row.sent { justify-content: flex-end; }
+        .row.pop { animation: pop .25s ease both; }
+        @keyframes pop { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        .img_cont_msg { width: 34px; height: 34px; flex: none; }
+        .img_cont_msg img, .img_cont_msg .avatar-ph { width: 34px; height: 34px; border-width: 2px; font-size: .85rem; border-color: #fff; }
+        .stack { display: flex; flex-direction: column; max-width: min(78%, 520px); }
+        .row.sent .stack { align-items: flex-end; }
+        .msg_cotainer, .msg_cotainer_send { padding: 11px 15px; border-radius: 18px; line-height: 1.5; font-size: .95rem; overflow-wrap: anywhere; word-break: break-word; }
+        .msg_cotainer { background: #fff; border: 1px solid var(--border); color: var(--text); border-bottom-left-radius: 5px; box-shadow: 0 4px 10px rgba(8,32,58,.05); }
+        .msg_cotainer_send { background: linear-gradient(135deg, var(--teal), var(--teal-dark)); color: #fff; border-bottom-right-radius: 5px; box-shadow: 0 8px 16px rgba(11,132,168,.22); }
+        .msg_time { margin-top: 4px; padding: 0 4px; font-size: .72rem; font-weight: 600; color: var(--muted); }
+
+        .state { display: grid; place-items: center; height: 100%; min-height: 180px; text-align: center; color: var(--muted); }
+        .state .ic { width: 64px; height: 64px; margin: 0 auto 14px; display: grid; place-items: center; border-radius: 50%; background: var(--tile); color: var(--teal); }
+        .state .ic svg { width: 30px; height: 30px; }
+        .state strong { display: block; margin-bottom: 4px; font-size: 1.05rem; color: var(--heading); }
+        .state p { margin: 0; font-size: .9rem; }
+        .spin { width: 28px; height: 28px; margin: 0 auto 12px; border-radius: 50%; border: 3px solid var(--tile); border-top-color: var(--teal); animation: spin .8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .new-pill { position: absolute; left: 50%; bottom: 112px; transform: translateX(-50%); z-index: 5; display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 0 16px; border: 0; border-radius: 999px; background: var(--teal); color: #fff; font: inherit; font-size: .84rem; font-weight: 700; cursor: pointer; box-shadow: 0 10px 22px rgba(11,132,168,.35); transition: background .2s, transform .15s; }
+        .new-pill:hover { background: var(--teal-dark); transform: translateX(-50%) translateY(-2px); }
+        .new-pill:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+        .new-pill[hidden] { display: none; }
+
+        /* COMPOSER */
+        .card-footer { flex: none; padding: 14px 18px 12px; background: #fff; border-top: 1px solid var(--border); }
+        .input-group { display: flex; align-items: flex-end; gap: 10px; }
+        .send_btn { width: 50px; height: 50px; flex: none; display: grid; place-items: center; border: 1.5px solid var(--field-line); border-radius: 13px; background: var(--field); color: var(--muted); font: inherit; cursor: pointer; transition: background .2s, color .2s, transform .15s, box-shadow .2s, opacity .2s; }
+        .send_btn svg { width: 22px; height: 22px; }
+        .send_btn { width: auto; min-width: 104px; padding: 0 20px; display: inline-flex; gap: 8px; align-items: center; justify-content: center; border-color: transparent; background: var(--teal); color: #fff; font-size: .95rem; font-weight: 700; box-shadow: 0 8px 16px rgba(11,132,168,.25); }
+        .send_btn:hover:not(:disabled) { background: var(--teal-dark); transform: translateY(-2px); box-shadow: 0 12px 22px rgba(11,132,168,.32); }
+        .send_btn:disabled { opacity: .55; cursor: not-allowed; box-shadow: none; }
+        .send_btn:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+        .type_wrap { position: relative; flex: 1; min-width: 0; }
+        .type_msg { display: block; width: 100%; height: 50px; min-height: 50px; max-height: 50px; padding: 13px 16px; font: inherit; font-weight: 500; line-height: 1.4; color: var(--text); background: var(--field); border: 1.5px solid var(--field-line); border-radius: 13px; resize: none; overflow-y: auto; transition: border-color .2s, box-shadow .2s, background .2s; }
+        .type_msg::placeholder { color: #8aa0b5; font-weight: 400; }
+        .type_msg:hover { border-color: #8fb4d2; }
+        .type_msg:focus { outline: none; background: #fff; border-color: var(--teal); box-shadow: 0 0 0 4px rgba(11,132,168,.16); }
+        .type_wrap.is-invalid .type_msg { border-color: var(--danger); background: #fffafa; }
+        .type_wrap.is-invalid .type_msg:focus { box-shadow: 0 0 0 4px rgba(192,41,31,.14); }
+        .type_wrap.shake { animation: shake .35s; }
+        @keyframes shake { 20%, 60% { transform: translateX(-5px); } 40%, 80% { transform: translateX(5px); } }
+        .foot-meta { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-top: 8px; padding: 0 2px; font-size: .8rem; }
+        .hint { min-height: 1.2em; color: var(--muted); line-height: 1.4; }
+        .hint.err { color: var(--danger); font-weight: 700; }
+        .counter { flex: none; color: var(--muted); font-weight: 600; font-variant-numeric: tabular-nums; }
+        .counter.warn { color: #b7791f; }
+        .counter.over { color: var(--danger); font-weight: 800; }
+
+        @media (max-width: 640px) {
+            .wrap { padding: 12px 10px 18px; }
+            .chat { height: calc(100vh - var(--nav-h) - 30px); border-radius: 18px; }
+            .msg_head { padding: 14px 16px; }
+            .msg_card_body { padding: 16px 12px; }
+            .stack { max-width: 84%; }
+            .home-link span { display: none; }
+            .send_btn { min-width: 50px; padding: 0; }
+            .send_btn .lbl { display: none; }
+        }
+        @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; scroll-behavior: auto !important; } }
+    </style>
+</head>
+<body>
+
+<header class="topbar">
+    <div class="topbar-inner">
+        <div class="brand">
+            <span class="brand-mark">
+                <svg width="23" height="23" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M12 2.5l8 3v6c0 5-3.3 8.6-8 10-4.7-1.4-8-5-8-10v-6l8-3z" stroke="#08203a" stroke-width="1.9" stroke-linejoin="round"/>
+                    <path d="M10.5 8.5h3M11 8.5v3l-2 3.6a.9.9 0 0 0 .8 1.3h4.4a.9.9 0 0 0 .8-1.3l-2-3.6v-3" stroke="#08203a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </span>
+            LabTrack
+        </div>
+        <a class="home-link" href="/myapp/staff_home/">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-8 9 8M5 10v10h14V10M10 20v-6h4v6"/></svg>
+            <span>Go to Home</span>
+        </a>
+    </div>
+</header>
+
+<main class="wrap">
+    <section class="chat" aria-label="Chat conversation">
+
+        <!-- Header: avatar, name and connection status -->
+        <div class="msg_head">
+            <div class="img_cont" id="iiim" role="button" tabindex="0" title="Refresh messages" aria-label="Refresh messages">
+                <span id="avatarSlot"><div class="avatar-ph" aria-hidden="true">?</div></span>
+            </div>
+            <div class="user_info" id="nnnm">
+                <input type="hidden" name="d" id="d" value="{{ toid }}" />
+                <strong id="chatName">Chat</strong>
+            </div>
+        </div>
+
+        <div class="conn" id="connBanner" role="alert" hidden>Connection lost. Retrying automatically&hellip;</div>
+
+        <!-- Messages -->
+        <div class="card-body msg_card_body" id="msgBody" tabindex="0" role="log" aria-live="polite" aria-label="Messages">
+            <div id="send1">
+                <div class="state" id="loadingState"><div><div class="spin"></div><p>Loading messages&hellip;</p></div></div>
+            </div>
+        </div>
+        <button type="button" class="new-pill" id="newPill" hidden>
+            New messages
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg>
+        </button>
+
+        <!-- Composer -->
+        <div class="card-footer">
+            <div class="input-group">
+                <div class="type_wrap" id="typeWrap">
+                    <textarea name="" id="textfield" class="form-control type_msg" rows="1" maxlength="1000" placeholder="Type your message..." aria-label="Type your message" aria-describedby="msgHint" autocomplete="off"></textarea>
+                </div>
+                <button type="button" class="send_btn" id="button" disabled aria-label="Send message">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+                    <span class="lbl">Send</span>
+                </button>
+            </div>
+            <div class="foot-meta">
+                <span class="hint" id="msgHint" aria-live="polite">Press Enter to send. Up to 250 characters.</span>
+                <span class="counter" id="msgCount">0 / 250</span>
+            </div>
+        </div>
+    </section>
+</main>
+
+<script>
+(function () {
+    var CHAT_VIEW = '/myapp/chat_view/';
+    var CHAT_SEND = '/myapp/chat_send/';
+    var MAX = 250;
+    var POLL_MS = 1000;
+    var DEFAULT_HINT = 'Press Enter to send. Up to 250 characters.';
+
+    var $ = function (id) { return document.getElementById(id); };
+    var body = $('msgBody'), list = $('send1'), ta = $('textfield'), btn = $('button');
+    var wrap = $('typeWrap'), hint = $('msgHint'), counter = $('msgCount'), pill = $('newPill');
+    var banner = $('connBanner');
+
+    var inflight = false, sending = false, fails = 0, first = true;
+    var lastSig = '', lastHead = '', prevCount = 0;
+
+    /* ---------- Connection status ---------- */
+    function setOnline(ok) {
+        banner.hidden = ok;
+    }
+
+    /* ---------- Helpers ---------- */
+    function el(tag, cls, text) {
+        var n = document.createElement(tag);
+        if (cls) n.className = cls;
+        if (text !== undefined && text !== null) n.textContent = text;
+        return n;
+    }
+    function str(v) { return (v === undefined || v === null) ? '' : String(v); }
+
+    function avatarNode(photo, name, cls) {
+        var initial = (str(name).trim().charAt(0) || '?').toUpperCase();
+        function fallback() { var ph = el('div', 'avatar-ph', initial); ph.setAttribute('aria-hidden', 'true'); return ph; }
+        if (!photo) return fallback();
+        var img = document.createElement('img');
+        img.className = cls || 'user_img';
+        img.alt = '';
+        img.src = photo;
+        img.addEventListener('error', function () { if (img.parentNode) img.parentNode.replaceChild(fallback(), img); });
+        return img;
+    }
+
+    function nearBottom() { return body.scrollHeight - body.scrollTop - body.clientHeight < 100; }
+    function toBottom() { body.scrollTop = body.scrollHeight; pill.hidden = true; }
+
+    function emptyState(title, text) {
+        var s = el('div', 'state');
+        var inner = el('div');
+        var ic = el('div', 'ic');
+        ic.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg>';
+        inner.appendChild(ic); inner.appendChild(el('strong', '', title)); inner.appendChild(el('p', '', text));
+        s.appendChild(inner);
+        return s;
+    }
+
+    /* ---------- Load and draw messages (same endpoint and logic as before) ---------- */
+    function render(dat) {
+        if (!dat || typeof dat !== 'object') return;
+        var data = Array.isArray(dat['data']) ? dat['data'] : [];
+        var name = str(dat['name']).trim();
+        var photo = str(dat['photo']);
+        var userLid = dat['toid'];
+
+        var headSig = name + '|' + photo;
+        if (headSig !== lastHead) {
+            lastHead = headSig;
+            $('chatName').textContent = name ? 'Chat with ' + name : 'Chat';
+            var slot = $('avatarSlot');
+            slot.textContent = '';
+            slot.appendChild(avatarNode(photo, name, 'user_img'));
+        }
+
+        var sig = JSON.stringify([userLid, data]);
+        if (sig === lastSig) return;
+        lastSig = sig;
+
+        var stick = first || nearBottom();
+        var keepTop = body.scrollTop;
+        var frag = document.createDocumentFragment();
+
+        data.forEach(function (m, i) {
+            m = m || {};
+            var mesg = str(m['message']);
+            var when = str(m['date']).trim();
+            var received = String(m['from']) === String(userLid);   // same rule as before: from == toid is the other person
+            var row = el('div', 'row ' + (received ? 'recv' : 'sent') + ((!first && i >= prevCount) ? ' pop' : ''));
+            var stack = el('div', 'stack');
+            stack.appendChild(el('div', received ? 'msg_cotainer' : 'msg_cotainer_send', mesg));
+            if (when) stack.appendChild(el('span', 'msg_time', when));
+            if (received) {
+                var av = el('div', 'img_cont_msg');
+                av.appendChild(avatarNode(photo, name, 'user_img'));
+                row.appendChild(av);
+            }
+            row.appendChild(stack);
+            frag.appendChild(row);
+        });
+
+        list.textContent = '';
+        if (!data.length) list.appendChild(emptyState('No messages yet', 'Say hello to start the conversation.'));
+        else list.appendChild(frag);
+
+        var grew = data.length > prevCount;
+        prevCount = data.length;
+        if (stick) { body.style.scrollBehavior = 'auto'; toBottom(); body.style.scrollBehavior = ''; }
+        else { body.scrollTop = keepTop; if (grew) pill.hidden = false; }
+        first = false;
+    }
+
+    function test() {
+        if (inflight) return;
+        inflight = true;
+        fetch(CHAT_VIEW, { method: 'GET', credentials: 'same-origin', cache: 'no-store', headers: { 'Accept': 'application/json' } })
+            .then(function (r) {
+                if (!r.ok) throw new Error('HTTP ' + r.status);
+                if (r.redirected) throw new Error('redirected');
+                return r.json();
+            })
+            .then(function (dat) { fails = 0; setOnline(true); render(dat); })
+            .catch(function () {
+                fails++;
+                if (fails >= 2) setOnline(false);
+                if (first && fails >= 2) {
+                    list.textContent = '';
+                    list.appendChild(emptyState('Could not load messages', 'We will keep trying. Check your connection.'));
+                }
+            })
+            .then(function () { inflight = false; });
+    }
+    window.test = test;   // kept for compatibility with the old page
+
+    /* ---------- Validation ---------- */
+    function clean(raw) { return raw.replace(/[\r\n\t]+/g, ' ').replace(/\s{2,}/g, ' ').trim(); }
+
+    function check(raw, strict) {
+        var v = clean(raw);
+        if (v === '') return { ok: false, quiet: !strict, msg: raw.length ? 'A message cannot be only spaces.' : 'Type a message before sending.' };
+        if (v.length > MAX) return { ok: false, msg: 'Message is too long. The limit is ' + MAX + ' characters (' + (v.length - MAX) + ' over).' };
+        if (/[\u0000-\u001F\u007F]/.test(v)) return { ok: false, msg: 'Message contains characters that are not allowed.' };
+        if (/[\/\\]/.test(v)) return { ok: false, msg: 'Slashes (/ and \\) cannot be used in a message.' };
+        if (/^\.+$/.test(v)) return { ok: false, msg: 'A message cannot be only dots.' };
+        return { ok: true, value: v };
+    }
+
+    function showHint(msg, isErr) {
+        hint.textContent = msg;
+        hint.className = 'hint' + (isErr ? ' err' : '');
+        wrap.classList.toggle('is-invalid', !!isErr);
+        ta.setAttribute('aria-invalid', isErr ? 'true' : 'false');
+    }
+
+    function refresh() {
+        var raw = ta.value, v = clean(raw), res = check(raw, false);
+        counter.textContent = v.length + ' / ' + MAX;
+        counter.className = 'counter' + (v.length > MAX ? ' over' : (v.length > MAX - 30 ? ' warn' : ''));
+        if (res.ok || res.quiet) showHint(DEFAULT_HINT, false);
+        else showHint(res.msg, true);
+        btn.disabled = !res.ok || sending;
+    }
+
+    ta.addEventListener('input', function () {
+        if (/[\r\n]/.test(ta.value)) ta.value = ta.value.replace(/[\r\n]+/g, ' ');
+        refresh();
+    });
+
+    ta.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' && !e.isComposing) {
+            e.preventDefault();               // Enter sends, Shift+Enter does not add a new line
+            if (!e.shiftKey) send();
+        }
+    });
+
+    /* ---------- Send (same endpoint: /myapp/chat_send/<message>) ---------- */
+    function send() {
+        if (sending) return;
+        var res = check(ta.value, true);
+        if (!res.ok) {
+            showHint(res.msg, true);
+            wrap.classList.remove('shake'); void wrap.offsetWidth; wrap.classList.add('shake');
+            ta.focus();
+            return;
+        }
+        sending = true;
+        btn.disabled = true;
+        btn.querySelector('.lbl').textContent = 'Sending\u2026';
+
+        fetch(CHAT_SEND + encodeURIComponent(res.value), { method: 'GET', credentials: 'same-origin', cache: 'no-store', headers: { 'Accept': 'application/json' } })
+            .then(function (r) {
+                if (!r.ok) throw new Error('HTTP ' + r.status);
+                if (r.redirected) throw new Error('redirected');
+                ta.value = '';
+                showHint(DEFAULT_HINT, false);
+                test();
+            })
+            .catch(function (err) {
+                var m = (err && err.message === 'redirected')
+                    ? 'Your session may have expired. Please log in again.'
+                    : 'Message could not be sent. Check your connection and try again.';
+                showHint(m, true);
+            })
+            .then(function () {
+                sending = false;
+                btn.querySelector('.lbl').textContent = 'Send';
+                refresh();
+                ta.focus();
+            });
+    }
+    btn.addEventListener('click', send);
+
+    /* ---------- Misc interactions ---------- */
+    $('iiim').addEventListener('click', test);
+    $('iiim').addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); test(); } });
+    pill.addEventListener('click', function () { toBottom(); ta.focus(); });
+    body.addEventListener('scroll', function () { if (nearBottom()) pill.hidden = true; });
+
+    /* ---------- Start: load now, then every second (paused while the tab is hidden) ---------- */
+    refresh();
+    test();
+    setInterval(function () { if (!document.hidden) test(); }, POLL_MS);
+    document.addEventListener('visibilitychange', function () { if (!document.hidden) test(); });
+})();
+</script>
+</body>
+</html>

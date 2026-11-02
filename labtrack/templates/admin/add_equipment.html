@@ -1,0 +1,1020 @@
+{#<!DOCTYPE html>#}
+{#<html>#}
+{#<head>#}
+{#    <title>Add Equipment - LabTrack</title>#}
+{#</head>#}
+{#<body>#}
+{##}
+{#    <h2>Add Equipment</h2>#}
+{#    <p>Lab: {{ lab.lab_name }}</p>#}
+{##}
+{#    <form method="post" action="/myapp/add_equipment_post/">#}
+{#        {% csrf_token %}#}
+{##}
+{#        <input type="hidden" name="LAB" value="{{ lab.id }}">#}
+{##}
+{#        <label>Equipment Name:</label>#}
+{#        <input type="text" name="equipment_name" required>#}
+{#        <br><br>#}
+{##}
+{#        <label>Category:</label>#}
+{#        <input type="text" name="category" required>#}
+{#        <br><br>#}
+{##}
+{#        <label>Total Quantity:</label>#}
+{#        <input type="number" name="quantity" min="1" required>#}
+{#        <br><br>#}
+{##}
+{#        <label>Available Quantity:</label>#}
+{#        <input type="number" name="available_quantity" min="0" required>#}
+{#        <br><br>#}
+{##}
+{#        <label>Status:</label>#}
+{#        <select name="status" required>#}
+{#            <option value="Available">Available</option>#}
+{#            <option value="Unavailable">Unavailable</option>#}
+{#            <option value="Maintenance">Maintenance</option>#}
+{#        </select>#}
+{#        <br><br>#}
+{##}
+{#        <input type="submit" value="Add Equipment">#}
+{#    </form>#}
+{##}
+{#    <br>#}
+{#    <a href="/myapp/view_equipment/{{ lab.id }}/">Back to Equipment</a>#}
+{##}
+{#</body>#}
+{#</html>#}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Add Equipment - LabTrack</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-top: #164a63;
+            --bg-mid: #0d3048;
+            --bg-deep: #08203a;
+            --cyan: #5cd0ee;
+            --teal: #0b84a8;
+            --teal-dark: #086a89;
+            --heading: #0d2b3e;
+            --text: #14283a;
+            --muted: #5d7183;
+            --surface: #ffffff;
+            --canvas: #f1f6fb;
+            --border: #dae6f1;
+            --field: #e9f1fc;
+            --field-line: #c8d9ee;
+            --tile: #e2f4fa;
+            --danger: #c0291f;
+            --danger-bg: #fdeceb;
+            --ok: #1c7c54;
+            --ok-bg: #e3f6ec;
+            --gold: #fbbf24;
+            --nav-h: 68px;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+            color: var(--text);
+            background: var(--canvas);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a { color: inherit; text-decoration: none; }
+
+        /* ================= NAVBAR ================= */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            color: #fff;
+            background:
+                radial-gradient(ellipse at 90% -40%, rgba(92,208,238,.28), transparent 55%),
+                linear-gradient(100deg, var(--bg-top) 0%, var(--bg-mid) 45%, var(--bg-deep) 100%);
+            box-shadow: 0 6px 20px rgba(8,32,58,.25);
+        }
+
+        .nav-inner {
+            max-width: 1280px;
+            height: var(--nav-h);
+            margin: 0 auto;
+            padding: 0 clamp(16px, 3vw, 36px);
+            display: flex;
+            align-items: center;
+            gap: 28px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.3rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            color: #fff;
+            flex: none;
+        }
+
+        .brand-mark {
+            width: 40px; height: 40px;
+            display: grid;
+            place-items: center;
+            border-radius: 11px;
+            background: var(--cyan);
+            transition: transform .25s ease;
+        }
+        .brand:hover .brand-mark { transform: rotate(-8deg) scale(1.06); }
+
+        .menu {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            height: 100%;
+        }
+
+        .nav-link {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            height: 42px;
+            padding: 0 14px;
+            font: inherit;
+            font-size: .92rem;
+            font-weight: 600;
+            color: #cfe3ef;
+            background: transparent;
+            border: 0;
+            border-radius: 10px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: background .2s, color .2s;
+        }
+
+        .nav-link:hover, .dd.open > .nav-link { background: rgba(255,255,255,.11); color: #fff; }
+        .nav-link:focus-visible { outline: 2px solid var(--cyan); outline-offset: 1px; }
+
+        .nav-link.active { color: #fff; background: rgba(92,208,238,.16); }
+        .nav-link.active::after {
+            content: "";
+            position: absolute;
+            left: 14px; right: 14px; bottom: -13px;
+            height: 3px;
+            border-radius: 3px 3px 0 0;
+            background: var(--cyan);
+        }
+
+        .caret { width: 14px; height: 14px; transition: transform .2s; }
+        .dd.open .caret { transform: rotate(180deg); }
+
+        .dd { position: relative; display: flex; align-items: center; }
+
+        .dd-panel {
+            position: absolute;
+            top: calc(100% + 12px);
+            left: 0;
+            min-width: 240px;
+            padding: 8px;
+            background: #fff;
+            color: var(--text);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            box-shadow: 0 22px 44px rgba(8,32,58,.22);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(8px);
+            transition: opacity .18s, transform .18s, visibility .18s;
+        }
+
+        .dd-panel::before { /* hover bridge */
+            content: "";
+            position: absolute;
+            left: 0; right: 0; top: -14px;
+            height: 14px;
+        }
+
+        .dd.open > .dd-panel { opacity: 1; visibility: visible; transform: translateY(0); }
+
+        @media (hover: hover) and (min-width: 961px) {
+            .dd:hover > .dd-panel { opacity: 1; visibility: visible; transform: translateY(0); }
+            .dd:hover > .nav-link { background: rgba(255,255,255,.11); color: #fff; }
+            .dd:hover .caret { transform: rotate(180deg); }
+        }
+
+        .dd.right .dd-panel { left: auto; right: 0; }
+
+        .dd-panel a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            border-radius: 9px;
+            font-size: .92rem;
+            font-weight: 600;
+            color: var(--heading);
+            transition: background .15s, color .15s, padding .15s;
+        }
+
+        .dd-panel a svg { width: 18px; height: 18px; flex: none; color: var(--teal); transition: color .15s; }
+
+        .dd-panel a:hover { background: var(--tile); color: var(--teal-dark); padding-left: 16px; }
+        .dd-panel a:focus-visible { outline: 2px solid var(--teal); outline-offset: -2px; }
+        .dd-panel a.active { background: var(--tile); color: var(--teal-dark); }
+
+        .dd-panel a.logout { color: var(--danger); }
+        .dd-panel a.logout svg { color: var(--danger); }
+        .dd-panel a.logout:hover { background: var(--danger-bg); color: var(--danger); }
+
+        .dd-sep { height: 1px; margin: 6px 4px; background: var(--border); }
+
+        .user { margin-left: auto; }
+
+        .avatar {
+            width: 30px; height: 30px;
+            display: grid;
+            place-items: center;
+            border-radius: 50%;
+            background: var(--cyan);
+            color: var(--bg-deep);
+            font-size: .82rem;
+            font-weight: 800;
+        }
+
+        .burger {
+            display: none;
+            margin-left: auto;
+            width: 44px; height: 44px;
+            place-items: center;
+            border: 0;
+            border-radius: 11px;
+            background: rgba(255,255,255,.1);
+            color: #fff;
+            cursor: pointer;
+        }
+        .burger:hover { background: rgba(255,255,255,.18); }
+        .burger:focus-visible { outline: 2px solid var(--cyan); }
+        .burger svg { width: 22px; height: 22px; }
+
+        /* ================= PAGE ================= */
+        .container { max-width: 1280px; margin: 0 auto; padding: 36px clamp(16px, 3vw, 36px) 56px; }
+
+        .page-head {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 24px;
+        }
+        .page-head h1 { margin: 0 0 4px; font-size: 1.8rem; font-weight: 800; letter-spacing: -0.03em; color: var(--heading); }
+        .page-head p { margin: 0; color: var(--muted); }
+
+        /* Reusable components for the other admin pages */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            height: 46px;
+            padding: 0 22px;
+            font: inherit;
+            font-size: .95rem;
+            font-weight: 700;
+            border-radius: 11px;
+            border: 1.5px solid transparent;
+            cursor: pointer;
+            transition: background .2s, transform .15s, box-shadow .2s, border-color .2s;
+        }
+        .btn:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+        .btn-primary { background: var(--teal); color: #fff; box-shadow: 0 8px 16px rgba(11,132,168,.25); }
+        .btn-primary:hover { background: var(--teal-dark); transform: translateY(-2px); box-shadow: 0 12px 22px rgba(11,132,168,.32); }
+        .btn-ghost { background: #fff; color: var(--heading); border-color: var(--border); }
+        .btn-ghost:hover { background: var(--canvas); border-color: #b8cde0; }
+        .btn-danger { background: var(--danger); color: #fff; }
+        .btn-danger:hover { background: #a11f17; transform: translateY(-2px); }
+
+        .panel { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 24px; }
+
+        .table-wrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; }
+        table.data { width: 100%; border-collapse: collapse; font-size: .92rem; }
+        table.data th { text-align: left; padding: 14px 18px; font-weight: 700; color: var(--heading); background: #f6f9fd; border-bottom: 1px solid var(--border); white-space: nowrap; }
+        table.data td { padding: 14px 18px; border-bottom: 1px solid #edf2f8; color: var(--text); }
+        table.data tbody tr { transition: background .15s; }
+        table.data tbody tr:hover { background: #f4f9fd; }
+        table.data tbody tr:last-child td { border-bottom: 0; }
+
+        .field { margin-bottom: 18px; }
+        .field label { display: block; margin-bottom: 8px; font-size: .88rem; font-weight: 700; color: var(--heading); }
+        .field input, .field select, .field textarea {
+            width: 100%;
+            padding: 0 16px;
+            height: 52px;
+            font: inherit;
+            color: var(--text);
+            background: var(--field);
+            border: 1.5px solid var(--field-line);
+            border-radius: 12px;
+            transition: border-color .2s, box-shadow .2s, background .2s;
+        }
+        .field textarea { height: auto; min-height: 110px; padding: 14px 16px; }
+        .field input:hover, .field select:hover, .field textarea:hover { border-color: #8fb4d2; }
+        .field input:focus, .field select:focus, .field textarea:focus {
+            outline: none; background: #fff; border-color: var(--teal); box-shadow: 0 0 0 4px rgba(11,132,168,.16);
+        }
+        .field .invalid { border-color: var(--danger); background: #fffafa; }
+        .field .hint { min-height: 1.2em; margin: 6px 0 0; font-size: .83rem; color: var(--danger); }
+
+        /* Django messages */
+        .toasts { position: fixed; top: calc(var(--nav-h) + 16px); right: 16px; z-index: 200; display: grid; gap: 10px; width: min(92vw, 360px); }
+        .toast {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 14px 16px;
+            background: #fff;
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--teal);
+            border-radius: 12px;
+            box-shadow: 0 16px 34px rgba(8,32,58,.18);
+            font-size: .92rem;
+            line-height: 1.45;
+            animation: toast-in .3s ease both;
+        }
+        .toast.error { border-left-color: var(--danger); }
+        .toast.success { border-left-color: var(--ok); }
+        .toast button { margin-left: auto; border: 0; background: transparent; color: var(--muted); font-size: 1.2rem; line-height: 1; cursor: pointer; }
+        @keyframes toast-in { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Logout dialog */
+        dialog { width: min(92vw, 400px); padding: 28px; border: 0; border-radius: 18px; color: var(--text); box-shadow: 0 30px 70px rgba(8,32,58,.35); }
+        dialog::backdrop { background: rgba(6,19,40,.55); backdrop-filter: blur(2px); }
+        dialog h2 { margin: 0 0 8px; font-size: 1.3rem; font-weight: 800; color: var(--heading); }
+        dialog p { margin: 0 0 24px; color: var(--muted); line-height: 1.55; }
+        .dialog-actions { display: flex; gap: 10px; justify-content: flex-end; }
+
+        /* ================= MOBILE ================= */
+        @media (max-width: 960px) {
+            .burger { display: grid; }
+
+            .nav-inner { gap: 12px; }
+
+            .menu {
+                position: absolute;
+                top: var(--nav-h);
+                left: 0; right: 0;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 2px;
+                height: auto;
+                max-height: calc(100vh - var(--nav-h));
+                overflow-y: auto;
+                padding: 12px 16px 20px;
+                background: var(--bg-deep);
+                border-top: 1px solid rgba(255,255,255,.1);
+                box-shadow: 0 24px 40px rgba(0,0,0,.3);
+                display: none;
+            }
+            .navbar.open .menu { display: flex; }
+
+            .nav-link { height: 48px; width: 100%; justify-content: flex-start; }
+            .nav-link.active::after { display: none; }
+            .dd { flex-direction: column; align-items: stretch; }
+            .dd > .nav-link .caret { margin-left: auto; }
+
+            .dd-panel {
+                position: static;
+                display: none;
+                min-width: 0;
+                margin: 2px 0 6px 12px;
+                padding: 4px;
+                background: rgba(255,255,255,.06);
+                border: 0;
+                border-left: 2px solid rgba(92,208,238,.4);
+                border-radius: 0 10px 10px 0;
+                box-shadow: none;
+                opacity: 1;
+                visibility: visible;
+                transform: none;
+            }
+            .dd-panel::before { display: none; }
+            .dd.open > .dd-panel { display: block; }
+            .dd-panel a { color: #d3e6f2; }
+            .dd-panel a svg { color: var(--cyan); }
+            .dd-panel a:hover, .dd-panel a.active { background: rgba(255,255,255,.1); color: #fff; padding-left: 12px; }
+            .dd-panel a.logout { color: #ffb4ac; }
+            .dd-panel a.logout svg { color: #ffb4ac; }
+            .dd-panel a.logout:hover { background: rgba(255,120,110,.16); color: #ffd7d2; }
+            .dd-sep { background: rgba(255,255,255,.12); }
+            .user { margin-left: 0; margin-top: 8px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,.12); }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * { transition: none !important; animation: none !important; }
+        }
+    </style>
+
+    <style>
+.container.narrow { max-width: 860px; }
+.container.wide { max-width: 1040px; }
+
+.form-panel { padding: clamp(22px, 3vw, 38px); }
+.req-note { margin: 0 0 24px; color: var(--muted); font-size: .86rem; }
+.req { color: var(--danger); margin-left: 3px; }
+
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 24px; }
+.form-grid .full { grid-column: 1 / -1; }
+
+.help-text { margin: 6px 0 0; font-size: .82rem; color: var(--muted); }
+
+.field .valid { border-color: #7cc9a6; }
+.field .invalid { border-color: var(--danger); background: #fffafa; }
+.field .invalid:focus { box-shadow: 0 0 0 4px rgba(192,41,31,.14); }
+
+.field select {
+    appearance: none;
+    -webkit-appearance: none;
+    padding-right: 44px;
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%235d7183' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+}
+
+.field input[type="file"] { height: auto; padding: 10px 12px; cursor: pointer; }
+.field input[type="file"]::file-selector-button {
+    margin-right: 14px;
+    padding: 9px 16px;
+    font: inherit;
+    font-size: .88rem;
+    font-weight: 700;
+    color: #fff;
+    background: var(--teal);
+    border: 0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background .2s;
+}
+.field input[type="file"]::file-selector-button:hover { background: var(--teal-dark); }
+
+.field-meta { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.field-meta .hint { flex: 1; }
+.counter { margin-top: 6px; font-size: .8rem; color: var(--muted); white-space: nowrap; }
+.counter.over { color: var(--danger); font-weight: 700; }
+
+.pw { position: relative; }
+.pw input { padding-right: 84px; }
+.pw .toggle {
+    position: absolute;
+    right: 8px; top: 7px;
+    height: 38px;
+    padding: 0 12px;
+    font: inherit;
+    font-size: .84rem;
+    font-weight: 700;
+    color: var(--teal);
+    background: transparent;
+    border: 0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background .2s, color .2s;
+}
+.pw .toggle:hover { background: #d9e8f5; color: var(--teal-dark); }
+.pw .toggle:focus-visible { outline: 2px solid var(--teal); outline-offset: 1px; }
+
+.meter { display: flex; gap: 6px; margin-top: 10px; }
+.meter span { flex: 1; height: 5px; border-radius: 3px; background: #dbe5ef; transition: background .2s; }
+.meter[data-level="1"] span:nth-child(-n+1) { background: #e5533d; }
+.meter[data-level="2"] span:nth-child(-n+2) { background: #f0a020; }
+.meter[data-level="3"] span:nth-child(-n+3) { background: #5bb85b; }
+.meter[data-level="4"] span:nth-child(-n+4) { background: #1c9a60; }
+
+.photo-preview {
+    display: none;
+    margin-top: 12px;
+    width: 96px; height: 96px;
+    object-fit: cover;
+    border-radius: 14px;
+    border: 2px solid var(--border);
+}
+.photo-preview.show { display: block; }
+
+.form-error {
+    margin-bottom: 22px;
+    padding: 13px 16px;
+    background: var(--danger-bg);
+    color: var(--danger);
+    border: 1px solid #f1c3bf;
+    border-left: 4px solid var(--danger);
+    border-radius: 10px;
+    font-size: .92rem;
+    font-weight: 600;
+}
+.form-error[hidden] { display: none; }
+
+.form-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 12px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+}
+.form-actions .btn-primary { min-width: 190px; }
+.btn[disabled] { opacity: .75; cursor: progress; transform: none; }
+
+.back-link {
+    display: inline-block;
+    margin-top: 22px;
+    font-size: .92rem;
+    font-weight: 700;
+    color: var(--teal);
+    background: linear-gradient(currentColor, currentColor) 0 100% / 0 2px no-repeat;
+    padding-bottom: 2px;
+    transition: background-size .25s ease, color .2s;
+}
+.back-link:hover { background-size: 100% 2px; color: var(--teal-dark); }
+.back-link:focus-visible { outline: 2px solid var(--teal); outline-offset: 3px; border-radius: 3px; }
+
+@media (max-width: 720px) {
+    .form-grid { grid-template-columns: 1fr; }
+    .form-actions .btn { width: 100%; }
+}
+</style>
+</head>
+<body>
+
+<header class="navbar" id="navbar">
+    <div class="nav-inner">
+
+        <a class="brand" href="/myapp/adminhome_get/" aria-label="LabTrack admin home">
+            <span class="brand-mark">
+                <svg width="23" height="23" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M12 2.5l8 3v6c0 5-3.3 8.6-8 10-4.7-1.4-8-5-8-10v-6l8-3z" stroke="#08203a" stroke-width="1.9" stroke-linejoin="round"/>
+                    <path d="M10.5 8.5h3M11 8.5v3l-2 3.6a.9.9 0 0 0 .8 1.3h4.4a.9.9 0 0 0 .8-1.3l-2-3.6v-3" stroke="#08203a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </span>
+            LabTrack
+        </a>
+
+        <button type="button" class="burger" id="burger" aria-label="Open menu" aria-controls="menu" aria-expanded="false">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </button>
+
+        <nav class="menu" id="menu" aria-label="Main">
+
+            <a class="nav-link" href="/myapp/adminhome_get/" data-match="adminhome">Home</a>
+
+            <div class="dd">
+                <button type="button" class="nav-link dd-btn" aria-expanded="false" aria-haspopup="true">
+                    Management
+                    <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+                </button>
+                <div class="dd-panel">
+                    <a href="/myapp/view_dept/" data-match="dept,course,subject">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6"/></svg>
+                        Manage Department
+                    </a>
+                    <a href="/myapp/view_student/" data-match="student">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 9L12 4 2 9l10 5 10-5z"/><path d="M6 11.5V16c0 1.5 2.7 3 6 3s6-1.5 6-3v-4.5"/></svg>
+                        View Students
+                    </a>
+                    <a href="/myapp/view_staff/" data-match="staff">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.5 3.3-5.5 6.5-5.5s5.7 2 6.5 5.5"/><circle cx="17.5" cy="9" r="2.5"/><path d="M17 14.5c2.5.2 4.3 1.8 5 4.5"/></svg>
+                        Manage Staff
+                    </a>
+                    <a href="/myapp/view_lab_coordinator/" data-match="lab_coordinator">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.2-4 4-6 8-6s6.8 2 8 6"/></svg>
+                        View Lab Coordinators
+                    </a>
+                    <a href="/myapp/view_lab/" data-match="view_lab/,add_lab_get,add_lab_post,edit_lab_get,edit_lab_post,delete_lab/,schedule,equipment">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.8 3h10.4a2 2 0 0 0 1.8-3l-5-9V3"/><path d="M7.5 15h9"/></svg>
+                        Manage Labs
+                    </a>
+                </div>
+            </div>
+
+            <a class="nav-link" href="/myapp/view_lab_submissions_admin/" data-match="lab_submissions">Lab Submissions</a>
+
+            <a class="nav-link" href="/myapp/admin_reports/" data-match="admin_reports">Reports</a>
+
+            <div class="dd">
+                <button type="button" class="nav-link dd-btn" aria-expanded="false" aria-haspopup="true">
+                    Complaints &amp; Reviews
+                    <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+                </button>
+                <div class="dd-panel">
+                    <a href="/myapp/view_complaints_admin/" data-match="complaint">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9.5 17h-19L12 3z"/><path d="M12 10v4M12 17.5v.01"/></svg>
+                        View Complaints
+                    </a>
+                    <a href="/myapp/view_feedback_admin/" data-match="feedback">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/><path d="M8.5 12h7"/></svg>
+                        View Feedback
+                    </a>
+                </div>
+            </div>
+
+            <div class="dd right user">
+                <button type="button" class="nav-link dd-btn" aria-expanded="false" aria-haspopup="true">
+                    <span class="avatar" aria-hidden="true">A</span>
+                    Admin
+                    <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+                </button>
+                <div class="dd-panel">
+                    <a href="/myapp/change_password_get/" data-match="change_password">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+                        Change Password
+                    </a>
+                    <div class="dd-sep"></div>
+                    <a href="/myapp/logout_get/" class="logout" id="logoutLink">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+                        Logout
+                    </a>
+                </div>
+            </div>
+
+        </nav>
+    </div>
+</header>
+
+{% if messages %}
+<div class="toasts" role="status" aria-live="polite">
+    {% for message in messages %}
+    <div class="toast {{ message.tags }}">
+        <span>{{ message }}</span>
+        <button type="button" aria-label="Dismiss" data-dismiss>&times;</button>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<main class="container narrow">
+<div class="page-head">
+    <div>
+        <h1>Add Equipment</h1>
+        <p>Lab: {{ lab.lab_name }}</p>
+    </div>
+</div>
+
+<section class="panel form-panel">
+    <form method="post" action="/myapp/add_equipment_post/" id="pageForm" novalidate>
+        {% csrf_token %}
+
+        <div class="form-error" id="formError" role="alert" hidden></div>
+        <p class="req-note"><span class="req" aria-hidden="true" style="margin:0">*</span> Required field</p>
+
+        <input type="hidden" name="LAB" value="{{ lab.id }}">
+
+        <div class="form-grid">
+<div class="field">
+    <label for="equipment_name">Equipment name<span class="req" aria-hidden="true">*</span></label>
+    <input type="text" id="equipment_name" name="equipment_name" placeholder="e.g. Digital multimeter" aria-describedby="equipment_nameHint" required maxlength="80" autocomplete="off" autofocus>
+
+    <p class="hint" id="equipment_nameHint" aria-live="polite"></p>
+</div>
+<div class="field">
+    <label for="category">Category<span class="req" aria-hidden="true">*</span></label>
+    <input type="text" id="category" name="category" placeholder="e.g. Measuring instruments" aria-describedby="categoryHint" required maxlength="50" autocomplete="off">
+
+    <p class="hint" id="categoryHint" aria-live="polite"></p>
+</div>
+<div class="field">
+    <label for="quantity">Total quantity<span class="req" aria-hidden="true">*</span></label>
+    <input type="number" id="quantity" name="quantity" placeholder="e.g. 10" aria-describedby="quantityHint" required min="1" max="100000" step="1" inputmode="numeric" data-int>
+    <p class="help-text">At least 1.</p>
+    <p class="hint" id="quantityHint" aria-live="polite"></p>
+</div>
+<div class="field">
+    <label for="available_quantity">Available quantity<span class="req" aria-hidden="true">*</span></label>
+    <input type="number" id="available_quantity" name="available_quantity" placeholder="e.g. 10" aria-describedby="available_quantityHint" required min="0" max="100000" step="1" inputmode="numeric" data-int>
+    <p class="help-text">Cannot be more than the total quantity.</p>
+    <p class="hint" id="available_quantityHint" aria-live="polite"></p>
+</div>
+<div class="field">
+    <label for="status">Status<span class="req" aria-hidden="true">*</span></label>
+    <select id="status" name="status" aria-describedby="statusHint" required>
+        <option value="Available">Available</option>
+        <option value="Unavailable">Unavailable</option>
+        <option value="Maintenance">Maintenance</option>
+    </select>
+    <p class="hint" id="statusHint" aria-live="polite"></p>
+</div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary" id="submitBtn">Add Equipment</button>
+            <a class="btn btn-ghost" href="/myapp/view_equipment/{{ lab.id }}/">Back to Equipment</a>
+        </div>
+    </form>
+</section>
+
+</main>
+
+<!-- Logout confirmation -->
+<dialog id="logoutDialog" aria-labelledby="logoutTitle">
+    <h2 id="logoutTitle">Log out of LabTrack?</h2>
+    <p>You will need to sign in again to use the admin panel.</p>
+    <div class="dialog-actions">
+        <button type="button" class="btn btn-ghost" id="cancelLogout">Stay signed in</button>
+        <button type="button" class="btn btn-primary" id="confirmLogout">Log out</button>
+    </div>
+</dialog>
+
+<script>
+(function () {
+    var navbar = document.getElementById('navbar');
+    var burger = document.getElementById('burger');
+    var dds = Array.prototype.slice.call(document.querySelectorAll('.dd'));
+
+    function closeAll(except) {
+        dds.forEach(function (d) {
+            if (d !== except) {
+                d.classList.remove('open');
+                d.querySelector('.dd-btn').setAttribute('aria-expanded', 'false');
+            }
+        });
+    }
+
+    // Dropdowns: click / keyboard toggle
+    dds.forEach(function (d) {
+        var btn = d.querySelector('.dd-btn');
+        btn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            var open = !d.classList.contains('open');
+            closeAll(d);
+            d.classList.toggle('open', open);
+            btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+        });
+    });
+
+    document.addEventListener('click', function (e) {
+        if (!e.target.closest('.dd')) closeAll();
+    });
+
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+            closeAll();
+            navbar.classList.remove('open');
+            burger.setAttribute('aria-expanded', 'false');
+        }
+    });
+
+    // Mobile menu
+    burger.addEventListener('click', function () {
+        var open = !navbar.classList.contains('open');
+        navbar.classList.toggle('open', open);
+        burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+        burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    });
+
+    // Mark the current page in the navbar
+    var path = window.location.pathname;
+    var links = document.querySelectorAll('.menu a[data-match]');
+    var matched = false;
+    Array.prototype.forEach.call(links, function (a) {
+        if (matched) return;
+        var tokens = a.getAttribute('data-match').split(',');
+        var hit = tokens.some(function (t) { return path.indexOf(t) !== -1; });
+        if (hit) {
+            matched = true;
+            a.classList.add('active');
+            a.setAttribute('aria-current', 'page');
+            var parent = a.closest('.dd');
+            if (parent) parent.querySelector('.dd-btn').classList.add('active');
+        }
+    });
+
+    // Dismissible messages (auto-hide after 6s)
+    var toasts = document.querySelectorAll('.toast');
+    Array.prototype.forEach.call(toasts, function (t) {
+        var remove = function () { if (t.parentNode) t.parentNode.removeChild(t); };
+        t.querySelector('[data-dismiss]').addEventListener('click', remove);
+        setTimeout(remove, 6000);
+    });
+
+    // Logout confirmation
+    var link = document.getElementById('logoutLink');
+    var dlg = document.getElementById('logoutDialog');
+    var cancel = document.getElementById('cancelLogout');
+    var confirmBtn = document.getElementById('confirmLogout');
+
+    link.addEventListener('click', function (e) {
+        if (typeof dlg.showModal !== 'function') return;
+        e.preventDefault();
+        closeAll();
+        navbar.classList.remove('open');
+        dlg.showModal();
+        cancel.focus();
+    });
+    cancel.addEventListener('click', function () { dlg.close(); });
+    confirmBtn.addEventListener('click', function () { window.location.href = link.getAttribute('href'); });
+    dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
+})();
+</script>
+
+
+<script>
+var specs = [
+    { id: 'equipment_name', label: 'Equipment name', minLen: 2, maxLen: 80,
+      pattern: /^[A-Za-z0-9][A-Za-z0-9 &().,'+\/\-]*$/,
+      patternMsg: 'Use letters, numbers, spaces and & ( ) . , + / - only, starting with a letter or number.' },
+    { id: 'category', label: 'Category', minLen: 2, maxLen: 50,
+      pattern: /^[A-Za-z][A-Za-z0-9 &().,'\/\-]*$/,
+      patternMsg: 'Use letters, numbers and spaces, starting with a letter.' },
+    { id: 'quantity', label: 'Total quantity', kind: 'int', minVal: 1, maxVal: 100000 },
+    { id: 'available_quantity', label: 'Available quantity', kind: 'int', minVal: 0, maxVal: 100000,
+      watch: ['quantity'],
+      custom: function (v) {
+          var total = parseInt(document.getElementById('quantity').value, 10);
+          if (!isNaN(total) && parseInt(v, 10) > total) return 'Available quantity cannot be more than the total quantity (' + total + ').';
+          return '';
+      } },
+    { id: 'status', label: 'Status', kind: 'select' }
+];
+
+(function () {
+    var form = document.getElementById('pageForm');
+    var btn = document.getElementById('submitBtn');
+    var banner = document.getElementById('formError');
+    var touched = {};
+
+    function byId(id) { return document.getElementById(id); }
+    function lower(s) { return s.charAt(0).toLowerCase() + s.slice(1); }
+
+    function check(spec) {
+        var input = byId(spec.id);
+        var label = spec.label;
+
+        if (spec.kind === 'file') {
+            var f = input.files && input.files[0];
+            if (!f) return spec.optional ? '' : 'Choose a ' + lower(label) + '.';
+            if (spec.types && spec.types.indexOf(f.type) === -1) return label + ' must be a JPG, PNG or WebP image.';
+            if (spec.maxMB && f.size > spec.maxMB * 1024 * 1024) return label + ' must be smaller than ' + spec.maxMB + ' MB.';
+            return '';
+        }
+
+        var v = input.value.trim();
+
+        if (!v) {
+            if (spec.optional) return '';
+            return (spec.kind === 'select' ? 'Select ' : 'Enter ') + (spec.kind === 'select' ? 'a ' : '') + lower(label) + '.';
+        }
+
+        if (spec.kind === 'email') {
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)) return 'Enter a valid email address, like name@example.com.';
+        }
+
+        if (spec.kind === 'int') {
+            if (!/^\d+$/.test(v)) return label + ' must be a whole number.';
+            var n = parseInt(v, 10);
+            if (spec.minVal !== undefined && n < spec.minVal) return label + ' must be at least ' + spec.minVal + '.';
+            if (spec.maxVal !== undefined && n > spec.maxVal) return label + ' must be ' + spec.maxVal + ' or less.';
+        }
+
+        if (spec.minLen && v.length < spec.minLen) return label + ' must be at least ' + spec.minLen + ' characters.';
+        if (spec.maxLen && v.length > spec.maxLen) return label + ' must be ' + spec.maxLen + ' characters or fewer.';
+        if (spec.pattern && !spec.pattern.test(v)) return spec.patternMsg || ('Enter a valid ' + lower(label) + '.');
+        if (spec.custom) return spec.custom(v, input) || '';
+        return '';
+    }
+
+    function show(spec, msg) {
+        var input = byId(spec.id);
+        var hint = byId(spec.id + 'Hint');
+        if (msg) {
+            input.classList.add('invalid');
+            input.classList.remove('valid');
+            input.setAttribute('aria-invalid', 'true');
+        } else {
+            input.classList.remove('invalid');
+            input.removeAttribute('aria-invalid');
+            var filled = input.type === 'file' ? (input.files && input.files.length) : input.value.trim();
+            if (filled) input.classList.add('valid'); else input.classList.remove('valid');
+        }
+        if (hint) hint.textContent = msg;
+    }
+
+    function refreshBanner() {
+        if (banner.hidden) return;
+        var n = form.querySelectorAll('.invalid').length;
+        if (!n) { banner.hidden = true; return; }
+        banner.textContent = n === 1
+            ? 'Fix the highlighted field before saving.'
+            : 'Fix the ' + n + ' highlighted fields before saving.';
+    }
+
+    function validate(spec) {
+        var msg = check(spec);
+        show(spec, msg);
+        refreshBanner();
+        return msg;
+    }
+
+    specs.forEach(function (spec) {
+        var input = byId(spec.id);
+        var evt = (input.tagName === 'SELECT' || input.type === 'file') ? 'change' : 'input';
+
+        input.addEventListener('blur', function () {
+            touched[spec.id] = true;
+            validate(spec);
+        });
+
+        input.addEventListener(evt, function () {
+            if (touched[spec.id] || input.classList.contains('invalid')) validate(spec);
+            if (evt === 'change') { touched[spec.id] = true; validate(spec); }
+        });
+
+        (spec.watch || []).forEach(function (wid) {
+            byId(wid).addEventListener('input', function () {
+                if (touched[spec.id]) validate(spec);
+            });
+        });
+    });
+
+    // Digits only (phone numbers etc.)
+    Array.prototype.forEach.call(form.querySelectorAll('[data-digits]'), function (el) {
+        el.addEventListener('input', function () { el.value = el.value.replace(/\D+/g, ''); });
+    });
+
+    // Whole-number inputs: block e, +, - and .
+    Array.prototype.forEach.call(form.querySelectorAll('[data-int]'), function (el) {
+        el.addEventListener('keydown', function (e) {
+            if (['e', 'E', '+', '-', '.', ','].indexOf(e.key) !== -1) e.preventDefault();
+        });
+        el.addEventListener('wheel', function () { el.blur(); });
+    });
+
+    // Character counters
+    Array.prototype.forEach.call(form.querySelectorAll('[data-count]'), function (el) {
+        var out = byId(el.id + 'Count');
+        var max = parseInt(el.getAttribute('data-count'), 10);
+        function upd() {
+            out.textContent = el.value.length + ' / ' + max;
+            out.classList.toggle('over', el.value.length > max);
+        }
+        el.addEventListener('input', upd);
+        upd();
+    });
+
+    // Show / hide password
+    Array.prototype.forEach.call(form.querySelectorAll('[data-toggle-for]'), function (b) {
+        b.addEventListener('click', function () {
+            var t = byId(b.getAttribute('data-toggle-for'));
+            var show = t.type === 'password';
+            t.type = show ? 'text' : 'password';
+            b.textContent = show ? 'Hide' : 'Show';
+            b.setAttribute('aria-pressed', show ? 'true' : 'false');
+            t.focus();
+        });
+    });
+
+    form.addEventListener('submit', function (e) {
+        var firstBad = null;
+        var count = 0;
+
+        specs.forEach(function (spec) {
+            var input = byId(spec.id);
+            if (input.type !== 'file' && input.tagName !== 'SELECT') input.value = input.value.trim();
+            touched[spec.id] = true;
+            if (validate(spec)) {
+                count++;
+                if (!firstBad) firstBad = input;
+            }
+        });
+
+        if (count) {
+            e.preventDefault();
+            banner.textContent = count === 1
+                ? 'Fix the highlighted field before saving.'
+                : 'Fix the ' + count + ' highlighted fields before saving.';
+            banner.hidden = false;
+            firstBad.focus();
+            firstBad.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            return;
+        }
+
+        banner.hidden = true;
+        btn.disabled = true;
+        btn.textContent = 'Saving...';
+    });
+})();
+
+
+</script>
+</body>
+</html>

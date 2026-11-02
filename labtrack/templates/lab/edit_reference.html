@@ -1,0 +1,2036 @@
+{##}
+{#<!DOCTYPE html>#}
+{#<html>#}
+{#<head>#}
+{#    <title>Edit Reference</title>#}
+{#</head>#}
+{#<body>#}
+{##}
+{#<h2>Edit Reference</h2>#}
+{##}
+{#{% if messages %}#}
+{#    {% for message in messages %}#}
+{#        <p>{{ message }}</p>#}
+{#    {% endfor %}#}
+{#{% endif %}#}
+{##}
+{#<form method="POST" action="/myapp/lab_edit_reference_post/" enctype="multipart/form-data">#}
+{#    {% csrf_token %}#}
+{##}
+{#    <input type="hidden" name="id" value="{{ data.id }}">#}
+{##}
+{#    <label>Subject</label>#}
+{#    <select name="subject" required>#}
+{#        {% for i in subjects %}#}
+{#            <option value="{{ i.id }}"#}
+{#                {% if i.id == data.SUBJECT.id %}selected{% endif %}>#}
+{#                {{ i.subject_name }}#}
+{#            </option>#}
+{#        {% endfor %}#}
+{#    </select>#}
+{##}
+{#    <br><br>#}
+{##}
+{#    <label>Reference Name</label>#}
+{#    <input type="text" name="reference_name" value="{{ data.reference_name }}" required>#}
+{##}
+{#    <br><br>#}
+{##}
+{#    <label>Description</label>#}
+{#    <textarea name="description" required>{{ data.description }}</textarea>#}
+{##}
+{#    <br><br>#}
+{##}
+{#    <label>Current Reference File</label>#}
+{#    {% if data.reference_file %}#}
+{#        <a href="{{ data.reference_file.url }}" target="_blank">View Current File</a>#}
+{#    {% else %}#}
+{#        No File Uploaded#}
+{#    {% endif %}#}
+{##}
+{#    <br><br>#}
+{##}
+{#    <label>Upload New Reference File (Optional)</label>#}
+{#    <input type="file" name="reference_file">#}
+{##}
+{#    <br><br>#}
+{##}
+{#    <input type="submit" value="Update Reference">#}
+{##}
+{#</form>#}
+{##}
+{#<br>#}
+{##}
+{#<a href="/myapp/lab_view_references/">Back to References</a>#}
+{##}
+{#</body>#}
+{#</html>#}
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Edit Reference | LabTrack</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-top: #164a63;
+            --bg-mid: #0d3048;
+            --bg-deep: #08203a;
+            --cyan: #5cd0ee;
+            --teal: #0b84a8;
+            --teal-dark: #086a89;
+            --heading: #0d2b3e;
+            --text: #14283a;
+            --muted: #5d7183;
+            --surface: #ffffff;
+            --canvas: #f1f6fb;
+            --border: #dae6f1;
+            --tile: #e2f4fa;
+            --danger: #c0291f;
+            --danger-bg: #fdeceb;
+            --success: #1c7c54;
+            --nav-h: 68px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+            color: var(--text);
+            background:
+                radial-gradient(900px 420px at 100% 0%, rgba(92,208,238,.14), transparent 60%),
+                radial-gradient(700px 380px at 0% 40%, rgba(11,132,168,.07), transparent 60%),
+                var(--canvas);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        button,
+        input,
+        select,
+        textarea {
+            font-family: inherit;
+        }
+
+        /* NAVBAR */
+
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            color: #fff;
+            background:
+                radial-gradient(ellipse at 90% -40%, rgba(92,208,238,.28), transparent 55%),
+                linear-gradient(100deg, var(--bg-top), var(--bg-mid) 45%, var(--bg-deep));
+            box-shadow: 0 6px 20px rgba(8,32,58,.25);
+        }
+
+        .nav-inner {
+            max-width: 1280px;
+            height: var(--nav-h);
+            margin: auto;
+            padding: 0 clamp(16px, 3vw, 36px);
+            display: flex;
+            align-items: center;
+            gap: 28px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: none;
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: -.02em;
+        }
+
+        .brand-mark {
+            width: 40px;
+            height: 40px;
+            display: grid;
+            place-items: center;
+            border-radius: 11px;
+            background: var(--cyan);
+            transition: transform .25s;
+        }
+
+        .brand:hover .brand-mark {
+            transform: rotate(-8deg) scale(1.06);
+        }
+
+        .menu {
+            flex: 1;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .nav-link {
+            position: relative;
+            height: 42px;
+            padding: 0 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            border: 0;
+            border-radius: 10px;
+            background: transparent;
+            color: #cfe3ef;
+            font-size: .92rem;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: background .2s, color .2s;
+        }
+
+        .nav-link:hover,
+        .dd.open > .nav-link {
+            background: rgba(255,255,255,.11);
+            color: #fff;
+        }
+
+        .nav-link.active {
+            color: #fff;
+            background: rgba(92,208,238,.16);
+        }
+
+        .nav-link.active::after {
+            content: "";
+            position: absolute;
+            left: 14px;
+            right: 14px;
+            bottom: -13px;
+            height: 3px;
+            border-radius: 3px 3px 0 0;
+            background: var(--cyan);
+        }
+
+        .nav-link:focus-visible,
+        .dd-panel a:focus-visible,
+        .burger:focus-visible {
+            outline: 2px solid var(--cyan);
+            outline-offset: 2px;
+        }
+
+        .dd {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .caret {
+            width: 14px;
+            height: 14px;
+            transition: transform .2s;
+        }
+
+        .dd.open .caret {
+            transform: rotate(180deg);
+        }
+
+        .dd-panel {
+            position: absolute;
+            top: calc(100% + 12px);
+            left: 0;
+            min-width: 240px;
+            padding: 8px;
+            background: #fff;
+            color: var(--text);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            box-shadow: 0 22px 44px rgba(8,32,58,.22);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(8px);
+            transition: opacity .18s, transform .18s, visibility .18s;
+        }
+
+        .dd-panel::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: -14px;
+            height: 14px;
+        }
+
+        .dd.open > .dd-panel {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        @media (hover: hover) and (min-width: 961px) {
+            .dd:hover > .dd-panel {
+                opacity: 1;
+                visibility: visible;
+                transform: translateY(0);
+            }
+
+            .dd:hover > .nav-link {
+                background: rgba(255,255,255,.11);
+                color: #fff;
+            }
+
+            .dd:hover .caret {
+                transform: rotate(180deg);
+            }
+        }
+
+        .dd.right .dd-panel {
+            left: auto;
+            right: 0;
+        }
+
+        .dd-panel a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            border-radius: 9px;
+            color: var(--heading);
+            font-size: .92rem;
+            font-weight: 600;
+            transition: background .15s, color .15s, padding .15s;
+        }
+
+        .dd-panel a svg {
+            width: 18px;
+            height: 18px;
+            flex: none;
+            color: var(--teal);
+        }
+
+        .dd-panel a:hover,
+        .dd-panel a.active {
+            background: var(--tile);
+            color: var(--teal-dark);
+            padding-left: 16px;
+        }
+
+        .dd-sep {
+            height: 1px;
+            margin: 6px 4px;
+            background: var(--border);
+        }
+
+        .user {
+            margin-left: auto;
+        }
+
+        .avatar {
+            width: 30px;
+            height: 30px;
+            display: grid;
+            place-items: center;
+            border-radius: 50%;
+            background: var(--cyan);
+            color: var(--bg-deep);
+            font-size: .82rem;
+            font-weight: 800;
+        }
+
+        .burger {
+            display: none;
+            margin-left: auto;
+            width: 44px;
+            height: 44px;
+            place-items: center;
+            border: 0;
+            border-radius: 11px;
+            background: rgba(255,255,255,.1);
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .burger svg {
+            width: 22px;
+            height: 22px;
+        }
+
+        /* PAGE LAYOUT */
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 32px clamp(16px, 3vw, 36px) 56px;
+        }
+
+        .page-heading {
+            margin-bottom: 25px;
+        }
+
+        .breadcrumb {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 9px;
+            margin-bottom: 14px;
+            font-size: .85rem;
+            font-weight: 600;
+            color: var(--muted);
+        }
+
+        .breadcrumb a {
+            color: var(--teal-dark);
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .breadcrumb .separator {
+            color: #9aafbf;
+        }
+
+        .page-heading h1 {
+            margin: 0 0 8px;
+            font-size: clamp(1.7rem, 3vw, 2.35rem);
+            font-weight: 800;
+            letter-spacing: -.035em;
+            color: var(--heading);
+        }
+
+        .page-heading p {
+            margin: 0;
+            color: var(--muted);
+            font-size: .96rem;
+            line-height: 1.7;
+        }
+
+        /* DJANGO MESSAGES */
+
+        .messages {
+            display: grid;
+            gap: 10px;
+            margin-bottom: 22px;
+        }
+
+        .alert {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 14px 16px;
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--teal);
+            border-radius: 12px;
+            background: #fff;
+            box-shadow: 0 6px 18px rgba(8,32,58,.05);
+            font-size: .9rem;
+            line-height: 1.55;
+        }
+
+        .alert.success {
+            border-left-color: var(--success);
+            background: #f0fdf6;
+            color: #176542;
+        }
+
+        .alert.error {
+            border-left-color: var(--danger);
+            background: #fff5f4;
+            color: #a32119;
+        }
+
+        .alert.warning {
+            border-left-color: #e08a0b;
+            background: #fffbeb;
+            color: #92400e;
+        }
+
+        .alert.info {
+            border-left-color: var(--teal);
+            background: #f0faff;
+            color: #075985;
+        }
+
+        .alert button {
+            margin-left: auto;
+            border: 0;
+            background: transparent;
+            color: currentColor;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        /* MAIN CARD */
+
+        .edit-layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 300px;
+            align-items: start;
+            gap: 22px;
+        }
+
+        .form-card {
+            min-width: 0;
+            padding: clamp(22px, 4vw, 36px);
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 22px;
+            box-shadow: 0 14px 35px rgba(8,32,58,.07);
+        }
+
+        .form-card-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            padding-bottom: 23px;
+            margin-bottom: 25px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .heading-icon {
+            width: 54px;
+            height: 54px;
+            flex: none;
+            display: grid;
+            place-items: center;
+            border-radius: 16px;
+            color: #fff;
+            background: linear-gradient(135deg, #38bdf8, #0b84a8);
+            box-shadow: 0 10px 18px rgba(11,132,168,.2);
+        }
+
+        .heading-icon svg {
+            width: 27px;
+            height: 27px;
+        }
+
+        .form-card-header h2 {
+            margin: 2px 0 6px;
+            color: var(--heading);
+            font-size: 1.22rem;
+            font-weight: 800;
+        }
+
+        .form-card-header p {
+            margin: 0;
+            color: var(--muted);
+            font-size: .88rem;
+            line-height: 1.6;
+        }
+
+        .form-section-title {
+            margin: 0 0 19px;
+            color: var(--heading);
+            font-size: .96rem;
+            font-weight: 800;
+        }
+
+        .form-group {
+            margin-bottom: 22px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 9px;
+            color: var(--heading);
+            font-size: .9rem;
+            font-weight: 700;
+        }
+
+        .required {
+            color: var(--danger);
+        }
+
+        .input-wrap {
+            position: relative;
+        }
+
+        .input-wrap > svg {
+            position: absolute;
+            top: 16px;
+            left: 15px;
+            width: 19px;
+            height: 19px;
+            color: #7790a4;
+            pointer-events: none;
+        }
+
+        .form-control {
+            display: block;
+            width: 100%;
+            min-height: 50px;
+            padding: 13px 15px;
+            border: 1.5px solid #d5e1ec;
+            border-radius: 11px;
+            outline: none;
+            background: #fbfdff;
+            color: var(--text);
+            font-size: .93rem;
+            transition: border-color .2s, box-shadow .2s, background .2s;
+        }
+
+        .input-wrap .form-control {
+            padding-left: 45px;
+        }
+
+        .form-control:hover {
+            border-color: #a9c4d8;
+        }
+
+        .form-control:focus {
+            border-color: var(--teal);
+            background: #fff;
+            box-shadow: 0 0 0 4px rgba(11,132,168,.12);
+        }
+
+        .form-control.invalid {
+            border-color: var(--danger);
+            background: #fffafa;
+        }
+
+        .form-control.valid {
+            border-color: var(--success);
+        }
+
+        textarea.form-control {
+            min-height: 145px;
+            resize: vertical;
+            line-height: 1.65;
+        }
+
+        select.form-control {
+            cursor: pointer;
+        }
+
+        .help-text {
+            margin: 8px 0 0;
+            color: var(--muted);
+            font-size: .81rem;
+            line-height: 1.55;
+        }
+
+        .error-text {
+            display: none;
+            margin-top: 7px;
+            color: var(--danger);
+            font-size: .81rem;
+            font-weight: 600;
+            line-height: 1.5;
+        }
+
+        .error-text.show {
+            display: block;
+        }
+
+        /* CURRENT FILE */
+
+        .file-box {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 16px;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            background: #f8fbfe;
+        }
+
+        .file-icon {
+            width: 46px;
+            height: 46px;
+            flex: none;
+            display: grid;
+            place-items: center;
+            border-radius: 13px;
+            background: var(--tile);
+            color: var(--teal);
+        }
+
+        .file-icon svg {
+            width: 23px;
+            height: 23px;
+        }
+
+        .file-info {
+            min-width: 0;
+            flex: 1;
+        }
+
+        .file-info strong {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--heading);
+            font-size: .87rem;
+            overflow-wrap: anywhere;
+        }
+
+        .file-info span {
+            display: block;
+            color: var(--muted);
+            font-size: .79rem;
+        }
+
+        .view-file {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex: none;
+            gap: 6px;
+            padding: 9px 12px;
+            border: 1px solid #b9dfe9;
+            border-radius: 9px;
+            background: #fff;
+            color: var(--teal-dark);
+            font-size: .82rem;
+            font-weight: 700;
+            transition: background .2s, border-color .2s;
+        }
+
+        .view-file:hover {
+            background: var(--tile);
+            border-color: var(--teal);
+        }
+
+        .view-file svg {
+            width: 15px;
+            height: 15px;
+        }
+
+        .no-file {
+            padding: 15px;
+            border: 1px dashed #c7d5e1;
+            border-radius: 12px;
+            color: var(--muted);
+            background: #f8fbfe;
+            font-size: .88rem;
+        }
+
+        /* FILE UPLOAD */
+
+        .upload-box {
+            padding: 18px;
+            border: 1.5px dashed #b7cedf;
+            border-radius: 14px;
+            background: #f8fbfe;
+            transition: border-color .2s, background .2s;
+        }
+
+        .upload-box.dragover {
+            border-color: var(--teal);
+            background: #eaf8fc;
+        }
+
+        .upload-top {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 13px;
+        }
+
+        .upload-top .upload-symbol {
+            width: 42px;
+            height: 42px;
+            display: grid;
+            place-items: center;
+            border-radius: 12px;
+            background: var(--tile);
+            color: var(--teal);
+            flex: none;
+        }
+
+        .upload-symbol svg {
+            width: 22px;
+            height: 22px;
+        }
+
+        .upload-top strong {
+            display: block;
+            margin-bottom: 4px;
+            color: var(--heading);
+            font-size: .9rem;
+        }
+
+        .upload-top span {
+            color: var(--muted);
+            font-size: .8rem;
+            line-height: 1.5;
+        }
+
+        input[type="file"].form-control {
+            min-height: auto;
+            padding: 10px;
+            background: #fff;
+            font-size: .85rem;
+        }
+
+        input[type="file"]::file-selector-button {
+            margin-right: 12px;
+            padding: 9px 12px;
+            border: 0;
+            border-radius: 8px;
+            background: var(--tile);
+            color: var(--teal-dark);
+            font: inherit;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        input[type="file"]::file-selector-button:hover {
+            background: #ccecf5;
+        }
+
+        .selected-file {
+            display: none;
+            margin-top: 10px;
+            padding: 10px 12px;
+            border-radius: 9px;
+            background: #eaf8f0;
+            color: #176542;
+            font-size: .83rem;
+            line-height: 1.5;
+            overflow-wrap: anywhere;
+        }
+
+        .selected-file.show {
+            display: block;
+        }
+
+        /* FORM ACTIONS */
+
+        .form-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+            margin-top: 30px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            min-height: 47px;
+            padding: 0 21px;
+            border: 1.5px solid transparent;
+            border-radius: 11px;
+            font-size: .91rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background .2s, transform .15s, box-shadow .2s, border-color .2s;
+        }
+
+        .btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .btn:focus-visible {
+            outline: 3px solid #fbbf24;
+            outline-offset: 2px;
+        }
+
+        .btn-primary {
+            color: #fff;
+            background: var(--teal);
+            box-shadow: 0 8px 16px rgba(11,132,168,.23);
+        }
+
+        .btn-primary:hover {
+            background: var(--teal-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 22px rgba(11,132,168,.3);
+        }
+
+        .btn-primary:disabled {
+            opacity: .65;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            color: var(--heading);
+            background: #fff;
+            border-color: var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--canvas);
+            border-color: #b8cde0;
+        }
+
+        /* SIDE PANEL */
+
+        .side-panel {
+            display: grid;
+            gap: 18px;
+        }
+
+        .side-card {
+            padding: 23px;
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 19px;
+            box-shadow: 0 10px 28px rgba(8,32,58,.05);
+        }
+
+        .side-icon {
+            width: 48px;
+            height: 48px;
+            display: grid;
+            place-items: center;
+            margin-bottom: 16px;
+            border-radius: 14px;
+            background: var(--tile);
+            color: var(--teal);
+        }
+
+        .side-icon svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .side-card h3 {
+            margin: 0 0 9px;
+            color: var(--heading);
+            font-size: 1rem;
+            font-weight: 800;
+        }
+
+        .side-card > p {
+            margin: 0;
+            color: var(--muted);
+            font-size: .85rem;
+            line-height: 1.7;
+        }
+
+        .tips-list {
+            display: grid;
+            gap: 15px;
+            margin: 18px 0 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .tips-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            color: var(--muted);
+            font-size: .83rem;
+            line-height: 1.6;
+        }
+
+        .check-icon {
+            width: 22px;
+            height: 22px;
+            display: grid;
+            place-items: center;
+            flex: none;
+            border-radius: 50%;
+            background: #e7f8ee;
+            color: var(--success);
+        }
+
+        .check-icon svg {
+            width: 13px;
+            height: 13px;
+        }
+
+        .side-back {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px;
+            border: 1px solid var(--border);
+            border-radius: 13px;
+            background: #f8fbfe;
+            color: var(--heading);
+            font-size: .87rem;
+            font-weight: 700;
+            transition: border-color .2s, background .2s, transform .2s;
+        }
+
+        .side-back svg {
+            width: 19px;
+            height: 19px;
+            color: var(--teal);
+            flex: none;
+        }
+
+        .side-back:hover {
+            background: var(--tile);
+            border-color: var(--teal);
+            transform: translateX(3px);
+        }
+
+        /* FOOTER */
+
+        .footer {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 8px;
+            margin-top: 46px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+            color: #8196a8;
+            font-size: .82rem;
+        }
+
+        /* RESPONSIVE */
+
+        @media (max-width: 960px) {
+            .burger {
+                display: grid;
+            }
+
+            .nav-inner {
+                gap: 12px;
+            }
+
+            .menu {
+                position: absolute;
+                top: var(--nav-h);
+                left: 0;
+                right: 0;
+                display: none;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 2px;
+                height: auto;
+                max-height: calc(100vh - var(--nav-h));
+                overflow-y: auto;
+                padding: 12px 16px 20px;
+                background: var(--bg-deep);
+                border-top: 1px solid rgba(255,255,255,.1);
+                box-shadow: 0 24px 40px rgba(0,0,0,.3);
+            }
+
+            .navbar.open .menu {
+                display: flex;
+            }
+
+            .nav-link {
+                width: 100%;
+                height: 48px;
+                justify-content: flex-start;
+            }
+
+            .nav-link.active::after {
+                display: none;
+            }
+
+            .dd {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .dd > .nav-link .caret {
+                margin-left: auto;
+            }
+
+            .dd-panel {
+                position: static;
+                display: none;
+                min-width: 0;
+                margin: 2px 0 6px 12px;
+                padding: 4px;
+                background: rgba(255,255,255,.06);
+                border: 0;
+                border-left: 2px solid rgba(92,208,238,.4);
+                border-radius: 0 10px 10px 0;
+                box-shadow: none;
+                opacity: 1;
+                visibility: visible;
+                transform: none;
+            }
+
+            .dd-panel::before {
+                display: none;
+            }
+
+            .dd.open > .dd-panel {
+                display: block;
+            }
+
+            .dd-panel a {
+                color: #d3e6f2;
+            }
+
+            .dd-panel a svg {
+                color: var(--cyan);
+            }
+
+            .dd-panel a:hover,
+            .dd-panel a.active {
+                background: rgba(255,255,255,.1);
+                color: #fff;
+                padding-left: 12px;
+            }
+
+            .dd-sep {
+                background: rgba(255,255,255,.12);
+            }
+
+            .user {
+                margin-left: 0;
+                margin-top: 8px;
+                padding-top: 10px;
+                border-top: 1px solid rgba(255,255,255,.12);
+            }
+
+            .edit-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .side-panel {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .side-back {
+                grid-column: 1 / -1;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding-top: 24px;
+            }
+
+            .form-card {
+                padding: 20px 16px;
+                border-radius: 17px;
+            }
+
+            .form-card-header {
+                gap: 12px;
+            }
+
+            .heading-icon {
+                width: 46px;
+                height: 46px;
+                border-radius: 13px;
+            }
+
+            .file-box {
+                flex-wrap: wrap;
+            }
+
+            .view-file {
+                margin-left: 59px;
+            }
+
+            .form-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .form-actions .btn {
+                width: 100%;
+            }
+
+            .side-panel {
+                grid-template-columns: 1fr;
+            }
+
+            .side-back {
+                grid-column: auto;
+            }
+
+            .footer {
+                flex-direction: column;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                scroll-behavior: auto !important;
+                transition: none !important;
+                animation: none !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- NAVBAR: SAME LABTRACK THEME -->
+
+<header class="navbar" id="navbar">
+    <div class="nav-inner">
+
+        <a class="brand" href="/myapp/lab_home/" aria-label="LabTrack home">
+            <span class="brand-mark">
+                <svg width="23" height="23" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M12 2.5l8 3v6c0 5-3.3 8.6-8 10-4.7-1.4-8-5-8-10v-6l8-3z"
+                          stroke="#08203a" stroke-width="1.9" stroke-linejoin="round"/>
+                    <path d="M10.5 8.5h3M11 8.5v3l-2 3.6a.9.9 0 0 0 .8 1.3h4.4a.9.9 0 0 0 .8-1.3l-2-3.6v-3"
+                          stroke="#08203a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </span>
+            LabTrack
+        </a>
+
+        <button type="button" class="burger" id="burger"
+                aria-label="Open menu" aria-controls="menu" aria-expanded="false">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2" stroke-linecap="round" aria-hidden="true">
+                <path d="M4 7h16M4 12h16M4 17h16"/>
+            </svg>
+        </button>
+
+        <nav class="menu" id="menu" aria-label="Main navigation">
+
+            <a class="nav-link" href="/myapp/lab_home/" data-match="lab_home">
+                Home
+            </a>
+
+            <div class="dd">
+                <button type="button" class="nav-link dd-btn"
+                        aria-expanded="false" aria-haspopup="true">
+                    My Lab
+                    <svg class="caret" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2.4"
+                         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M6 9l6 6 6-6"/>
+                    </svg>
+                </button>
+
+                <div class="dd-panel">
+                    <a href="/myapp/lab_view_assigned_lab/"
+                       data-match="lab_view_assigned_lab,lab_view_schedules">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                             stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.8 3h10.4a2 2 0 0 0 1.8-3l-5-9V3"/>
+                            <path d="M7.5 15h9"/>
+                        </svg>
+                        View Assigned Lab
+                    </a>
+
+                    <a href="/myapp/lab_view_exercises/" data-match="lab_view_exercises">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                             stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <rect x="4" y="3" width="16" height="18" rx="2"/>
+                            <path d="M8 8h8M8 12h8M8 16h5"/>
+                        </svg>
+                        View Lab Exercises
+                    </a>
+                </div>
+            </div>
+
+            <div class="dd">
+                <button type="button" class="nav-link dd-btn active"
+                        aria-expanded="false" aria-haspopup="true">
+                    References
+                    <svg class="caret" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2.4"
+                         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M6 9l6 6 6-6"/>
+                    </svg>
+                </button>
+
+                <div class="dd-panel">
+                    <a href="/myapp/lab_view_references/" data-match="lab_view_references">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                             stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2V5z"/>
+                            <path d="M8 7h7M8 11h5"/>
+                        </svg>
+                        View References
+                    </a>
+
+                    <a href="/myapp/lab_add_reference/" data-match="lab_add_reference">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                             stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M12 5v14M5 12h14"/>
+                        </svg>
+                        Add Reference
+                    </a>
+                </div>
+            </div>
+
+            <a class="nav-link" href="/myapp/lab_view_equipment_requests/"
+               data-match="lab_view_equipment_requests,lab_assign_equipment,lab_fine_damage">
+                Equipment
+            </a>
+
+            <a class="nav-link" href="/myapp/lab_send_notification/"
+               data-match="lab_send_notification">
+                Notifications
+            </a>
+
+            <div class="dd right user">
+                <button type="button" class="nav-link dd-btn"
+                        aria-expanded="false" aria-haspopup="true">
+                    <span class="avatar" aria-hidden="true">L</span>
+                    Coordinator
+                    <svg class="caret" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2.4"
+                         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M6 9l6 6 6-6"/>
+                    </svg>
+                </button>
+
+                <div class="dd-panel">
+                    <a href="/myapp/lab_view_profile/" data-match="lab_view_profile">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                             stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <circle cx="12" cy="8" r="4"/>
+                            <path d="M4 21c1.2-4 4-6 8-6s6.8 2 8 6"/>
+                        </svg>
+                        View Profile
+                    </a>
+
+                    <a href="/myapp/change_password_get/" data-match="change_password_get">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                             stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <rect x="4" y="10" width="16" height="10" rx="2"/>
+                            <path d="M8 10V7a4 4 0 0 1 8 0v3"/>
+                        </svg>
+                        Change Password
+                    </a>
+
+                    <div class="dd-sep"></div>
+
+                    <a href="/myapp/logout_get/" id="logoutLink">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                             stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                            <path d="M16 17l5-5-5-5M21 12H9"/>
+                        </svg>
+                        Logout
+                    </a>
+                </div>
+            </div>
+
+        </nav>
+    </div>
+</header>
+
+<!-- MAIN PAGE -->
+
+<main class="container">
+
+    <div class="page-heading">
+        <div class="breadcrumb">
+            <a href="/myapp/lab_home/">Home</a>
+            <span class="separator">/</span>
+            <a href="/myapp/lab_view_references/">References</a>
+            <span class="separator">/</span>
+            <span>Edit Reference</span>
+        </div>
+
+        <h1>Edit Reference</h1>
+        <p>Update the subject, reference details or uploaded study material.</p>
+    </div>
+
+    <!-- DJANGO MESSAGES -->
+
+    {% if messages %}
+    <div class="messages" role="status" aria-live="polite">
+        {% for message in messages %}
+        <div class="alert {{ message.tags }}">
+            <span>{{ message }}</span>
+            <button type="button" aria-label="Dismiss message" data-dismiss>&times;</button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="edit-layout">
+
+        <!-- EDIT FORM -->
+
+        <section class="form-card">
+
+            <div class="form-card-header">
+                <div class="heading-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                         stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M12 20h9"/>
+                        <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L8 18l-4 1 1-4Z"/>
+                    </svg>
+                </div>
+
+                <div>
+                    <h2>Reference Information</h2>
+                    <p>Make the necessary changes below and update your reference.</p>
+                </div>
+            </div>
+
+            <form id="editReferenceForm"
+                  method="POST"
+                  action="/myapp/lab_edit_reference_post/"
+                  enctype="multipart/form-data"
+                  novalidate>
+
+                {% csrf_token %}
+
+                <input type="hidden" name="id" value="{{ data.id }}">
+
+                <h3 class="form-section-title">Basic Details</h3>
+
+                <!-- SUBJECT -->
+
+                <div class="form-group">
+                    <label for="subject">
+                        Subject <span class="required">*</span>
+                    </label>
+
+                    <div class="input-wrap">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                             stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2V5z"/>
+                            <path d="M8 7h7M8 11h5"/>
+                        </svg>
+
+                        <select class="form-control" id="subject" name="subject" required>
+                            <option value="">-- Select Subject --</option>
+
+                            {% for i in subjects %}
+                            <option value="{{ i.id }}"
+                                {% if i.id == data.SUBJECT.id %}selected{% endif %}>
+                                {{ i.subject_name }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="error-text" id="subjectError">
+                        Please select a subject.
+                    </div>
+                </div>
+
+                <!-- REFERENCE NAME -->
+
+                <div class="form-group">
+                    <label for="reference_name">
+                        Reference Name <span class="required">*</span>
+                    </label>
+
+                    <div class="input-wrap">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                             stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2V5z"/>
+                            <path d="M8 7h7M8 11h5"/>
+                        </svg>
+
+                        <input
+                            class="form-control"
+                            type="text"
+                            id="reference_name"
+                            name="reference_name"
+                            value="{{ data.reference_name }}"
+                            placeholder="Enter reference name"
+                            maxlength="100"
+                            minlength="2"
+                            required
+                            autocomplete="off"
+                            aria-describedby="referenceNameHelp referenceNameError">
+                    </div>
+
+                    <p class="help-text" id="referenceNameHelp">
+                        Enter a meaningful name for the book, document or study material.
+                    </p>
+
+                    <div class="error-text" id="referenceNameError"></div>
+                </div>
+
+                <!-- DESCRIPTION -->
+
+                <div class="form-group">
+                    <label for="description">
+                        Description <span class="required">*</span>
+                    </label>
+
+                    <textarea
+                        class="form-control"
+                        id="description"
+                        name="description"
+                        placeholder="Describe this reference and its relevance..."
+                        minlength="5"
+                        maxlength="1000"
+                        required
+                        aria-describedby="descriptionHelp descriptionError">{{ data.description }}</textarea>
+
+                    <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;">
+                        <p class="help-text" id="descriptionHelp">
+                            Provide a clear explanation of the reference.
+                        </p>
+                        <p class="help-text"><span id="descriptionCount">0</span>/1000</p>
+                    </div>
+
+                    <div class="error-text" id="descriptionError"></div>
+                </div>
+
+                <!-- CURRENT FILE -->
+
+                <div class="form-group">
+                    <label>Current Reference File</label>
+
+                    {% if data.reference_file %}
+                    <div class="file-box">
+                        <div class="file-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                 stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                <path d="M14 2v6h6M8 13h8M8 17h8"/>
+                            </svg>
+                        </div>
+
+                        <div class="file-info">
+                            <strong>Current reference is uploaded</strong>
+                            <span>You can keep this file or upload a replacement.</span>
+                        </div>
+
+                        <a class="view-file"
+                           href="{{ data.reference_file.url }}"
+                           target="_blank"
+                           rel="noopener noreferrer">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                 stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M15 3h6v6M10 14 21 3"/>
+                                <path d="M19 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h6"/>
+                            </svg>
+                            View File
+                        </a>
+                    </div>
+                    {% else %}
+                    <div class="no-file">
+                        No reference file is currently uploaded. You can upload one below.
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- NEW FILE -->
+
+                <div class="form-group">
+                    <label for="reference_file">Upload New Reference File</label>
+
+                    <div class="upload-box" id="uploadBox">
+                        <div class="upload-top">
+                            <div class="upload-symbol">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                     stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <path d="M12 16V4M7 9l5-5 5 5"/>
+                                    <path d="M4 16v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4"/>
+                                </svg>
+                            </div>
+
+                            <div>
+                                <strong>Replace reference file (optional)</strong>
+                                <span>Choose a new file only if you want to replace the current one.</span>
+                            </div>
+                        </div>
+
+                        <input
+                            class="form-control"
+                            type="file"
+                            id="reference_file"
+                            name="reference_file"
+                            accept=".pdf,.doc,.docx,.ppt,.pptx,.txt,.jpg,.jpeg,.png"
+                            aria-describedby="fileHelp fileError">
+
+                        <p class="help-text" id="fileHelp">
+                            Accepted formats: PDF, DOC, DOCX, PPT, PPTX, TXT, JPG, JPEG and PNG.
+                            Maximum size: 10 MB.
+                        </p>
+
+                        <div class="selected-file" id="selectedFile"></div>
+                        <div class="error-text" id="fileError"></div>
+                    </div>
+                </div>
+
+                <!-- ACTIONS -->
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary" id="submitButton">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M20 7v13H4V4h13z"/>
+                            <path d="M8 4v6h8V4M8 20v-7h8v7"/>
+                        </svg>
+                        Update Reference
+                    </button>
+
+                    <a href="/myapp/lab_view_references/" class="btn btn-secondary">
+                        Cancel
+                    </a>
+                </div>
+
+            </form>
+        </section>
+
+        <!-- SIDE INFORMATION -->
+
+        <aside class="side-panel">
+
+            <div class="side-card">
+                <div class="side-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                         stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <circle cx="12" cy="12" r="9"/>
+                        <path d="M12 11v5M12 8h.01"/>
+                    </svg>
+                </div>
+
+                <h3>Editing Tips</h3>
+                <p>Keep your reference details accurate so students can easily identify the correct learning material.</p>
+
+                <ul class="tips-list">
+                    <li>
+                        <span class="check-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                 stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="m5 12 4 4L19 6"/>
+                            </svg>
+                        </span>
+                        Select the correct subject for this reference.
+                    </li>
+
+                    <li>
+                        <span class="check-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                 stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="m5 12 4 4L19 6"/>
+                            </svg>
+                        </span>
+                        Use a clear and descriptive reference name.
+                    </li>
+
+                    <li>
+                        <span class="check-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                 stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="m5 12 4 4L19 6"/>
+                            </svg>
+                        </span>
+                        Upload a replacement file only when necessary.
+                    </li>
+                </ul>
+            </div>
+
+            <div class="side-card">
+                <div class="side-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                         stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <rect x="3" y="4" width="18" height="17" rx="2"/>
+                        <path d="M16 2v4M8 2v4M3 10h18"/>
+                    </svg>
+                </div>
+
+                <h3>Before Updating</h3>
+                <p>Check the subject, name, description and selected file before submitting your changes.</p>
+            </div>
+
+            <a href="/myapp/lab_view_references/" class="side-back">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="m15 18-6-6 6-6"/>
+                </svg>
+                Back to References
+            </a>
+
+        </aside>
+    </div>
+
+    <footer class="footer">
+        <span>&copy; LabTrack &middot; College Lab, Subject &amp; Management System</span>
+        <span>Lab Coordinator Panel</span>
+    </footer>
+
+</main>
+
+<!-- LOGOUT CONFIRMATION -->
+
+<dialog id="logoutDialog" style="width:min(92vw,400px);padding:28px;border:0;border-radius:18px;color:var(--text);box-shadow:0 30px 70px rgba(8,32,58,.35);">
+    <h2 style="margin:0 0 8px;font-size:1.3rem;color:var(--heading);">Log out of LabTrack?</h2>
+    <p style="margin:0 0 24px;color:var(--muted);line-height:1.6;">You will need to sign in again to use the lab coordinator panel.</p>
+
+    <div style="display:flex;justify-content:flex-end;flex-wrap:wrap;gap:10px;">
+        <button type="button" class="btn btn-secondary" id="cancelLogout">Stay signed in</button>
+        <button type="button" class="btn btn-primary" id="confirmLogout">Log out</button>
+    </div>
+</dialog>
+
+<script>
+(function () {
+    var navbar = document.getElementById('navbar');
+    var burger = document.getElementById('burger');
+    var dropdowns = Array.prototype.slice.call(document.querySelectorAll('.dd'));
+
+    function closeDropdowns(except) {
+        dropdowns.forEach(function (dropdown) {
+            if (dropdown !== except) {
+                dropdown.classList.remove('open');
+
+                var button = dropdown.querySelector('.dd-btn');
+
+                if (button) {
+                    button.setAttribute('aria-expanded', 'false');
+                }
+            }
+        });
+    }
+
+    dropdowns.forEach(function (dropdown) {
+        var button = dropdown.querySelector('.dd-btn');
+
+        button.addEventListener('click', function (event) {
+            event.stopPropagation();
+
+            var shouldOpen = !dropdown.classList.contains('open');
+
+            closeDropdowns(dropdown);
+
+            dropdown.classList.toggle('open', shouldOpen);
+            button.setAttribute('aria-expanded', shouldOpen ? 'true' : 'false');
+        });
+    });
+
+    document.addEventListener('click', function (event) {
+        if (!event.target.closest('.dd')) {
+            closeDropdowns();
+        }
+    });
+
+    burger.addEventListener('click', function () {
+        var isOpen = !navbar.classList.contains('open');
+
+        navbar.classList.toggle('open', isOpen);
+        burger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        burger.setAttribute('aria-label', isOpen ? 'Close menu' : 'Open menu');
+    });
+
+    document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape') {
+            closeDropdowns();
+            navbar.classList.remove('open');
+            burger.setAttribute('aria-expanded', 'false');
+            burger.setAttribute('aria-label', 'Open menu');
+        }
+    });
+
+    // Highlight the current navbar page.
+    var currentPath = window.location.pathname;
+    var navLinks = document.querySelectorAll('.menu a[data-match]');
+
+    Array.prototype.forEach.call(navLinks, function (link) {
+        var tokens = link.getAttribute('data-match').split(',');
+
+        var matched = tokens.some(function (token) {
+            return currentPath.indexOf(token) !== -1;
+        });
+
+        if (matched) {
+            link.classList.add('active');
+            link.setAttribute('aria-current', 'page');
+
+            var parentDropdown = link.closest('.dd');
+
+            if (parentDropdown) {
+                var parentButton = parentDropdown.querySelector('.dd-btn');
+
+                if (parentButton) {
+                    parentButton.classList.add('active');
+                }
+            }
+        }
+    });
+
+    // Dismiss Django messages.
+    Array.prototype.forEach.call(document.querySelectorAll('[data-dismiss]'), function (button) {
+        button.addEventListener('click', function () {
+            var alert = button.closest('.alert');
+
+            if (alert) {
+                alert.remove();
+            }
+        });
+    });
+
+    // Logout confirmation.
+    var logoutLink = document.getElementById('logoutLink');
+    var logoutDialog = document.getElementById('logoutDialog');
+    var cancelLogout = document.getElementById('cancelLogout');
+    var confirmLogout = document.getElementById('confirmLogout');
+
+    logoutLink.addEventListener('click', function (event) {
+        if (typeof logoutDialog.showModal !== 'function') {
+            return;
+        }
+
+        event.preventDefault();
+        closeDropdowns();
+        navbar.classList.remove('open');
+        burger.setAttribute('aria-expanded', 'false');
+
+        logoutDialog.showModal();
+        cancelLogout.focus();
+    });
+
+    cancelLogout.addEventListener('click', function () {
+        logoutDialog.close();
+        logoutLink.focus();
+    });
+
+    confirmLogout.addEventListener('click', function () {
+        window.location.href = logoutLink.getAttribute('href');
+    });
+
+    // Form validation.
+    var form = document.getElementById('editReferenceForm');
+    var subject = document.getElementById('subject');
+    var referenceName = document.getElementById('reference_name');
+    var description = document.getElementById('description');
+    var referenceFile = document.getElementById('reference_file');
+    var submitButton = document.getElementById('submitButton');
+
+    var subjectError = document.getElementById('subjectError');
+    var nameError = document.getElementById('referenceNameError');
+    var descriptionError = document.getElementById('descriptionError');
+    var fileError = document.getElementById('fileError');
+
+    var descriptionCount = document.getElementById('descriptionCount');
+    var selectedFile = document.getElementById('selectedFile');
+    var uploadBox = document.getElementById('uploadBox');
+
+    var allowedExtensions = [
+        'pdf', 'doc', 'docx', 'ppt', 'pptx',
+        'txt', 'jpg', 'jpeg', 'png'
+    ];
+
+    var maxFileSize = 10 * 1024 * 1024;
+
+    function setError(input, errorElement, message) {
+        input.classList.add('invalid');
+        input.classList.remove('valid');
+        errorElement.textContent = message;
+        errorElement.classList.add('show');
+    }
+
+    function clearError(input, errorElement) {
+        input.classList.remove('invalid');
+        errorElement.textContent = '';
+        errorElement.classList.remove('show');
+    }
+
+    function setValid(input, errorElement) {
+        clearError(input, errorElement);
+        input.classList.add('valid');
+    }
+
+    function validateSubject() {
+        if (!subject.value) {
+            setError(subject, subjectError, 'Please select a subject.');
+            return false;
+        }
+
+        setValid(subject, subjectError);
+        return true;
+    }
+
+    function validateReferenceName() {
+        var value = referenceName.value.trim();
+
+        if (value.length === 0) {
+            setError(referenceName, nameError, 'Reference name is required.');
+            return false;
+        }
+
+        if (value.length < 2) {
+            setError(referenceName, nameError, 'Reference name must contain at least 2 characters.');
+            return false;
+        }
+
+        if (value.length > 100) {
+            setError(referenceName, nameError, 'Reference name cannot exceed 100 characters.');
+            return false;
+        }
+
+        if (!/[A-Za-z0-9]/.test(value)) {
+            setError(referenceName, nameError, 'Enter a meaningful reference name containing letters or numbers.');
+            return false;
+        }
+
+        setValid(referenceName, nameError);
+        return true;
+    }
+
+    function validateDescription() {
+        var value = description.value.trim();
+
+        descriptionCount.textContent = description.value.length;
+
+        if (value.length === 0) {
+            setError(description, descriptionError, 'Description is required.');
+            return false;
+        }
+
+        if (value.length < 5) {
+            setError(description, descriptionError, 'Description must contain at least 5 characters.');
+            return false;
+        }
+
+        if (value.length > 1000) {
+            setError(description, descriptionError, 'Description cannot exceed 1000 characters.');
+            return false;
+        }
+
+        setValid(description, descriptionError);
+        return true;
+    }
+
+    function validateFile() {
+        var file = referenceFile.files[0];
+
+        // File is optional when editing an existing reference.
+        if (!file) {
+            clearError(referenceFile, fileError);
+            return true;
+        }
+
+        var extensionParts = file.name.split('.');
+        var extension = extensionParts.length > 1
+            ? extensionParts.pop().toLowerCase()
+            : '';
+
+        if (allowedExtensions.indexOf(extension) === -1) {
+            setError(
+                referenceFile,
+                fileError,
+                'Unsupported file type. Upload a PDF, DOC, DOCX, PPT, PPTX, TXT, JPG, JPEG or PNG file.'
+            );
+            selectedFile.classList.remove('show');
+            return false;
+        }
+
+        if (file.size === 0) {
+            setError(referenceFile, fileError, 'The selected file is empty. Please choose a valid file.');
+            selectedFile.classList.remove('show');
+            return false;
+        }
+
+        if (file.size > maxFileSize) {
+            setError(referenceFile, fileError, 'File size must not exceed 10 MB.');
+            selectedFile.classList.remove('show');
+            return false;
+        }
+
+        setValid(referenceFile, fileError);
+
+        var sizeText = file.size < 1024 * 1024
+            ? (file.size / 1024).toFixed(1) + ' KB'
+            : (file.size / (1024 * 1024)).toFixed(2) + ' MB';
+
+        selectedFile.textContent = 'Selected: ' + file.name + ' (' + sizeText + ')';
+        selectedFile.classList.add('show');
+
+        return true;
+    }
+
+    subject.addEventListener('change', validateSubject);
+
+    referenceName.addEventListener('input', function () {
+        if (referenceName.value.trim().length > 0) {
+            validateReferenceName();
+        } else {
+            clearError(referenceName, nameError);
+        }
+    });
+
+    referenceName.addEventListener('blur', validateReferenceName);
+
+    description.addEventListener('input', function () {
+        descriptionCount.textContent = description.value.length;
+
+        if (description.value.trim().length > 0) {
+            validateDescription();
+        } else {
+            clearError(description, descriptionError);
+        }
+    });
+
+    description.addEventListener('blur', validateDescription);
+
+    referenceFile.addEventListener('change', validateFile);
+
+    // Allow drag-and-drop file selection.
+    uploadBox.addEventListener('dragover', function (event) {
+        event.preventDefault();
+        uploadBox.classList.add('dragover');
+    });
+
+    uploadBox.addEventListener('dragleave', function () {
+        uploadBox.classList.remove('dragover');
+    });
+
+    uploadBox.addEventListener('drop', function (event) {
+        event.preventDefault();
+        uploadBox.classList.remove('dragover');
+
+        if (event.dataTransfer && event.dataTransfer.files.length) {
+            try {
+                referenceFile.files = event.dataTransfer.files;
+                validateFile();
+            } catch (error) {
+                setError(
+                    referenceFile,
+                    fileError,
+                    'Please select the file using the Choose File button.'
+                );
+            }
+        }
+    });
+
+    // Initialize description counter with existing text.
+    descriptionCount.textContent = description.value.length;
+
+    form.addEventListener('submit', function (event) {
+        var validSubject = validateSubject();
+        var validName = validateReferenceName();
+        var validDescription = validateDescription();
+        var validFile = validateFile();
+
+        if (!validSubject || !validName || !validDescription || !validFile) {
+            event.preventDefault();
+
+            var firstInvalid = form.querySelector('.invalid');
+
+            if (firstInvalid) {
+                firstInvalid.focus();
+                firstInvalid.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center'
+                });
+            }
+
+            return;
+        }
+
+        // Prevent accidental double submission.
+        submitButton.disabled = true;
+        submitButton.textContent = 'Updating Reference...';
+    });
+
+})();
+</script>
+
+</body>
+</html>

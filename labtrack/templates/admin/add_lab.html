@@ -1,0 +1,1613 @@
+{##}
+{##}
+{##}
+{#<!DOCTYPE html>#}
+{#<html>#}
+{#<head>#}
+{#    <title>Add Lab</title>#}
+{#</head>#}
+{#<body>#}
+{##}
+{#<h2>Add Lab</h2>#}
+{##}
+{#<form method="post" action="/myapp/add_lab_post/">#}
+{#    {% csrf_token %}#}
+{##}
+{#    <label>Lab Name:</label>#}
+{#    <input type="text" name="lab_name" required>#}
+{#    <br><br>#}
+{##}
+{#    <label>Room Number:</label>#}
+{#    <input type="text" name="room_number" required>#}
+{#    <br><br>#}
+{##}
+{#    <label>Description:</label>#}
+{#    <textarea name="description" required></textarea>#}
+{#    <br><br>#}
+{##}
+{#    <label>Lab Coordinator:</label>#}
+{#    <select name="coordinator" required>#}
+{#        <option value="">Select Coordinator</option>#}
+{#        {% for i in coordinators %}#}
+{#        <option value="{{ i.id }}">{{ i.name }}</option>#}
+{#        {% endfor %}#}
+{#    </select>#}
+{#    <br><br>#}
+{##}
+{#    <input type="submit" value="Add Lab">#}
+{#</form>#}
+{##}
+{#<br>#}
+{#<a href="/myapp/view_lab/">View Labs</a>#}
+{#<br><br>#}
+{#<a href="/myapp/adminhome_get/">Back to Home</a>#}
+{##}
+{#</body>#}
+{#</html>#}
+
+{##}
+{#<!DOCTYPE html>#}
+{#<html lang="en">#}
+{#<head>#}
+{#    <meta charset="UTF-8">#}
+{#    <meta name="viewport" content="width=device-width, initial-scale=1">#}
+{#    <title>Add Lab - LabTrack</title>#}
+{##}
+{#    <link rel="preconnect" href="https://fonts.googleapis.com">#}
+{#    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>#}
+{#    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">#}
+{##}
+{#    <style>#}
+{#        :root {#}
+{#            --bg-top: #164a63;#}
+{#            --bg-mid: #0d3048;#}
+{#            --bg-deep: #08203a;#}
+{#            --cyan: #5cd0ee;#}
+{#            --teal: #0b84a8;#}
+{#            --teal-dark: #086a89;#}
+{#            --heading: #0d2b3e;#}
+{#            --text: #14283a;#}
+{#            --muted: #5d7183;#}
+{#            --surface: #ffffff;#}
+{#            --canvas: #f1f6fb;#}
+{#            --border: #dae6f1;#}
+{#            --field: #e9f1fc;#}
+{#            --field-line: #c8d9ee;#}
+{#            --tile: #e2f4fa;#}
+{#            --danger: #c0291f;#}
+{#            --danger-bg: #fdeceb;#}
+{#            --ok: #1c7c54;#}
+{#            --ok-bg: #e3f6ec;#}
+{#            --gold: #fbbf24;#}
+{#            --nav-h: 68px;#}
+{#        }#}
+{##}
+{#        *, *::before, *::after { box-sizing: border-box; }#}
+{##}
+{#        body {#}
+{#            margin: 0;#}
+{#            min-height: 100vh;#}
+{#            font-family: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;#}
+{#            color: var(--text);#}
+{#            background: var(--canvas);#}
+{#            -webkit-font-smoothing: antialiased;#}
+{#        }#}
+{##}
+{#        a { color: inherit; text-decoration: none; }#}
+{##}
+{#        /* ================= NAVBAR ================= */#}
+{#        .navbar {#}
+{#            position: sticky;#}
+{#            top: 0;#}
+{#            z-index: 100;#}
+{#            color: #fff;#}
+{#            background:#}
+{#                radial-gradient(ellipse at 90% -40%, rgba(92,208,238,.28), transparent 55%),#}
+{#                linear-gradient(100deg, var(--bg-top) 0%, var(--bg-mid) 45%, var(--bg-deep) 100%);#}
+{#            box-shadow: 0 6px 20px rgba(8,32,58,.25);#}
+{#        }#}
+{##}
+{#        .nav-inner {#}
+{#            max-width: 1280px;#}
+{#            height: var(--nav-h);#}
+{#            margin: 0 auto;#}
+{#            padding: 0 clamp(16px, 3vw, 36px);#}
+{#            display: flex;#}
+{#            align-items: center;#}
+{#            gap: 28px;#}
+{#        }#}
+{##}
+{#        .brand {#}
+{#            display: flex;#}
+{#            align-items: center;#}
+{#            gap: 12px;#}
+{#            font-size: 1.3rem;#}
+{#            font-weight: 800;#}
+{#            letter-spacing: -0.02em;#}
+{#            color: #fff;#}
+{#            flex: none;#}
+{#        }#}
+{##}
+{#        .brand-mark {#}
+{#            width: 40px; height: 40px;#}
+{#            display: grid;#}
+{#            place-items: center;#}
+{#            border-radius: 11px;#}
+{#            background: var(--cyan);#}
+{#            transition: transform .25s ease;#}
+{#        }#}
+{#        .brand:hover .brand-mark { transform: rotate(-8deg) scale(1.06); }#}
+{##}
+{#        .menu {#}
+{#            flex: 1;#}
+{#            display: flex;#}
+{#            align-items: center;#}
+{#            gap: 4px;#}
+{#            height: 100%;#}
+{#        }#}
+{##}
+{#        .nav-link {#}
+{#            position: relative;#}
+{#            display: inline-flex;#}
+{#            align-items: center;#}
+{#            gap: 7px;#}
+{#            height: 42px;#}
+{#            padding: 0 14px;#}
+{#            font: inherit;#}
+{#            font-size: .92rem;#}
+{#            font-weight: 600;#}
+{#            color: #cfe3ef;#}
+{#            background: transparent;#}
+{#            border: 0;#}
+{#            border-radius: 10px;#}
+{#            cursor: pointer;#}
+{#            white-space: nowrap;#}
+{#            transition: background .2s, color .2s;#}
+{#        }#}
+{##}
+{#        .nav-link:hover, .dd.open > .nav-link { background: rgba(255,255,255,.11); color: #fff; }#}
+{#        .nav-link:focus-visible { outline: 2px solid var(--cyan); outline-offset: 1px; }#}
+{##}
+{#        .nav-link.active { color: #fff; background: rgba(92,208,238,.16); }#}
+{#        .nav-link.active::after {#}
+{#            content: "";#}
+{#            position: absolute;#}
+{#            left: 14px; right: 14px; bottom: -13px;#}
+{#            height: 3px;#}
+{#            border-radius: 3px 3px 0 0;#}
+{#            background: var(--cyan);#}
+{#        }#}
+{##}
+{#        .caret { width: 14px; height: 14px; transition: transform .2s; }#}
+{#        .dd.open .caret { transform: rotate(180deg); }#}
+{##}
+{#        .dd { position: relative; display: flex; align-items: center; }#}
+{##}
+{#        .dd-panel {#}
+{#            position: absolute;#}
+{#            top: calc(100% + 12px);#}
+{#            left: 0;#}
+{#            min-width: 240px;#}
+{#            padding: 8px;#}
+{#            background: #fff;#}
+{#            color: var(--text);#}
+{#            border: 1px solid var(--border);#}
+{#            border-radius: 14px;#}
+{#            box-shadow: 0 22px 44px rgba(8,32,58,.22);#}
+{#            opacity: 0;#}
+{#            visibility: hidden;#}
+{#            transform: translateY(8px);#}
+{#            transition: opacity .18s, transform .18s, visibility .18s;#}
+{#        }#}
+{##}
+{#        .dd-panel::before { /* hover bridge */#}
+{#            content: "";#}
+{#            position: absolute;#}
+{#            left: 0; right: 0; top: -14px;#}
+{#            height: 14px;#}
+{#        }#}
+{##}
+{#        .dd.open > .dd-panel { opacity: 1; visibility: visible; transform: translateY(0); }#}
+{##}
+{#        @media (hover: hover) and (min-width: 961px) {#}
+{#            .dd:hover > .dd-panel { opacity: 1; visibility: visible; transform: translateY(0); }#}
+{#            .dd:hover > .nav-link { background: rgba(255,255,255,.11); color: #fff; }#}
+{#            .dd:hover .caret { transform: rotate(180deg); }#}
+{#        }#}
+{##}
+{#        .dd.right .dd-panel { left: auto; right: 0; }#}
+{##}
+{#        .dd-panel a {#}
+{#            display: flex;#}
+{#            align-items: center;#}
+{#            gap: 12px;#}
+{#            padding: 10px 12px;#}
+{#            border-radius: 9px;#}
+{#            font-size: .92rem;#}
+{#            font-weight: 600;#}
+{#            color: var(--heading);#}
+{#            transition: background .15s, color .15s, padding .15s;#}
+{#        }#}
+{##}
+{#        .dd-panel a svg { width: 18px; height: 18px; flex: none; color: var(--teal); transition: color .15s; }#}
+{##}
+{#        .dd-panel a:hover { background: var(--tile); color: var(--teal-dark); padding-left: 16px; }#}
+{#        .dd-panel a:focus-visible { outline: 2px solid var(--teal); outline-offset: -2px; }#}
+{#        .dd-panel a.active { background: var(--tile); color: var(--teal-dark); }#}
+{##}
+{#        .dd-panel a.logout { color: var(--danger); }#}
+{#        .dd-panel a.logout svg { color: var(--danger); }#}
+{#        .dd-panel a.logout:hover { background: var(--danger-bg); color: var(--danger); }#}
+{##}
+{#        .dd-sep { height: 1px; margin: 6px 4px; background: var(--border); }#}
+{##}
+{#        .user { margin-left: auto; }#}
+{##}
+{#        .avatar {#}
+{#            width: 30px; height: 30px;#}
+{#            display: grid;#}
+{#            place-items: center;#}
+{#            border-radius: 50%;#}
+{#            background: var(--cyan);#}
+{#            color: var(--bg-deep);#}
+{#            font-size: .82rem;#}
+{#            font-weight: 800;#}
+{#        }#}
+{##}
+{#        .burger {#}
+{#            display: none;#}
+{#            margin-left: auto;#}
+{#            width: 44px; height: 44px;#}
+{#            place-items: center;#}
+{#            border: 0;#}
+{#            border-radius: 11px;#}
+{#            background: rgba(255,255,255,.1);#}
+{#            color: #fff;#}
+{#            cursor: pointer;#}
+{#        }#}
+{#        .burger:hover { background: rgba(255,255,255,.18); }#}
+{#        .burger:focus-visible { outline: 2px solid var(--cyan); }#}
+{#        .burger svg { width: 22px; height: 22px; }#}
+{##}
+{#        /* ================= PAGE ================= */#}
+{#        .container { max-width: 1280px; margin: 0 auto; padding: 36px clamp(16px, 3vw, 36px) 56px; }#}
+{##}
+{#        .page-head {#}
+{#            display: flex;#}
+{#            align-items: flex-end;#}
+{#            justify-content: space-between;#}
+{#            gap: 16px;#}
+{#            flex-wrap: wrap;#}
+{#            margin-bottom: 24px;#}
+{#        }#}
+{#        .page-head h1 { margin: 0 0 4px; font-size: 1.8rem; font-weight: 800; letter-spacing: -0.03em; color: var(--heading); }#}
+{#        .page-head p { margin: 0; color: var(--muted); }#}
+{##}
+{#        /* Reusable components for the other admin pages */#}
+{#        .btn {#}
+{#            display: inline-flex;#}
+{#            align-items: center;#}
+{#            justify-content: center;#}
+{#            gap: 8px;#}
+{#            height: 46px;#}
+{#            padding: 0 22px;#}
+{#            font: inherit;#}
+{#            font-size: .95rem;#}
+{#            font-weight: 700;#}
+{#            border-radius: 11px;#}
+{#            border: 1.5px solid transparent;#}
+{#            cursor: pointer;#}
+{#            transition: background .2s, transform .15s, box-shadow .2s, border-color .2s;#}
+{#        }#}
+{#        .btn:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }#}
+{#        .btn-primary { background: var(--teal); color: #fff; box-shadow: 0 8px 16px rgba(11,132,168,.25); }#}
+{#        .btn-primary:hover { background: var(--teal-dark); transform: translateY(-2px); box-shadow: 0 12px 22px rgba(11,132,168,.32); }#}
+{#        .btn-ghost { background: #fff; color: var(--heading); border-color: var(--border); }#}
+{#        .btn-ghost:hover { background: var(--canvas); border-color: #b8cde0; }#}
+{#        .btn-danger { background: var(--danger); color: #fff; }#}
+{#        .btn-danger:hover { background: #a11f17; transform: translateY(-2px); }#}
+{##}
+{#        .panel { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 24px; }#}
+{##}
+{#        .table-wrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; }#}
+{#        table.data { width: 100%; border-collapse: collapse; font-size: .92rem; }#}
+{#        table.data th { text-align: left; padding: 14px 18px; font-weight: 700; color: var(--heading); background: #f6f9fd; border-bottom: 1px solid var(--border); white-space: nowrap; }#}
+{#        table.data td { padding: 14px 18px; border-bottom: 1px solid #edf2f8; color: var(--text); }#}
+{#        table.data tbody tr { transition: background .15s; }#}
+{#        table.data tbody tr:hover { background: #f4f9fd; }#}
+{#        table.data tbody tr:last-child td { border-bottom: 0; }#}
+{##}
+{#        .field { margin-bottom: 18px; }#}
+{#        .field label { display: block; margin-bottom: 8px; font-size: .88rem; font-weight: 700; color: var(--heading); }#}
+{#        .field input, .field select, .field textarea {#}
+{#            width: 100%;#}
+{#            padding: 0 16px;#}
+{#            height: 52px;#}
+{#            font: inherit;#}
+{#            color: var(--text);#}
+{#            background: var(--field);#}
+{#            border: 1.5px solid var(--field-line);#}
+{#            border-radius: 12px;#}
+{#            transition: border-color .2s, box-shadow .2s, background .2s;#}
+{#        }#}
+{#        .field textarea { height: auto; min-height: 110px; padding: 14px 16px; }#}
+{#        .field input:hover, .field select:hover, .field textarea:hover { border-color: #8fb4d2; }#}
+{#        .field input:focus, .field select:focus, .field textarea:focus {#}
+{#            outline: none; background: #fff; border-color: var(--teal); box-shadow: 0 0 0 4px rgba(11,132,168,.16);#}
+{#        }#}
+{#        .field .invalid { border-color: var(--danger); background: #fffafa; }#}
+{#        .field .hint { min-height: 1.2em; margin: 6px 0 0; font-size: .83rem; color: var(--danger); }#}
+{##}
+{#        /* Django messages */#}
+{#        .toasts { position: fixed; top: calc(var(--nav-h) + 16px); right: 16px; z-index: 200; display: grid; gap: 10px; width: min(92vw, 360px); }#}
+{#        .toast {#}
+{#            display: flex;#}
+{#            align-items: flex-start;#}
+{#            gap: 12px;#}
+{#            padding: 14px 16px;#}
+{#            background: #fff;#}
+{#            border: 1px solid var(--border);#}
+{#            border-left: 4px solid var(--teal);#}
+{#            border-radius: 12px;#}
+{#            box-shadow: 0 16px 34px rgba(8,32,58,.18);#}
+{#            font-size: .92rem;#}
+{#            line-height: 1.45;#}
+{#            animation: toast-in .3s ease both;#}
+{#        }#}
+{#        .toast.error { border-left-color: var(--danger); }#}
+{#        .toast.success { border-left-color: var(--ok); }#}
+{#        .toast button { margin-left: auto; border: 0; background: transparent; color: var(--muted); font-size: 1.2rem; line-height: 1; cursor: pointer; }#}
+{#        @keyframes toast-in { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }#}
+{##}
+{#        /* Logout dialog */#}
+{#        dialog { width: min(92vw, 400px); padding: 28px; border: 0; border-radius: 18px; color: var(--text); box-shadow: 0 30px 70px rgba(8,32,58,.35); }#}
+{#        dialog::backdrop { background: rgba(6,19,40,.55); backdrop-filter: blur(2px); }#}
+{#        dialog h2 { margin: 0 0 8px; font-size: 1.3rem; font-weight: 800; color: var(--heading); }#}
+{#        dialog p { margin: 0 0 24px; color: var(--muted); line-height: 1.55; }#}
+{#        .dialog-actions { display: flex; gap: 10px; justify-content: flex-end; }#}
+{##}
+{#        /* ================= MOBILE ================= */#}
+{#        @media (max-width: 960px) {#}
+{#            .burger { display: grid; }#}
+{##}
+{#            .nav-inner { gap: 12px; }#}
+{##}
+{#            .menu {#}
+{#                position: absolute;#}
+{#                top: var(--nav-h);#}
+{#                left: 0; right: 0;#}
+{#                flex-direction: column;#}
+{#                align-items: stretch;#}
+{#                gap: 2px;#}
+{#                height: auto;#}
+{#                max-height: calc(100vh - var(--nav-h));#}
+{#                overflow-y: auto;#}
+{#                padding: 12px 16px 20px;#}
+{#                background: var(--bg-deep);#}
+{#                border-top: 1px solid rgba(255,255,255,.1);#}
+{#                box-shadow: 0 24px 40px rgba(0,0,0,.3);#}
+{#                display: none;#}
+{#            }#}
+{#            .navbar.open .menu { display: flex; }#}
+{##}
+{#            .nav-link { height: 48px; width: 100%; justify-content: flex-start; }#}
+{#            .nav-link.active::after { display: none; }#}
+{#            .dd { flex-direction: column; align-items: stretch; }#}
+{#            .dd > .nav-link .caret { margin-left: auto; }#}
+{##}
+{#            .dd-panel {#}
+{#                position: static;#}
+{#                display: none;#}
+{#                min-width: 0;#}
+{#                margin: 2px 0 6px 12px;#}
+{#                padding: 4px;#}
+{#                background: rgba(255,255,255,.06);#}
+{#                border: 0;#}
+{#                border-left: 2px solid rgba(92,208,238,.4);#}
+{#                border-radius: 0 10px 10px 0;#}
+{#                box-shadow: none;#}
+{#                opacity: 1;#}
+{#                visibility: visible;#}
+{#                transform: none;#}
+{#            }#}
+{#            .dd-panel::before { display: none; }#}
+{#            .dd.open > .dd-panel { display: block; }#}
+{#            .dd-panel a { color: #d3e6f2; }#}
+{#            .dd-panel a svg { color: var(--cyan); }#}
+{#            .dd-panel a:hover, .dd-panel a.active { background: rgba(255,255,255,.1); color: #fff; padding-left: 12px; }#}
+{#            .dd-panel a.logout { color: #ffb4ac; }#}
+{#            .dd-panel a.logout svg { color: #ffb4ac; }#}
+{#            .dd-panel a.logout:hover { background: rgba(255,120,110,.16); color: #ffd7d2; }#}
+{#            .dd-sep { background: rgba(255,255,255,.12); }#}
+{#            .user { margin-left: 0; margin-top: 8px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,.12); }#}
+{#        }#}
+{##}
+{#        @media (prefers-reduced-motion: reduce) {#}
+{#            * { transition: none !important; animation: none !important; }#}
+{#        }#}
+{#    </style>#}
+{##}
+{#    <style>#}
+{#.container.narrow { max-width: 860px; }#}
+{#.container.wide { max-width: 1040px; }#}
+{##}
+{#.form-panel { padding: clamp(22px, 3vw, 38px); }#}
+{#.req-note { margin: 0 0 24px; color: var(--muted); font-size: .86rem; }#}
+{#.req { color: var(--danger); margin-left: 3px; }#}
+{##}
+{#.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 24px; }#}
+{#.form-grid .full { grid-column: 1 / -1; }#}
+{##}
+{#.help-text { margin: 6px 0 0; font-size: .82rem; color: var(--muted); }#}
+{##}
+{#.field .valid { border-color: #7cc9a6; }#}
+{#.field .invalid { border-color: var(--danger); background: #fffafa; }#}
+{#.field .invalid:focus { box-shadow: 0 0 0 4px rgba(192,41,31,.14); }#}
+{##}
+{#.field select {#}
+{#    appearance: none;#}
+{#    -webkit-appearance: none;#}
+{#    padding-right: 44px;#}
+{#    cursor: pointer;#}
+{#    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%235d7183' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");#}
+{#    background-repeat: no-repeat;#}
+{#    background-position: right 16px center;#}
+{#}#}
+{##}
+{#.field input[type="file"] { height: auto; padding: 10px 12px; cursor: pointer; }#}
+{#.field input[type="file"]::file-selector-button {#}
+{#    margin-right: 14px;#}
+{#    padding: 9px 16px;#}
+{#    font: inherit;#}
+{#    font-size: .88rem;#}
+{#    font-weight: 700;#}
+{#    color: #fff;#}
+{#    background: var(--teal);#}
+{#    border: 0;#}
+{#    border-radius: 8px;#}
+{#    cursor: pointer;#}
+{#    transition: background .2s;#}
+{#}#}
+{#.field input[type="file"]::file-selector-button:hover { background: var(--teal-dark); }#}
+{##}
+{#.field-meta { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }#}
+{#.field-meta .hint { flex: 1; }#}
+{#.counter { margin-top: 6px; font-size: .8rem; color: var(--muted); white-space: nowrap; }#}
+{#.counter.over { color: var(--danger); font-weight: 700; }#}
+{##}
+{#.pw { position: relative; }#}
+{#.pw input { padding-right: 84px; }#}
+{#.pw .toggle {#}
+{#    position: absolute;#}
+{#    right: 8px; top: 7px;#}
+{#    height: 38px;#}
+{#    padding: 0 12px;#}
+{#    font: inherit;#}
+{#    font-size: .84rem;#}
+{#    font-weight: 700;#}
+{#    color: var(--teal);#}
+{#    background: transparent;#}
+{#    border: 0;#}
+{#    border-radius: 8px;#}
+{#    cursor: pointer;#}
+{#    transition: background .2s, color .2s;#}
+{#}#}
+{#.pw .toggle:hover { background: #d9e8f5; color: var(--teal-dark); }#}
+{#.pw .toggle:focus-visible { outline: 2px solid var(--teal); outline-offset: 1px; }#}
+{##}
+{#.meter { display: flex; gap: 6px; margin-top: 10px; }#}
+{#.meter span { flex: 1; height: 5px; border-radius: 3px; background: #dbe5ef; transition: background .2s; }#}
+{#.meter[data-level="1"] span:nth-child(-n+1) { background: #e5533d; }#}
+{#.meter[data-level="2"] span:nth-child(-n+2) { background: #f0a020; }#}
+{#.meter[data-level="3"] span:nth-child(-n+3) { background: #5bb85b; }#}
+{#.meter[data-level="4"] span:nth-child(-n+4) { background: #1c9a60; }#}
+{##}
+{#.photo-preview {#}
+{#    display: none;#}
+{#    margin-top: 12px;#}
+{#    width: 96px; height: 96px;#}
+{#    object-fit: cover;#}
+{#    border-radius: 14px;#}
+{#    border: 2px solid var(--border);#}
+{#}#}
+{#.photo-preview.show { display: block; }#}
+{##}
+{#.form-error {#}
+{#    margin-bottom: 22px;#}
+{#    padding: 13px 16px;#}
+{#    background: var(--danger-bg);#}
+{#    color: var(--danger);#}
+{#    border: 1px solid #f1c3bf;#}
+{#    border-left: 4px solid var(--danger);#}
+{#    border-radius: 10px;#}
+{#    font-size: .92rem;#}
+{#    font-weight: 600;#}
+{#}#}
+{#.form-error[hidden] { display: none; }#}
+{##}
+{#.form-actions {#}
+{#    display: flex;#}
+{#    flex-wrap: wrap;#}
+{#    gap: 12px;#}
+{#    margin-top: 12px;#}
+{#    padding-top: 24px;#}
+{#    border-top: 1px solid var(--border);#}
+{#}#}
+{#.form-actions .btn-primary { min-width: 190px; }#}
+{#.btn[disabled] { opacity: .75; cursor: progress; transform: none; }#}
+{##}
+{#.back-link {#}
+{#    display: inline-block;#}
+{#    margin-top: 22px;#}
+{#    font-size: .92rem;#}
+{#    font-weight: 700;#}
+{#    color: var(--teal);#}
+{#    background: linear-gradient(currentColor, currentColor) 0 100% / 0 2px no-repeat;#}
+{#    padding-bottom: 2px;#}
+{#    transition: background-size .25s ease, color .2s;#}
+{#}#}
+{#.back-link:hover { background-size: 100% 2px; color: var(--teal-dark); }#}
+{#.back-link:focus-visible { outline: 2px solid var(--teal); outline-offset: 3px; border-radius: 3px; }#}
+{##}
+{#@media (max-width: 720px) {#}
+{#    .form-grid { grid-template-columns: 1fr; }#}
+{#    .form-actions .btn { width: 100%; }#}
+{#}#}
+{#</style>#}
+{#</head>#}
+{#<body>#}
+{##}
+{#<header class="navbar" id="navbar">#}
+{#    <div class="nav-inner">#}
+{##}
+{#        <a class="brand" href="/myapp/adminhome_get/" aria-label="LabTrack admin home">#}
+{#            <span class="brand-mark">#}
+{#                <svg width="23" height="23" viewBox="0 0 24 24" fill="none" aria-hidden="true">#}
+{#                    <path d="M12 2.5l8 3v6c0 5-3.3 8.6-8 10-4.7-1.4-8-5-8-10v-6l8-3z" stroke="#08203a" stroke-width="1.9" stroke-linejoin="round"/>#}
+{#                    <path d="M10.5 8.5h3M11 8.5v3l-2 3.6a.9.9 0 0 0 .8 1.3h4.4a.9.9 0 0 0 .8-1.3l-2-3.6v-3" stroke="#08203a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>#}
+{#                </svg>#}
+{#            </span>#}
+{#            LabTrack#}
+{#        </a>#}
+{##}
+{#        <button type="button" class="burger" id="burger" aria-label="Open menu" aria-controls="menu" aria-expanded="false">#}
+{#            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>#}
+{#        </button>#}
+{##}
+{#        <nav class="menu" id="menu" aria-label="Main">#}
+{##}
+{#            <a class="nav-link" href="/myapp/adminhome_get/" data-match="adminhome">Home</a>#}
+{##}
+{#            <div class="dd">#}
+{#                <button type="button" class="nav-link dd-btn" aria-expanded="false" aria-haspopup="true">#}
+{#                    Management#}
+{#                    <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>#}
+{#                </button>#}
+{#                <div class="dd-panel">#}
+{#                    <a href="/myapp/view_dept/" data-match="dept,course,subject">#}
+{#                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6"/></svg>#}
+{#                        Manage Department#}
+{#                    </a>#}
+{#                    <a href="/myapp/view_student/" data-match="student">#}
+{#                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 9L12 4 2 9l10 5 10-5z"/><path d="M6 11.5V16c0 1.5 2.7 3 6 3s6-1.5 6-3v-4.5"/></svg>#}
+{#                        View Students#}
+{#                    </a>#}
+{#                    <a href="/myapp/view_staff/" data-match="staff">#}
+{#                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.5 3.3-5.5 6.5-5.5s5.7 2 6.5 5.5"/><circle cx="17.5" cy="9" r="2.5"/><path d="M17 14.5c2.5.2 4.3 1.8 5 4.5"/></svg>#}
+{#                        Manage Staff#}
+{#                    </a>#}
+{#                    <a href="/myapp/view_lab_coordinator/" data-match="lab_coordinator">#}
+{#                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.2-4 4-6 8-6s6.8 2 8 6"/></svg>#}
+{#                        View Lab Coordinators#}
+{#                    </a>#}
+{#                    <a href="/myapp/view_lab/" data-match="view_lab/,add_lab_get,add_lab_post,edit_lab_get,edit_lab_post,delete_lab/,schedule,equipment">#}
+{#                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.8 3h10.4a2 2 0 0 0 1.8-3l-5-9V3"/><path d="M7.5 15h9"/></svg>#}
+{#                        Manage Labs#}
+{#                    </a>#}
+{#                </div>#}
+{#            </div>#}
+{##}
+{#            <a class="nav-link" href="/myapp/view_lab_submissions_admin/" data-match="lab_submissions">Lab Submissions</a>#}
+{##}
+{#            <a class="nav-link" href="/myapp/admin_reports/" data-match="admin_reports">Reports</a>#}
+{##}
+{#            <div class="dd">#}
+{#                <button type="button" class="nav-link dd-btn" aria-expanded="false" aria-haspopup="true">#}
+{#                    Complaints &amp; Reviews#}
+{#                    <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>#}
+{#                </button>#}
+{#                <div class="dd-panel">#}
+{#                    <a href="/myapp/view_complaints_admin/" data-match="complaint">#}
+{#                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9.5 17h-19L12 3z"/><path d="M12 10v4M12 17.5v.01"/></svg>#}
+{#                        View Complaints#}
+{#                    </a>#}
+{#                    <a href="/myapp/view_feedback_admin/" data-match="feedback">#}
+{#                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/><path d="M8.5 12h7"/></svg>#}
+{#                        View Feedback#}
+{#                    </a>#}
+{#                </div>#}
+{#            </div>#}
+{##}
+{#            <div class="dd right user">#}
+{#                <button type="button" class="nav-link dd-btn" aria-expanded="false" aria-haspopup="true">#}
+{#                    <span class="avatar" aria-hidden="true">A</span>#}
+{#                    Admin#}
+{#                    <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>#}
+{#                </button>#}
+{#                <div class="dd-panel">#}
+{#                    <a href="/myapp/change_password_get/" data-match="change_password">#}
+{#                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>#}
+{#                        Change Password#}
+{#                    </a>#}
+{#                    <div class="dd-sep"></div>#}
+{#                    <a href="/myapp/logout_get/" class="logout" id="logoutLink">#}
+{#                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>#}
+{#                        Logout#}
+{#                    </a>#}
+{#                </div>#}
+{#            </div>#}
+{##}
+{#        </nav>#}
+{#    </div>#}
+{#</header>#}
+{##}
+{#{% if messages %}#}
+{#<div class="toasts" role="status" aria-live="polite">#}
+{#    {% for message in messages %}#}
+{#    <div class="toast {{ message.tags }}">#}
+{#        <span>{{ message }}</span>#}
+{#        <button type="button" aria-label="Dismiss" data-dismiss>&times;</button>#}
+{#    </div>#}
+{#    {% endfor %}#}
+{#</div>#}
+{#{% endif %}#}
+{##}
+{#<main class="container narrow">#}
+{#<div class="page-head">#}
+{#    <div>#}
+{#        <h1>Add Lab</h1>#}
+{#        <p>Set up a lab and assign its coordinator.</p>#}
+{#    </div>#}
+{#</div>#}
+{##}
+{#<section class="panel form-panel">#}
+{#    <form method="post" action="/myapp/add_lab_post/" id="pageForm" novalidate>#}
+{#        {% csrf_token %}#}
+{##}
+{#        <div class="form-error" id="formError" role="alert" hidden></div>#}
+{#        <p class="req-note"><span class="req" aria-hidden="true" style="margin:0">*</span> Required field</p>#}
+{##}
+{#        <div class="form-grid">#}
+{#<div class="field">#}
+{#    <label for="lab_name">Lab name<span class="req" aria-hidden="true">*</span></label>#}
+{#    <input type="text" id="lab_name" name="lab_name" placeholder="e.g. Computer Networks Lab" aria-describedby="lab_nameHint" required maxlength="60" autocomplete="off" autofocus>#}
+{##}
+{#    <p class="hint" id="lab_nameHint" aria-live="polite"></p>#}
+{#</div>#}
+{#<div class="field">#}
+{#    <label for="room_number">Room number<span class="req" aria-hidden="true">*</span></label>#}
+{#    <input type="text" id="room_number" name="room_number" placeholder="e.g. B-204" aria-describedby="room_numberHint" required maxlength="20" autocomplete="off">#}
+{##}
+{#    <p class="hint" id="room_numberHint" aria-live="polite"></p>#}
+{#</div>#}
+{#<div class="field full">#}
+{#    <label for="coordinator">Lab coordinator<span class="req" aria-hidden="true">*</span></label>#}
+{#    <select id="coordinator" name="coordinator" aria-describedby="coordinatorHint" required>#}
+{#        <option value="">Select coordinator</option>#}
+{#        {% for i in coordinators %}#}
+{#        <option value="{{ i.id }}">{{ i.name }}</option>#}
+{#        {% empty %}#}
+{#        <option value="" disabled>No coordinators available</option>#}
+{#        {% endfor %}#}
+{#    </select>#}
+{#    <p class="hint" id="coordinatorHint" aria-live="polite"></p>#}
+{#</div>#}
+{#<div class="field full">#}
+{#    <label for="description">Description<span class="req" aria-hidden="true">*</span></label>#}
+{#    <textarea id="description" name="description" rows="4" placeholder="What is this lab used for?" data-count="300" aria-describedby="descriptionHint" required></textarea>#}
+{#    <div class="field-meta">#}
+{#        <p class="hint" id="descriptionHint" aria-live="polite"></p>#}
+{#        <span class="counter" id="descriptionCount" aria-hidden="true">0 / 300</span>#}
+{#    </div>#}
+{#</div>#}
+{#        </div>#}
+{##}
+{#        <div class="form-actions">#}
+{#            <button type="submit" class="btn btn-primary" id="submitBtn">Add Lab</button>#}
+{#            <a class="btn btn-ghost" href="/myapp/view_lab/">View Labs</a>#}
+{#        </div>#}
+{#    </form>#}
+{#</section>#}
+{#<a class="back-link" href="/myapp/adminhome_get/">Back to Home</a>#}
+{#</main>#}
+{##}
+{#<!-- Logout confirmation -->#}
+{#<dialog id="logoutDialog" aria-labelledby="logoutTitle">#}
+{#    <h2 id="logoutTitle">Log out of LabTrack?</h2>#}
+{#    <p>You will need to sign in again to use the admin panel.</p>#}
+{#    <div class="dialog-actions">#}
+{#        <button type="button" class="btn btn-ghost" id="cancelLogout">Stay signed in</button>#}
+{#        <button type="button" class="btn btn-primary" id="confirmLogout">Log out</button>#}
+{#    </div>#}
+{#</dialog>#}
+{##}
+{#<script>#}
+{#(function () {#}
+{#    var navbar = document.getElementById('navbar');#}
+{#    var burger = document.getElementById('burger');#}
+{#    var dds = Array.prototype.slice.call(document.querySelectorAll('.dd'));#}
+{##}
+{#    function closeAll(except) {#}
+{#        dds.forEach(function (d) {#}
+{#            if (d !== except) {#}
+{#                d.classList.remove('open');#}
+{#                d.querySelector('.dd-btn').setAttribute('aria-expanded', 'false');#}
+{#            }#}
+{#        });#}
+{#    }#}
+{##}
+{#    // Dropdowns: click / keyboard toggle#}
+{#    dds.forEach(function (d) {#}
+{#        var btn = d.querySelector('.dd-btn');#}
+{#        btn.addEventListener('click', function (e) {#}
+{#            e.stopPropagation();#}
+{#            var open = !d.classList.contains('open');#}
+{#            closeAll(d);#}
+{#            d.classList.toggle('open', open);#}
+{#            btn.setAttribute('aria-expanded', open ? 'true' : 'false');#}
+{#        });#}
+{#    });#}
+{##}
+{#    document.addEventListener('click', function (e) {#}
+{#        if (!e.target.closest('.dd')) closeAll();#}
+{#    });#}
+{##}
+{#    document.addEventListener('keydown', function (e) {#}
+{#        if (e.key === 'Escape') {#}
+{#            closeAll();#}
+{#            navbar.classList.remove('open');#}
+{#            burger.setAttribute('aria-expanded', 'false');#}
+{#        }#}
+{#    });#}
+{##}
+{#    // Mobile menu#}
+{#    burger.addEventListener('click', function () {#}
+{#        var open = !navbar.classList.contains('open');#}
+{#        navbar.classList.toggle('open', open);#}
+{#        burger.setAttribute('aria-expanded', open ? 'true' : 'false');#}
+{#        burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');#}
+{#    });#}
+{##}
+{#    // Mark the current page in the navbar#}
+{#    var path = window.location.pathname;#}
+{#    var links = document.querySelectorAll('.menu a[data-match]');#}
+{#    var matched = false;#}
+{#    Array.prototype.forEach.call(links, function (a) {#}
+{#        if (matched) return;#}
+{#        var tokens = a.getAttribute('data-match').split(',');#}
+{#        var hit = tokens.some(function (t) { return path.indexOf(t) !== -1; });#}
+{#        if (hit) {#}
+{#            matched = true;#}
+{#            a.classList.add('active');#}
+{#            a.setAttribute('aria-current', 'page');#}
+{#            var parent = a.closest('.dd');#}
+{#            if (parent) parent.querySelector('.dd-btn').classList.add('active');#}
+{#        }#}
+{#    });#}
+{##}
+{#    // Dismissible messages (auto-hide after 6s)#}
+{#    var toasts = document.querySelectorAll('.toast');#}
+{#    Array.prototype.forEach.call(toasts, function (t) {#}
+{#        var remove = function () { if (t.parentNode) t.parentNode.removeChild(t); };#}
+{#        t.querySelector('[data-dismiss]').addEventListener('click', remove);#}
+{#        setTimeout(remove, 6000);#}
+{#    });#}
+{##}
+{#    // Logout confirmation#}
+{#    var link = document.getElementById('logoutLink');#}
+{#    var dlg = document.getElementById('logoutDialog');#}
+{#    var cancel = document.getElementById('cancelLogout');#}
+{#    var confirmBtn = document.getElementById('confirmLogout');#}
+{##}
+{#    link.addEventListener('click', function (e) {#}
+{#        if (typeof dlg.showModal !== 'function') return;#}
+{#        e.preventDefault();#}
+{#        closeAll();#}
+{#        navbar.classList.remove('open');#}
+{#        dlg.showModal();#}
+{#        cancel.focus();#}
+{#    });#}
+{#    cancel.addEventListener('click', function () { dlg.close(); });#}
+{#    confirmBtn.addEventListener('click', function () { window.location.href = link.getAttribute('href'); });#}
+{#    dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });#}
+{#})();#}
+{#</script>#}
+{##}
+{##}
+{#<script>#}
+{#var specs = [#}
+{#    { id: 'lab_name', label: 'Lab name', minLen: 3, maxLen: 60,#}
+{#      pattern: /^[A-Za-z0-9][A-Za-z0-9 &().,'\-]*$/,#}
+{#      patternMsg: 'Use letters, numbers, spaces and & ( ) . , - only, starting with a letter or number.' },#}
+{#    { id: 'room_number', label: 'Room number', maxLen: 20,#}
+{#      pattern: /^[A-Za-z0-9][A-Za-z0-9 \/\-]*$/,#}
+{#      patternMsg: 'Use letters, numbers, spaces, / and - only, like B-204.' },#}
+{#    { id: 'coordinator', label: 'Lab coordinator', kind: 'select' },#}
+{#    { id: 'description', label: 'Description', minLen: 10, maxLen: 300 }#}
+{#];#}
+{##}
+{#(function () {#}
+{#    var form = document.getElementById('pageForm');#}
+{#    var btn = document.getElementById('submitBtn');#}
+{#    var banner = document.getElementById('formError');#}
+{#    var touched = {};#}
+{##}
+{#    function byId(id) { return document.getElementById(id); }#}
+{#    function lower(s) { return s.charAt(0).toLowerCase() + s.slice(1); }#}
+{##}
+{#    function check(spec) {#}
+{#        var input = byId(spec.id);#}
+{#        var label = spec.label;#}
+{##}
+{#        if (spec.kind === 'file') {#}
+{#            var f = input.files && input.files[0];#}
+{#            if (!f) return spec.optional ? '' : 'Choose a ' + lower(label) + '.';#}
+{#            if (spec.types && spec.types.indexOf(f.type) === -1) return label + ' must be a JPG, PNG or WebP image.';#}
+{#            if (spec.maxMB && f.size > spec.maxMB * 1024 * 1024) return label + ' must be smaller than ' + spec.maxMB + ' MB.';#}
+{#            return '';#}
+{#        }#}
+{##}
+{#        var v = input.value.trim();#}
+{##}
+{#        if (!v) {#}
+{#            if (spec.optional) return '';#}
+{#            return (spec.kind === 'select' ? 'Select ' : 'Enter ') + (spec.kind === 'select' ? 'a ' : '') + lower(label) + '.';#}
+{#        }#}
+{##}
+{#        if (spec.kind === 'email') {#}
+{#            if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)) return 'Enter a valid email address, like name@example.com.';#}
+{#        }#}
+{##}
+{#        if (spec.kind === 'int') {#}
+{#            if (!/^\d+$/.test(v)) return label + ' must be a whole number.';#}
+{#            var n = parseInt(v, 10);#}
+{#            if (spec.minVal !== undefined && n < spec.minVal) return label + ' must be at least ' + spec.minVal + '.';#}
+{#            if (spec.maxVal !== undefined && n > spec.maxVal) return label + ' must be ' + spec.maxVal + ' or less.';#}
+{#        }#}
+{##}
+{#        if (spec.minLen && v.length < spec.minLen) return label + ' must be at least ' + spec.minLen + ' characters.';#}
+{#        if (spec.maxLen && v.length > spec.maxLen) return label + ' must be ' + spec.maxLen + ' characters or fewer.';#}
+{#        if (spec.pattern && !spec.pattern.test(v)) return spec.patternMsg || ('Enter a valid ' + lower(label) + '.');#}
+{#        if (spec.custom) return spec.custom(v, input) || '';#}
+{#        return '';#}
+{#    }#}
+{##}
+{#    function show(spec, msg) {#}
+{#        var input = byId(spec.id);#}
+{#        var hint = byId(spec.id + 'Hint');#}
+{#        if (msg) {#}
+{#            input.classList.add('invalid');#}
+{#            input.classList.remove('valid');#}
+{#            input.setAttribute('aria-invalid', 'true');#}
+{#        } else {#}
+{#            input.classList.remove('invalid');#}
+{#            input.removeAttribute('aria-invalid');#}
+{#            var filled = input.type === 'file' ? (input.files && input.files.length) : input.value.trim();#}
+{#            if (filled) input.classList.add('valid'); else input.classList.remove('valid');#}
+{#        }#}
+{#        if (hint) hint.textContent = msg;#}
+{#    }#}
+{##}
+{#    function refreshBanner() {#}
+{#        if (banner.hidden) return;#}
+{#        var n = form.querySelectorAll('.invalid').length;#}
+{#        if (!n) { banner.hidden = true; return; }#}
+{#        banner.textContent = n === 1#}
+{#            ? 'Fix the highlighted field before saving.'#}
+{#            : 'Fix the ' + n + ' highlighted fields before saving.';#}
+{#    }#}
+{##}
+{#    function validate(spec) {#}
+{#        var msg = check(spec);#}
+{#        show(spec, msg);#}
+{#        refreshBanner();#}
+{#        return msg;#}
+{#    }#}
+{##}
+{#    specs.forEach(function (spec) {#}
+{#        var input = byId(spec.id);#}
+{#        var evt = (input.tagName === 'SELECT' || input.type === 'file') ? 'change' : 'input';#}
+{##}
+{#        input.addEventListener('blur', function () {#}
+{#            touched[spec.id] = true;#}
+{#            validate(spec);#}
+{#        });#}
+{##}
+{#        input.addEventListener(evt, function () {#}
+{#            if (touched[spec.id] || input.classList.contains('invalid')) validate(spec);#}
+{#            if (evt === 'change') { touched[spec.id] = true; validate(spec); }#}
+{#        });#}
+{##}
+{#        (spec.watch || []).forEach(function (wid) {#}
+{#            byId(wid).addEventListener('input', function () {#}
+{#                if (touched[spec.id]) validate(spec);#}
+{#            });#}
+{#        });#}
+{#    });#}
+{##}
+{#    // Digits only (phone numbers etc.)#}
+{#    Array.prototype.forEach.call(form.querySelectorAll('[data-digits]'), function (el) {#}
+{#        el.addEventListener('input', function () { el.value = el.value.replace(/\D+/g, ''); });#}
+{#    });#}
+{##}
+{#    // Whole-number inputs: block e, +, - and .#}
+{#    Array.prototype.forEach.call(form.querySelectorAll('[data-int]'), function (el) {#}
+{#        el.addEventListener('keydown', function (e) {#}
+{#            if (['e', 'E', '+', '-', '.', ','].indexOf(e.key) !== -1) e.preventDefault();#}
+{#        });#}
+{#        el.addEventListener('wheel', function () { el.blur(); });#}
+{#    });#}
+{##}
+{#    // Character counters#}
+{#    Array.prototype.forEach.call(form.querySelectorAll('[data-count]'), function (el) {#}
+{#        var out = byId(el.id + 'Count');#}
+{#        var max = parseInt(el.getAttribute('data-count'), 10);#}
+{#        function upd() {#}
+{#            out.textContent = el.value.length + ' / ' + max;#}
+{#            out.classList.toggle('over', el.value.length > max);#}
+{#        }#}
+{#        el.addEventListener('input', upd);#}
+{#        upd();#}
+{#    });#}
+{##}
+{#    // Show / hide password#}
+{#    Array.prototype.forEach.call(form.querySelectorAll('[data-toggle-for]'), function (b) {#}
+{#        b.addEventListener('click', function () {#}
+{#            var t = byId(b.getAttribute('data-toggle-for'));#}
+{#            var show = t.type === 'password';#}
+{#            t.type = show ? 'text' : 'password';#}
+{#            b.textContent = show ? 'Hide' : 'Show';#}
+{#            b.setAttribute('aria-pressed', show ? 'true' : 'false');#}
+{#            t.focus();#}
+{#        });#}
+{#    });#}
+{##}
+{#    form.addEventListener('submit', function (e) {#}
+{#        var firstBad = null;#}
+{#        var count = 0;#}
+{##}
+{#        specs.forEach(function (spec) {#}
+{#            var input = byId(spec.id);#}
+{#            if (input.type !== 'file' && input.tagName !== 'SELECT') input.value = input.value.trim();#}
+{#            touched[spec.id] = true;#}
+{#            if (validate(spec)) {#}
+{#                count++;#}
+{#                if (!firstBad) firstBad = input;#}
+{#            }#}
+{#        });#}
+{##}
+{#        if (count) {#}
+{#            e.preventDefault();#}
+{#            banner.textContent = count === 1#}
+{#                ? 'Fix the highlighted field before saving.'#}
+{#                : 'Fix the ' + count + ' highlighted fields before saving.';#}
+{#            banner.hidden = false;#}
+{#            firstBad.focus();#}
+{#            firstBad.scrollIntoView({ behavior: 'smooth', block: 'center' });#}
+{#            return;#}
+{#        }#}
+{##}
+{#        banner.hidden = true;#}
+{#        btn.disabled = true;#}
+{#        btn.textContent = 'Saving...';#}
+{#    });#}
+{#{)();#}
+{##}
+{##}
+{#</script>#}
+{#</body>#}
+{#</html>#}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Add Lab - LabTrack</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-top: #164a63; --bg-mid: #0d3048; --bg-deep: #08203a;
+            --cyan: #5cd0ee; --teal: #0b84a8; --teal-dark: #086a89;
+            --heading: #0d2b3e; --text: #14283a; --muted: #5d7183;
+            --surface: #ffffff; --canvas: #f1f6fb; --border: #dae6f1;
+            --field: #e9f1fc; --field-line: #c8d9ee; --tile: #e2f4fa;
+            --danger: #c0291f; --danger-bg: #fdeceb;
+            --ok: #1c7c54; --ok-bg: #e3f6ec; --gold: #fbbf24; --nav-h: 68px;
+        }
+        *, *::before, *::after { box-sizing: border-box; }
+        body { margin: 0; min-height: 100vh; font-family: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; color: var(--text); background: var(--canvas); -webkit-font-smoothing: antialiased; }
+        a { color: inherit; text-decoration: none; }
+
+        /* NAVBAR */
+        .navbar { position: sticky; top: 0; z-index: 100; color: #fff;
+            background: radial-gradient(ellipse at 90% -40%, rgba(92,208,238,.28), transparent 55%), linear-gradient(100deg, var(--bg-top) 0%, var(--bg-mid) 45%, var(--bg-deep) 100%);
+            box-shadow: 0 6px 20px rgba(8,32,58,.25); }
+        .nav-inner { max-width: 1280px; height: var(--nav-h); margin: 0 auto; padding: 0 clamp(16px, 3vw, 36px); display: flex; align-items: center; gap: 28px; }
+        .brand { display: flex; align-items: center; gap: 12px; font-size: 1.3rem; font-weight: 800; letter-spacing: -0.02em; color: #fff; flex: none; }
+        .brand-mark { width: 40px; height: 40px; display: grid; place-items: center; border-radius: 11px; background: var(--cyan); transition: transform .25s ease; }
+        .brand:hover .brand-mark { transform: rotate(-8deg) scale(1.06); }
+        .menu { flex: 1; display: flex; align-items: center; gap: 4px; height: 100%; }
+        .nav-link { position: relative; display: inline-flex; align-items: center; gap: 7px; height: 42px; padding: 0 14px; font: inherit; font-size: .92rem; font-weight: 600; color: #cfe3ef; background: transparent; border: 0; border-radius: 10px; cursor: pointer; white-space: nowrap; transition: background .2s, color .2s; }
+        .nav-link:hover, .dd.open > .nav-link { background: rgba(255,255,255,.11); color: #fff; }
+        .nav-link:focus-visible { outline: 2px solid var(--cyan); outline-offset: 1px; }
+        .nav-link.active { color: #fff; background: rgba(92,208,238,.16); }
+        .nav-link.active::after { content: ""; position: absolute; left: 14px; right: 14px; bottom: -13px; height: 3px; border-radius: 3px 3px 0 0; background: var(--cyan); }
+        .caret { width: 14px; height: 14px; transition: transform .2s; }
+        .dd.open .caret { transform: rotate(180deg); }
+        .dd { position: relative; display: flex; align-items: center; }
+        .dd-panel { position: absolute; top: calc(100% + 12px); left: 0; min-width: 240px; padding: 8px; background: #fff; color: var(--text); border: 1px solid var(--border); border-radius: 14px; box-shadow: 0 22px 44px rgba(8,32,58,.22); opacity: 0; visibility: hidden; transform: translateY(8px); transition: opacity .18s, transform .18s, visibility .18s; }
+        .dd-panel::before { content: ""; position: absolute; left: 0; right: 0; top: -14px; height: 14px; }
+        .dd.open > .dd-panel { opacity: 1; visibility: visible; transform: translateY(0); }
+        @media (hover: hover) and (min-width: 961px) {
+            .dd:hover > .dd-panel { opacity: 1; visibility: visible; transform: translateY(0); }
+            .dd:hover > .nav-link { background: rgba(255,255,255,.11); color: #fff; }
+            .dd:hover .caret { transform: rotate(180deg); }
+        }
+        .dd.right .dd-panel { left: auto; right: 0; }
+        .dd-panel a { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 9px; font-size: .92rem; font-weight: 600; color: var(--heading); transition: background .15s, color .15s, padding .15s; }
+        .dd-panel a svg { width: 18px; height: 18px; flex: none; color: var(--teal); transition: color .15s; }
+        .dd-panel a:hover { background: var(--tile); color: var(--teal-dark); padding-left: 16px; }
+        .dd-panel a:focus-visible { outline: 2px solid var(--teal); outline-offset: -2px; }
+        .dd-panel a.active { background: var(--tile); color: var(--teal-dark); }
+        .dd-panel a.logout { color: var(--danger); }
+        .dd-panel a.logout svg { color: var(--danger); }
+        .dd-panel a.logout:hover { background: var(--danger-bg); color: var(--danger); }
+        .dd-sep { height: 1px; margin: 6px 4px; background: var(--border); }
+        .user { margin-left: auto; }
+        .avatar { width: 30px; height: 30px; display: grid; place-items: center; border-radius: 50%; background: var(--cyan); color: var(--bg-deep); font-size: .82rem; font-weight: 800; }
+        .burger { display: none; margin-left: auto; width: 44px; height: 44px; place-items: center; border: 0; border-radius: 11px; background: rgba(255,255,255,.1); color: #fff; cursor: pointer; }
+        .burger:hover { background: rgba(255,255,255,.18); }
+        .burger:focus-visible { outline: 2px solid var(--cyan); }
+        .burger svg { width: 22px; height: 22px; }
+
+        /* PAGE */
+        .container { max-width: 1280px; margin: 0 auto; padding: 36px clamp(16px, 3vw, 36px) 56px; }
+        .page-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 24px; }
+        .page-head h1 { margin: 0 0 4px; font-size: 1.8rem; font-weight: 800; letter-spacing: -0.03em; color: var(--heading); }
+        .page-head p { margin: 0; color: var(--muted); }
+
+        .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 46px; padding: 0 22px; font: inherit; font-size: .95rem; font-weight: 700; border-radius: 11px; border: 1.5px solid transparent; cursor: pointer; transition: background .2s, transform .15s, box-shadow .2s, border-color .2s; }
+        .btn:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+        .btn-primary { background: var(--teal); color: #fff; box-shadow: 0 8px 16px rgba(11,132,168,.25); }
+        .btn-primary:hover { background: var(--teal-dark); transform: translateY(-2px); box-shadow: 0 12px 22px rgba(11,132,168,.32); }
+        .btn-ghost { background: #fff; color: var(--heading); border-color: var(--border); }
+        .btn-ghost:hover { background: var(--canvas); border-color: #b8cde0; }
+        .btn-danger { background: var(--danger); color: #fff; }
+        .btn-danger:hover { background: #a11f17; transform: translateY(-2px); }
+
+        .panel { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 24px; }
+
+        .field { margin-bottom: 18px; }
+        .field label { display: block; margin-bottom: 8px; font-size: .88rem; font-weight: 700; color: var(--heading); }
+        .field input, .field select, .field textarea { width: 100%; padding: 0 16px; height: 52px; font: inherit; color: var(--text); background: var(--field); border: 1.5px solid var(--field-line); border-radius: 12px; transition: border-color .2s, box-shadow .2s, background .2s; }
+        .field textarea { height: auto; min-height: 110px; padding: 14px 16px; resize: vertical; }
+        .field input:hover, .field select:hover, .field textarea:hover { border-color: #8fb4d2; }
+        .field input:focus, .field select:focus, .field textarea:focus { outline: none; background: #fff; border-color: var(--teal); box-shadow: 0 0 0 4px rgba(11,132,168,.16); }
+        .field .hint { min-height: 1.2em; margin: 6px 0 0; font-size: .83rem; color: var(--danger); }
+
+        /* Django messages (toasts) */
+        .toasts { position: fixed; top: calc(var(--nav-h) + 16px); right: 16px; z-index: 200; display: grid; gap: 10px; width: min(92vw, 360px); }
+        .toast { display: flex; align-items: flex-start; gap: 12px; padding: 14px 16px; background: #fff; border: 1px solid var(--border); border-left: 4px solid var(--teal); border-radius: 12px; box-shadow: 0 16px 34px rgba(8,32,58,.18); font-size: .92rem; line-height: 1.45; animation: toast-in .3s ease both; }
+        .toast.error, .toast.danger { border-left-color: var(--danger); }
+        .toast.success { border-left-color: var(--ok); }
+        .toast.warning { border-left-color: var(--gold); }
+        .toast .t-icon { width: 20px; height: 20px; flex: none; margin-top: 1px; color: var(--teal); }
+        .toast.error .t-icon, .toast.danger .t-icon { color: var(--danger); }
+        .toast.success .t-icon { color: var(--ok); }
+        .toast.warning .t-icon { color: #b7791f; }
+        .toast button { margin-left: auto; border: 0; background: transparent; color: var(--muted); font-size: 1.2rem; line-height: 1; cursor: pointer; }
+        @keyframes toast-in { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Logout dialog */
+        dialog { width: min(92vw, 400px); padding: 28px; border: 0; border-radius: 18px; color: var(--text); box-shadow: 0 30px 70px rgba(8,32,58,.35); }
+        dialog::backdrop { background: rgba(6,19,40,.55); backdrop-filter: blur(2px); }
+        dialog h2 { margin: 0 0 8px; font-size: 1.3rem; font-weight: 800; color: var(--heading); }
+        dialog p { margin: 0 0 24px; color: var(--muted); line-height: 1.55; }
+        .dialog-actions { display: flex; gap: 10px; justify-content: flex-end; }
+
+        /* FORM */
+        .container.narrow { max-width: 860px; }
+        .form-panel { padding: clamp(22px, 3vw, 38px); }
+        .req-note { margin: 0 0 24px; color: var(--muted); font-size: .86rem; }
+        .req { color: var(--danger); margin-left: 3px; }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 24px; }
+        .form-grid .full { grid-column: 1 / -1; }
+        .help-text { margin: 6px 0 0; font-size: .82rem; color: var(--muted); }
+        .field .valid { border-color: #7cc9a6; }
+        .field .invalid { border-color: var(--danger); background: #fffafa; }
+        .field .invalid:focus { box-shadow: 0 0 0 4px rgba(192,41,31,.14); }
+        .field select { appearance: none; -webkit-appearance: none; padding-right: 44px; cursor: pointer;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%235d7183' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+            background-repeat: no-repeat; background-position: right 16px center; }
+        .field-meta { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+        .field-meta .hint { flex: 1; }
+        .counter { margin-top: 6px; font-size: .8rem; color: var(--muted); white-space: nowrap; }
+        .counter.over { color: var(--danger); font-weight: 700; }
+        .form-error { margin-bottom: 22px; padding: 13px 16px; background: var(--danger-bg); color: var(--danger); border: 1px solid #f1c3bf; border-left: 4px solid var(--danger); border-radius: 10px; font-size: .92rem; font-weight: 600; }
+        .form-error[hidden] { display: none; }
+        .form-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 12px; padding-top: 24px; border-top: 1px solid var(--border); }
+        .form-actions .btn-primary { min-width: 190px; }
+        .btn[disabled] { opacity: .75; cursor: progress; transform: none; }
+        .back-link { display: inline-block; margin-top: 22px; font-size: .92rem; font-weight: 700; color: var(--teal); background: linear-gradient(currentColor, currentColor) 0 100% / 0 2px no-repeat; padding-bottom: 2px; transition: background-size .25s ease, color .2s; }
+        .back-link:hover { background-size: 100% 2px; color: var(--teal-dark); }
+        .back-link:focus-visible { outline: 2px solid var(--teal); outline-offset: 3px; border-radius: 3px; }
+
+        /* MOBILE */
+        @media (max-width: 960px) {
+            .burger { display: grid; }
+            .nav-inner { gap: 12px; }
+            .menu { position: absolute; top: var(--nav-h); left: 0; right: 0; flex-direction: column; align-items: stretch; gap: 2px; height: auto; max-height: calc(100vh - var(--nav-h)); overflow-y: auto; padding: 12px 16px 20px; background: var(--bg-deep); border-top: 1px solid rgba(255,255,255,.1); box-shadow: 0 24px 40px rgba(0,0,0,.3); display: none; }
+            .navbar.open .menu { display: flex; }
+            .nav-link { height: 48px; width: 100%; justify-content: flex-start; }
+            .nav-link.active::after { display: none; }
+            .dd { flex-direction: column; align-items: stretch; }
+            .dd > .nav-link .caret { margin-left: auto; }
+            .dd-panel { position: static; display: none; min-width: 0; margin: 2px 0 6px 12px; padding: 4px; background: rgba(255,255,255,.06); border: 0; border-left: 2px solid rgba(92,208,238,.4); border-radius: 0 10px 10px 0; box-shadow: none; opacity: 1; visibility: visible; transform: none; }
+            .dd-panel::before { display: none; }
+            .dd.open > .dd-panel { display: block; }
+            .dd-panel a { color: #d3e6f2; }
+            .dd-panel a svg { color: var(--cyan); }
+            .dd-panel a:hover, .dd-panel a.active { background: rgba(255,255,255,.1); color: #fff; padding-left: 12px; }
+            .dd-panel a.logout, .dd-panel a.logout svg { color: #ffb4ac; }
+            .dd-panel a.logout:hover { background: rgba(255,120,110,.16); color: #ffd7d2; }
+            .dd-sep { background: rgba(255,255,255,.12); }
+            .user { margin-left: 0; margin-top: 8px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,.12); }
+        }
+        @media (max-width: 720px) {
+            .form-grid { grid-template-columns: 1fr; }
+            .form-actions .btn { width: 100%; }
+        }
+        @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+    </style>
+</head>
+<body>
+
+<header class="navbar" id="navbar">
+    <div class="nav-inner">
+
+        <a class="brand" href="/myapp/adminhome_get/" aria-label="LabTrack admin home">
+            <span class="brand-mark">
+                <svg width="23" height="23" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M12 2.5l8 3v6c0 5-3.3 8.6-8 10-4.7-1.4-8-5-8-10v-6l8-3z" stroke="#08203a" stroke-width="1.9" stroke-linejoin="round"/>
+                    <path d="M10.5 8.5h3M11 8.5v3l-2 3.6a.9.9 0 0 0 .8 1.3h4.4a.9.9 0 0 0 .8-1.3l-2-3.6v-3" stroke="#08203a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </span>
+            LabTrack
+        </a>
+
+        <button type="button" class="burger" id="burger" aria-label="Open menu" aria-controls="menu" aria-expanded="false">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </button>
+
+        <nav class="menu" id="menu" aria-label="Main">
+
+            <a class="nav-link" href="/myapp/adminhome_get/" data-match="adminhome">Home</a>
+
+            <div class="dd">
+                <button type="button" class="nav-link dd-btn" aria-expanded="false" aria-haspopup="true">
+                    Management
+                    <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+                </button>
+                <div class="dd-panel">
+                    <a href="/myapp/view_dept/" data-match="dept,course,subject">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6"/></svg>
+                        Manage Department
+                    </a>
+                    <a href="/myapp/view_student/" data-match="student">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 9L12 4 2 9l10 5 10-5z"/><path d="M6 11.5V16c0 1.5 2.7 3 6 3s6-1.5 6-3v-4.5"/></svg>
+                        View Students
+                    </a>
+                    <a href="/myapp/view_staff/" data-match="staff">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.5 3.3-5.5 6.5-5.5s5.7 2 6.5 5.5"/><circle cx="17.5" cy="9" r="2.5"/><path d="M17 14.5c2.5.2 4.3 1.8 5 4.5"/></svg>
+                        Manage Staff
+                    </a>
+                    <a href="/myapp/view_lab_coordinator/" data-match="lab_coordinator">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.2-4 4-6 8-6s6.8 2 8 6"/></svg>
+                        View Lab Coordinators
+                    </a>
+                    <a href="/myapp/view_lab/" data-match="view_lab/,add_lab_get,add_lab_post,edit_lab_get,edit_lab_post,delete_lab/,schedule,equipment">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.8 3h10.4a2 2 0 0 0 1.8-3l-5-9V3"/><path d="M7.5 15h9"/></svg>
+                        Manage Labs
+                    </a>
+                </div>
+            </div>
+
+            <a class="nav-link" href="/myapp/view_lab_submissions_admin/" data-match="lab_submissions">Lab Submissions</a>
+            <a class="nav-link" href="/myapp/admin_reports/" data-match="admin_reports">Reports</a>
+
+            <div class="dd">
+                <button type="button" class="nav-link dd-btn" aria-expanded="false" aria-haspopup="true">
+                    Complaints &amp; Reviews
+                    <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+                </button>
+                <div class="dd-panel">
+                    <a href="/myapp/view_complaints_admin/" data-match="complaint">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9.5 17h-19L12 3z"/><path d="M12 10v4M12 17.5v.01"/></svg>
+                        View Complaints
+                    </a>
+                    <a href="/myapp/view_feedback_admin/" data-match="feedback">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/><path d="M8.5 12h7"/></svg>
+                        View Feedback
+                    </a>
+                </div>
+            </div>
+
+            <div class="dd right user">
+                <button type="button" class="nav-link dd-btn" aria-expanded="false" aria-haspopup="true">
+                    <span class="avatar" aria-hidden="true">A</span>
+                    Admin
+                    <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+                </button>
+                <div class="dd-panel">
+                    <a href="/myapp/change_password_get/" data-match="change_password">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+                        Change Password
+                    </a>
+                    <div class="dd-sep"></div>
+                    <a href="/myapp/logout_get/" class="logout" id="logoutLink">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+                        Logout
+                    </a>
+                </div>
+            </div>
+
+        </nav>
+    </div>
+</header>
+
+<!-- Django messages -->
+<div class="toasts" id="toasts" role="status" aria-live="polite">
+    {% if messages %}
+    {% for i in messages %}
+    <div class="toast {{ i.tags }}">
+        <svg class="t-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.01"/></svg>
+        <span>{{ i }}</span>
+        <button type="button" aria-label="Dismiss" data-dismiss>&times;</button>
+    </div>
+    {% endfor %}
+    {% endif %}
+</div>
+
+<main class="container narrow">
+    <div class="page-head">
+        <div>
+            <h1>Add Lab</h1>
+            <p>Set up a lab and assign its coordinator.</p>
+        </div>
+    </div>
+
+    <section class="panel form-panel">
+        <form method="post" action="/myapp/add_lab_post/" id="pageForm" novalidate>
+            {% csrf_token %}
+
+            <div class="form-error" id="formError" role="alert" hidden></div>
+            <p class="req-note"><span class="req" aria-hidden="true" style="margin:0">*</span> Required field</p>
+
+            <div class="form-grid">
+                <div class="field">
+                    <label for="lab_name">Lab name<span class="req" aria-hidden="true">*</span></label>
+                    <input type="text" id="lab_name" name="lab_name" value="{{ request.POST.lab_name }}" placeholder="e.g. Computer Networks Lab" aria-describedby="lab_nameHint" required minlength="3" maxlength="60" autocomplete="off" autofocus>
+                    <p class="hint" id="lab_nameHint" aria-live="polite"></p>
+                </div>
+
+                <div class="field">
+                    <label for="room_number">Room number<span class="req" aria-hidden="true">*</span></label>
+                    <input type="text" id="room_number" name="room_number" value="{{ request.POST.room_number }}" placeholder="e.g. B-204" aria-describedby="room_numberHint" required maxlength="20" autocomplete="off">
+                    <p class="hint" id="room_numberHint" aria-live="polite"></p>
+                </div>
+
+                <div class="field full">
+                    <label for="coordinator">Lab coordinator<span class="req" aria-hidden="true">*</span></label>
+                    <select id="coordinator" name="coordinator" aria-describedby="coordinatorHint" required>
+                        <option value="">Select coordinator</option>
+                        {% for i in coordinators %}
+                        <option value="{{ i.id }}" {% if request.POST.coordinator == i.id|stringformat:"s" %}selected{% endif %}>{{ i.name }}</option>
+                        {% empty %}
+                        <option value="" disabled>No coordinators available</option>
+                        {% endfor %}
+                    </select>
+                    <p class="hint" id="coordinatorHint" aria-live="polite"></p>
+                </div>
+
+                <div class="field full">
+                    <label for="description">Description<span class="req" aria-hidden="true">*</span></label>
+                    <textarea id="description" name="description" rows="4" placeholder="What is this lab used for?" data-count="300" aria-describedby="descriptionHint" required>{{ request.POST.description }}</textarea>
+                    <div class="field-meta">
+                        <p class="hint" id="descriptionHint" aria-live="polite"></p>
+                        <span class="counter" id="descriptionCount" aria-hidden="true">0 / 300</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary" id="submitBtn">Add Lab</button>
+                <a class="btn btn-ghost" href="/myapp/view_lab/">View Labs</a>
+            </div>
+        </form>
+    </section>
+    <a class="back-link" href="/myapp/adminhome_get/">Back to Home</a>
+</main>
+
+<!-- Logout confirmation -->
+<dialog id="logoutDialog" aria-labelledby="logoutTitle">
+    <h2 id="logoutTitle">Log out of LabTrack?</h2>
+    <p>You will need to sign in again to use the admin panel.</p>
+    <div class="dialog-actions">
+        <button type="button" class="btn btn-ghost" id="cancelLogout">Stay signed in</button>
+        <button type="button" class="btn btn-primary" id="confirmLogout">Log out</button>
+    </div>
+</dialog>
+
+<script>
+(function () {
+    var navbar = document.getElementById('navbar');
+    var burger = document.getElementById('burger');
+    var dds = Array.prototype.slice.call(document.querySelectorAll('.dd'));
+
+    function closeAll(except) {
+        dds.forEach(function (d) {
+            if (d !== except) {
+                d.classList.remove('open');
+                d.querySelector('.dd-btn').setAttribute('aria-expanded', 'false');
+            }
+        });
+    }
+
+    dds.forEach(function (d) {
+        var btn = d.querySelector('.dd-btn');
+        btn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            var open = !d.classList.contains('open');
+            closeAll(d);
+            d.classList.toggle('open', open);
+            btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+        });
+    });
+
+    document.addEventListener('click', function (e) { if (!e.target.closest('.dd')) closeAll(); });
+
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+            closeAll();
+            navbar.classList.remove('open');
+            burger.setAttribute('aria-expanded', 'false');
+        }
+    });
+
+    burger.addEventListener('click', function () {
+        var open = !navbar.classList.contains('open');
+        navbar.classList.toggle('open', open);
+        burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+        burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    });
+
+    // Mark current page in navbar
+    var path = window.location.pathname;
+    var links = document.querySelectorAll('.menu a[data-match]');
+    var matched = false;
+    Array.prototype.forEach.call(links, function (a) {
+        if (matched) return;
+        var tokens = a.getAttribute('data-match').split(',');
+        if (tokens.some(function (t) { return path.indexOf(t) !== -1; })) {
+            matched = true;
+            a.classList.add('active');
+            a.setAttribute('aria-current', 'page');
+            var parent = a.closest('.dd');
+            if (parent) parent.querySelector('.dd-btn').classList.add('active');
+        }
+    });
+
+    // Toasts: dismiss + auto-hide (shared with JS-created toasts)
+    window.bindToast = function (t) {
+        var remove = function () { if (t.parentNode) t.parentNode.removeChild(t); };
+        var x = t.querySelector('[data-dismiss]');
+        if (x) x.addEventListener('click', remove);
+        setTimeout(remove, 6000);
+    };
+    Array.prototype.forEach.call(document.querySelectorAll('.toast'), window.bindToast);
+
+    // Logout confirmation
+    var link = document.getElementById('logoutLink');
+    var dlg = document.getElementById('logoutDialog');
+    var cancel = document.getElementById('cancelLogout');
+    var confirmBtn = document.getElementById('confirmLogout');
+    link.addEventListener('click', function (e) {
+        if (typeof dlg.showModal !== 'function') return;
+        e.preventDefault();
+        closeAll();
+        navbar.classList.remove('open');
+        dlg.showModal();
+        cancel.focus();
+    });
+    cancel.addEventListener('click', function () { dlg.close(); });
+    confirmBtn.addEventListener('click', function () { window.location.href = link.getAttribute('href'); });
+    dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
+})();
+</script>
+
+<script>
+(function () {
+    var form = document.getElementById('pageForm');
+    var btn = document.getElementById('submitBtn');
+    var banner = document.getElementById('formError');
+    var toasts = document.getElementById('toasts');
+    var touched = {};
+
+    function byId(id) { return document.getElementById(id); }
+
+    // Toast helper (same look as Django messages)
+    function toast(type, text) {
+        var el = document.createElement('div');
+        el.className = 'toast ' + type;
+        el.innerHTML = '<svg class="t-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.01"/></svg><span></span><button type="button" aria-label="Dismiss" data-dismiss>&times;</button>';
+        el.querySelector('span').textContent = text;
+        toasts.appendChild(el);
+        window.bindToast(el);
+    }
+
+    var specs = [
+        {
+            id: 'lab_name',
+            check: function (v) {
+                if (!v) return 'Enter the lab name.';
+                if (v.length < 3) return 'Lab name must be at least 3 characters.';
+                if (v.length > 60) return 'Lab name must be 60 characters or fewer.';
+                if (!/^[A-Za-z0-9]/.test(v)) return 'Lab name must start with a letter or number.';
+                if (!/^[A-Za-z0-9 &().,'\-]+$/.test(v)) return "Use letters, numbers, spaces and & ( ) . , ' - only.";
+                if ((v.match(/[A-Za-z]/g) || []).length < 3) return 'Lab name must contain at least 3 letters.';
+                if (/(.)\1{3,}/.test(v)) return 'Lab name cannot repeat the same character 4 or more times.';
+                if (/\s{2,}/.test(v)) return 'Remove extra spaces between words.';
+                return '';
+            }
+        },
+        {
+            id: 'room_number',
+            check: function (v) {
+                if (!v) return 'Enter the room number.';
+                if (v.length > 20) return 'Room number must be 20 characters or fewer.';
+                if (!/^[A-Za-z0-9]/.test(v)) return 'Room number must start with a letter or number.';
+                if (!/^[A-Za-z0-9 \/\-]+$/.test(v)) return 'Use letters, numbers, spaces, / and - only, like B-204.';
+                if (!/\d/.test(v)) return 'Room number must contain at least one digit.';
+                if (/[\/\-]{2,}/.test(v)) return 'Room number cannot have consecutive / or - symbols.';
+                if (/[\/\-]$/.test(v)) return 'Room number cannot end with / or -.';
+                return '';
+            }
+        },
+        {
+            id: 'coordinator',
+            check: function (v) {
+                if (!v) return 'Select a lab coordinator.';
+                if (!/^\d+$/.test(v)) return 'Select a valid lab coordinator.';
+                return '';
+            }
+        },
+        {
+            id: 'description',
+            check: function (v) {
+                if (!v) return 'Enter a description.';
+                if (v.length < 10) return 'Description must be at least 10 characters.';
+                if (v.length > 300) return 'Description must be 300 characters or fewer.';
+                if (v.split(/\s+/).length < 3) return 'Description must have at least 3 words.';
+                if ((v.match(/[A-Za-z]/g) || []).length < 5) return 'Description must contain meaningful text.';
+                if (/[<>]/.test(v)) return 'Description cannot contain < or > characters.';
+                if (/(.)\1{5,}/.test(v)) return 'Description cannot repeat the same character 6 or more times.';
+                return '';
+            }
+        }
+    ];
+
+    function value(spec) {
+        var el = byId(spec.id);
+        return el.tagName === 'SELECT' ? el.value : el.value.trim();
+    }
+
+    function show(spec, msg) {
+        var input = byId(spec.id);
+        var hint = byId(spec.id + 'Hint');
+        if (msg) {
+            input.classList.add('invalid');
+            input.classList.remove('valid');
+            input.setAttribute('aria-invalid', 'true');
+        } else {
+            input.classList.remove('invalid');
+            input.removeAttribute('aria-invalid');
+            input.classList.toggle('valid', !!value(spec));
+        }
+        if (hint) hint.textContent = msg;
+    }
+
+    function refreshBanner() {
+        if (banner.hidden) return;
+        var n = form.querySelectorAll('.invalid').length;
+        if (!n) { banner.hidden = true; return; }
+        banner.textContent = n === 1 ? 'Fix the highlighted field before saving.' : 'Fix the ' + n + ' highlighted fields before saving.';
+    }
+
+    function validate(spec) {
+        var msg = spec.check(value(spec));
+        show(spec, msg);
+        refreshBanner();
+        return msg;
+    }
+
+    specs.forEach(function (spec) {
+        var input = byId(spec.id);
+        var evt = input.tagName === 'SELECT' ? 'change' : 'input';
+        input.addEventListener('blur', function () { touched[spec.id] = true; validate(spec); });
+        input.addEventListener(evt, function () {
+            if (touched[spec.id] || input.classList.contains('invalid') || evt === 'change') {
+                touched[spec.id] = true;
+                validate(spec);
+            }
+        });
+    });
+
+    // Block characters that can never be valid
+    byId('lab_name').addEventListener('input', function () { this.value = this.value.replace(/[^A-Za-z0-9 &().,'\-]/g, ''); });
+    byId('room_number').addEventListener('input', function () { this.value = this.value.replace(/[^A-Za-z0-9 \/\-]/g, ''); });
+
+    // Character counter
+    var desc = byId('description');
+    var out = byId('descriptionCount');
+    function upd() {
+        var max = parseInt(desc.getAttribute('data-count'), 10);
+        out.textContent = desc.value.length + ' / ' + max;
+        out.classList.toggle('over', desc.value.length > max);
+    }
+    desc.addEventListener('input', upd);
+    upd();
+
+    form.addEventListener('submit', function (e) {
+        var firstBad = null, count = 0, firstMsg = '';
+
+        specs.forEach(function (spec) {
+            var input = byId(spec.id);
+            if (input.tagName !== 'SELECT') input.value = input.value.trim().replace(/[ ]{2,}/g, input.tagName === 'TEXTAREA' ? ' ' : ' ');
+            touched[spec.id] = true;
+            var msg = validate(spec);
+            if (msg) {
+                count++;
+                if (!firstBad) { firstBad = input; firstMsg = msg; }
+            }
+        });
+        upd();
+
+        if (count) {
+            e.preventDefault();
+            banner.textContent = count === 1 ? 'Fix the highlighted field before saving.' : 'Fix the ' + count + ' highlighted fields before saving.';
+            banner.hidden = false;
+            toast('error', firstMsg);
+            firstBad.focus();
+            firstBad.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            return;
+        }
+
+        banner.hidden = true;
+        btn.disabled = true;
+        btn.textContent = 'Saving...';
+    });
+
+    // Show initial state for values re-filled after a server error
+    specs.forEach(function (spec) {
+        if (value(spec)) { touched[spec.id] = true; validate(spec); }
+    });
+})();
+</script>
+</body>
+</html>

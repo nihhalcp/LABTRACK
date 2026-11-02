@@ -1,0 +1,852 @@
+{##}
+{#<!DOCTYPE html>#}
+{#<html>#}
+{#<head>#}
+{#    <title>Edit Equipment - LabTrack</title>#}
+{#</head>#}
+{#<body>#}
+{##}
+{#    <h2>Edit Equipment</h2>#}
+{##}
+{#    <form method="post" action="/myapp/edit_equipment_post/">#}
+{#        {% csrf_token %}#}
+{##}
+{#        <input type="hidden" name="id" value="{{ data.id }}">#}
+{##}
+{#        <label>Equipment Name:</label>#}
+{#        <input type="text" name="equipment_name" value="{{ data.equipment_name }}" required>#}
+{#        <br><br>#}
+{##}
+{#        <label>Category:</label>#}
+{#        <input type="text" name="category" value="{{ data.category }}" required>#}
+{#        <br><br>#}
+{##}
+{#        <label>Total Quantity:</label>#}
+{#        <input type="number" name="quantity" value="{{ data.quantity }}" min="1" required>#}
+{#        <br><br>#}
+{##}
+{#        <label>Available Quantity:</label>#}
+{#        <input type="number" name="available_quantity" value="{{ data.available_quantity }}" min="0" required>#}
+{#        <br><br>#}
+{##}
+{#        <label>Status:</label>#}
+{#        <select name="status" required>#}
+{#            <option value="Available" {% if data.status == 'Available' %}selected{% endif %}>Available</option>#}
+{#            <option value="Unavailable" {% if data.status == 'Unavailable' %}selected{% endif %}>Unavailable</option>#}
+{#            <option value="Maintenance" {% if data.status == 'Maintenance' %}selected{% endif %}>Maintenance</option>#}
+{#        </select>#}
+{#        <br><br>#}
+{##}
+{#        <input type="submit" value="Update Equipment">#}
+{#    </form>#}
+{##}
+{#    <br>#}
+{#    <a href="/myapp/view_equipment/{{ data.LAB.id }}/">Back to Equipment</a>#}
+{##}
+{#</body>#}
+{#</html>#}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Edit Equipment - LabTrack</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-top: #164a63;
+            --bg-mid: #0d3048;
+            --bg-deep: #08203a;
+            --cyan: #5cd0ee;
+            --teal: #0b84a8;
+            --teal-dark: #086a89;
+            --heading: #0d2b3e;
+            --text: #14283a;
+            --muted: #5d7183;
+            --surface: #ffffff;
+            --canvas: #f1f6fb;
+            --border: #dae6f1;
+            --field: #e9f1fc;
+            --field-line: #c8d9ee;
+            --tile: #e2f4fa;
+            --danger: #c0291f;
+            --danger-bg: #fdeceb;
+            --ok: #1c7c54;
+            --ok-bg: #e3f6ec;
+            --gold: #fbbf24;
+            --nav-h: 68px;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+            color: var(--text);
+            background:
+                radial-gradient(900px 420px at 100% 0%, rgba(92,208,238,.14), transparent 60%),
+                radial-gradient(700px 380px at 0% 40%, rgba(11,132,168,.07), transparent 60%),
+                var(--canvas);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a { color: inherit; text-decoration: none; }
+
+        /* ================= NAVBAR ================= */
+        .navbar {
+            position: sticky; top: 0; z-index: 100; color: #fff;
+            background:
+                radial-gradient(ellipse at 90% -40%, rgba(92,208,238,.28), transparent 55%),
+                linear-gradient(100deg, var(--bg-top) 0%, var(--bg-mid) 45%, var(--bg-deep) 100%);
+            box-shadow: 0 6px 20px rgba(8,32,58,.25);
+        }
+        .nav-inner { max-width: 1280px; height: var(--nav-h); margin: 0 auto; padding: 0 clamp(16px, 3vw, 36px); display: flex; align-items: center; gap: 28px; }
+        .brand { display: flex; align-items: center; gap: 12px; font-size: 1.3rem; font-weight: 800; letter-spacing: -0.02em; color: #fff; flex: none; }
+        .brand-mark { width: 40px; height: 40px; display: grid; place-items: center; border-radius: 11px; background: var(--cyan); transition: transform .25s ease; }
+        .brand:hover .brand-mark { transform: rotate(-8deg) scale(1.06); }
+
+        .menu { flex: 1; display: flex; align-items: center; gap: 4px; height: 100%; }
+        .nav-link { position: relative; display: inline-flex; align-items: center; gap: 7px; height: 42px; padding: 0 14px; font: inherit; font-size: .92rem; font-weight: 600; color: #cfe3ef; background: transparent; border: 0; border-radius: 10px; cursor: pointer; white-space: nowrap; transition: background .2s, color .2s; }
+        .nav-link:hover, .dd.open > .nav-link { background: rgba(255,255,255,.11); color: #fff; }
+        .nav-link:focus-visible { outline: 2px solid var(--cyan); outline-offset: 1px; }
+        .nav-link.active { color: #fff; background: rgba(92,208,238,.16); }
+        .nav-link.active::after { content: ""; position: absolute; left: 14px; right: 14px; bottom: -13px; height: 3px; border-radius: 3px 3px 0 0; background: var(--cyan); }
+
+        .caret { width: 14px; height: 14px; transition: transform .2s; }
+        .dd.open .caret { transform: rotate(180deg); }
+        .dd { position: relative; display: flex; align-items: center; }
+
+        .dd-panel { position: absolute; top: calc(100% + 12px); left: 0; min-width: 240px; padding: 8px; background: #fff; color: var(--text); border: 1px solid var(--border); border-radius: 14px; box-shadow: 0 22px 44px rgba(8,32,58,.22); opacity: 0; visibility: hidden; transform: translateY(8px); transition: opacity .18s, transform .18s, visibility .18s; }
+        .dd-panel::before { content: ""; position: absolute; left: 0; right: 0; top: -14px; height: 14px; }
+        .dd.open > .dd-panel { opacity: 1; visibility: visible; transform: translateY(0); }
+
+        @media (hover: hover) and (min-width: 961px) {
+            .dd:hover > .dd-panel { opacity: 1; visibility: visible; transform: translateY(0); }
+            .dd:hover > .nav-link { background: rgba(255,255,255,.11); color: #fff; }
+            .dd:hover .caret { transform: rotate(180deg); }
+        }
+
+        .dd.right .dd-panel { left: auto; right: 0; }
+        .dd-panel a { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 9px; font-size: .92rem; font-weight: 600; color: var(--heading); transition: background .15s, color .15s, padding .15s; }
+        .dd-panel a svg { width: 18px; height: 18px; flex: none; color: var(--teal); }
+        .dd-panel a:hover { background: var(--tile); color: var(--teal-dark); padding-left: 16px; }
+        .dd-panel a:focus-visible { outline: 2px solid var(--teal); outline-offset: -2px; }
+        .dd-panel a.active { background: var(--tile); color: var(--teal-dark); }
+        .dd-panel a.logout { color: var(--danger); }
+        .dd-panel a.logout svg { color: var(--danger); }
+        .dd-panel a.logout:hover { background: var(--danger-bg); color: var(--danger); }
+        .dd-sep { height: 1px; margin: 6px 4px; background: var(--border); }
+
+        .user { margin-left: auto; }
+        .avatar { width: 30px; height: 30px; display: grid; place-items: center; border-radius: 50%; background: var(--cyan); color: var(--bg-deep); font-size: .82rem; font-weight: 800; }
+
+        .burger { display: none; margin-left: auto; width: 44px; height: 44px; place-items: center; border: 0; border-radius: 11px; background: rgba(255,255,255,.1); color: #fff; cursor: pointer; }
+        .burger:hover { background: rgba(255,255,255,.18); }
+        .burger:focus-visible { outline: 2px solid var(--cyan); }
+        .burger svg { width: 22px; height: 22px; }
+
+        /* ================= PAGE ================= */
+        .container { max-width: 1280px; margin: 0 auto; padding: 32px clamp(16px, 3vw, 36px) 56px; }
+
+        .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 50px; padding: 0 26px; font: inherit; font-size: .95rem; font-weight: 700; border-radius: 12px; border: 1.5px solid transparent; cursor: pointer; transition: background .2s, transform .15s, box-shadow .2s, border-color .2s; }
+        .btn svg { width: 18px; height: 18px; }
+        .btn:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+        .btn-primary { background: var(--teal); color: #fff; box-shadow: 0 8px 16px rgba(11,132,168,.25); }
+        .btn-primary:hover { background: var(--teal-dark); transform: translateY(-2px); box-shadow: 0 12px 22px rgba(11,132,168,.32); }
+        .btn-primary:disabled { opacity: .7; cursor: wait; transform: none; }
+        .btn-ghost { background: #fff; color: var(--heading); border-color: var(--border); }
+        .btn-ghost:hover { background: var(--canvas); border-color: #b8cde0; transform: translateY(-2px); }
+
+        .toasts { position: fixed; top: calc(var(--nav-h) + 16px); right: 16px; z-index: 200; display: grid; gap: 10px; width: min(92vw, 360px); }
+        .toast { display: flex; align-items: flex-start; gap: 12px; padding: 14px 16px; background: #fff; border: 1px solid var(--border); border-left: 4px solid var(--teal); border-radius: 12px; box-shadow: 0 16px 34px rgba(8,32,58,.18); font-size: .92rem; line-height: 1.45; animation: toast-in .3s ease both; }
+        .toast.error { border-left-color: var(--danger); }
+        .toast.success { border-left-color: var(--ok); }
+        .toast button { margin-left: auto; border: 0; background: transparent; color: var(--muted); font-size: 1.2rem; line-height: 1; cursor: pointer; }
+        @keyframes toast-in { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+
+        dialog { width: min(92vw, 400px); padding: 28px; border: 0; border-radius: 18px; color: var(--text); box-shadow: 0 30px 70px rgba(8,32,58,.35); }
+        dialog::backdrop { background: rgba(6,19,40,.55); backdrop-filter: blur(2px); }
+        dialog h2 { margin: 0 0 8px; font-size: 1.3rem; font-weight: 800; color: var(--heading); }
+        dialog p { margin: 0 0 24px; color: var(--muted); line-height: 1.55; }
+        .dialog-actions { display: flex; gap: 10px; justify-content: flex-end; }
+
+        /* ================= HEADER ================= */
+        .crumbs { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 14px; font-size: .84rem; font-weight: 600; color: var(--muted); }
+        .crumbs a { transition: color .2s; }
+        .crumbs a:hover { color: var(--teal); }
+        .crumbs svg { width: 14px; height: 14px; }
+        .crumbs b { color: var(--heading); }
+
+        .hero {
+            position: relative; display: flex; align-items: center; justify-content: space-between; gap: 24px;
+            padding: 32px 38px; border-radius: 24px; color: #fff; overflow: hidden;
+            background: radial-gradient(ellipse at 92% 0%, rgba(92,208,238,.34), transparent 55%), linear-gradient(135deg, var(--bg-top), var(--bg-deep));
+            box-shadow: 0 20px 40px rgba(8,32,58,.22);
+        }
+        .hero::before { content: ""; position: absolute; inset: 0; background-image: radial-gradient(rgba(255,255,255,.09) 1px, transparent 1px); background-size: 24px 24px; pointer-events: none; }
+        .hero::after { content: ""; position: absolute; right: -70px; bottom: -100px; width: 280px; height: 280px; border-radius: 50%; border: 2px dashed rgba(92,208,238,.35); pointer-events: none; }
+        .hero > * { position: relative; z-index: 1; }
+        .hero-ic { width: 70px; height: 70px; flex: none; display: grid; place-items: center; border-radius: 20px; background: linear-gradient(145deg, var(--cyan), var(--teal)); box-shadow: 0 14px 28px rgba(0,0,0,.3); transform: rotate(-6deg); transition: transform .3s; }
+        .hero:hover .hero-ic { transform: rotate(0) scale(1.05); }
+        .hero-ic svg { width: 34px; height: 34px; }
+        .hero-text { flex: 1; min-width: 0; }
+        .hero h1 { margin: 0 0 6px; font-size: clamp(1.5rem, 2.6vw, 2.1rem); font-weight: 800; letter-spacing: -0.03em; }
+        .hero h1 span { color: var(--cyan); }
+        .hero p { margin: 0; color: #b9d3e3; line-height: 1.55; }
+        .chip { flex: none; display: inline-flex; align-items: center; gap: 8px; padding: 9px 16px; border-radius: 999px; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.22); font-size: .85rem; font-weight: 700; }
+        .chip svg { width: 16px; height: 16px; }
+
+        /* ================= LAYOUT ================= */
+        .layout { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 22px; margin-top: 26px; align-items: start; }
+        .panel { padding: 30px; background: var(--surface); border: 1px solid var(--border); border-radius: 22px; box-shadow: 0 12px 28px rgba(8,32,58,.06); }
+        .panel-head { display: flex; align-items: center; gap: 14px; margin-bottom: 24px; padding-bottom: 18px; border-bottom: 1px solid var(--border); }
+        .panel-head .ic { width: 46px; height: 46px; flex: none; display: grid; place-items: center; border-radius: 14px; background: var(--tile); color: var(--teal); }
+        .panel-head .ic svg { width: 22px; height: 22px; }
+        .panel-head h2 { margin: 0; font-size: 1.15rem; font-weight: 800; color: var(--heading); }
+        .panel-head p { margin: 2px 0 0; font-size: .86rem; color: var(--muted); }
+
+        /* ================= FORM ================= */
+        .field { margin-bottom: 22px; }
+        .field label { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; font-size: .88rem; font-weight: 700; color: var(--heading); }
+        .field label .req { color: var(--danger); margin-left: 3px; }
+
+        .control { position: relative; }
+        .control > svg.lead { position: absolute; left: 16px; top: 50%; width: 19px; height: 19px; transform: translateY(-50%); color: #7d93a8; pointer-events: none; transition: color .2s; z-index: 1; }
+        .control input, .control select {
+            width: 100%; height: 54px; padding: 0 46px 0 48px; font: inherit; font-weight: 500; color: var(--text);
+            background: var(--field); border: 1.5px solid var(--field-line); border-radius: 13px;
+            transition: border-color .2s, box-shadow .2s, background .2s;
+        }
+        .control select { appearance: none; -webkit-appearance: none; cursor: pointer; padding-right: 74px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235d7183' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+            background-repeat: no-repeat; background-position: right 44px center; background-size: 16px; }
+        .control select:invalid, .control select.placeholder { color: #8aa0b5; font-weight: 400; }
+        .control select option { color: var(--text); }
+        .control input::placeholder { color: #8aa0b5; font-weight: 400; }
+        .control input:hover, .control select:hover { border-color: #8fb4d2; }
+        .control input:focus, .control select:focus { outline: none; background-color: #fff; border-color: var(--teal); box-shadow: 0 0 0 4px rgba(11,132,168,.16); }
+        .control:focus-within > svg.lead { color: var(--teal); }
+
+        .control .state { position: absolute; right: 14px; top: 50%; width: 22px; height: 22px; transform: translateY(-50%) scale(.6); opacity: 0; transition: opacity .2s, transform .2s; pointer-events: none; }
+        .field.is-invalid .control input, .field.is-invalid .control select { border-color: var(--danger); background-color: #fffafa; }
+        .field.is-invalid .control input:focus, .field.is-invalid .control select:focus { box-shadow: 0 0 0 4px rgba(192,41,31,.14); }
+        .field.is-invalid .control > svg.lead { color: var(--danger); }
+        .field.is-invalid .state.bad { opacity: 1; transform: translateY(-50%) scale(1); color: var(--danger); }
+        .field.is-valid .control input, .field.is-valid .control select { border-color: #35a574; background-color: #fbfffd; }
+        .field.is-valid .state.good { opacity: 1; transform: translateY(-50%) scale(1); color: var(--ok); }
+
+        .hint { display: flex; align-items: flex-start; gap: 6px; min-height: 1.3em; margin: 8px 2px 0; font-size: .83rem; line-height: 1.4; color: var(--muted); }
+        .field.is-invalid .hint { color: var(--danger); font-weight: 600; }
+        .field.is-invalid .control { animation: shake .35s; }
+        @keyframes shake { 20%, 60% { transform: translateX(-5px); } 40%, 80% { transform: translateX(5px); } }
+
+        .presets { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 10px; }
+        .presets span { font-size: .8rem; font-weight: 600; color: var(--muted); }
+        .presets button { padding: 6px 14px; font: inherit; font-size: .82rem; font-weight: 700; color: var(--teal-dark); background: var(--tile); border: 1px solid transparent; border-radius: 999px; cursor: pointer; transition: background .2s, color .2s, transform .15s; }
+        .presets button:hover { background: var(--teal); color: #fff; transform: translateY(-2px); }
+        .presets button:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+
+        .row { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+
+        .form-alert { display: none; align-items: center; gap: 10px; margin-bottom: 20px; padding: 12px 14px; border-radius: 12px; background: var(--danger-bg); border: 1px solid #f3c2be; color: var(--danger); font-size: .88rem; font-weight: 600; }
+        .form-alert.show { display: flex; animation: toast-in .25s ease both; }
+        .form-alert svg { width: 18px; height: 18px; flex: none; }
+
+        .summary { display: none; align-items: center; gap: 12px; margin-bottom: 22px; padding: 14px 16px; border-radius: 14px; background: var(--ok-bg); border: 1px solid #b9e4cd; color: var(--ok); font-size: .9rem; font-weight: 600; line-height: 1.45; }
+        .summary.show { display: flex; animation: toast-in .25s ease both; }
+        .summary svg { width: 20px; height: 20px; flex: none; }
+
+        .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 8px; padding-top: 22px; border-top: 1px solid var(--border); }
+        .actions .btn-primary { flex: 1; min-width: 180px; }
+
+        /* ================= SIDE ================= */
+        .side { display: grid; gap: 18px; }
+        .dept-card { position: relative; padding: 24px; border-radius: 22px; color: #fff; overflow: hidden; background: radial-gradient(ellipse at 100% 0%, rgba(92,208,238,.35), transparent 60%), linear-gradient(135deg, var(--teal), var(--bg-mid)); box-shadow: 0 16px 32px rgba(8,32,58,.2); transition: transform .25s; }
+        .dept-card:hover { transform: translateY(-4px); }
+        .dept-card small { display: block; margin-bottom: 6px; font-size: .78rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #bfe6f3; }
+        .dept-card h3 { margin: 0 0 4px; font-size: 1.3rem; font-weight: 800; letter-spacing: -0.02em; }
+        .dept-card p { margin: 0; font-size: .86rem; color: #cfe9f3; }
+        .dept-card svg { position: absolute; right: 18px; bottom: 14px; width: 70px; height: 70px; color: rgba(255,255,255,.16); }
+
+        .rules { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+        .rules li { display: flex; gap: 12px; padding: 12px 14px; border-radius: 14px; background: var(--canvas); font-size: .86rem; line-height: 1.5; color: var(--text); transition: transform .2s, background .2s; }
+        .rules li:hover { transform: translateX(4px); background: var(--tile); }
+        .rules .dot { width: 28px; height: 28px; flex: none; display: grid; place-items: center; border-radius: 50%; background: var(--teal); color: #fff; }
+        .rules .dot svg { width: 14px; height: 14px; }
+        .rules b { display: block; color: var(--heading); }
+        .side .panel { padding: 24px; }
+        .side .panel h3 { margin: 0 0 14px; font-size: 1.05rem; font-weight: 800; color: var(--heading); }
+
+        .footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; margin-top: 48px; padding-top: 20px; border-top: 1px solid var(--border); font-size: .82rem; color: #8196a8; }
+
+        /* ================= RESPONSIVE ================= */
+        @media (max-width: 960px) {
+            .burger { display: grid; }
+            .nav-inner { gap: 12px; }
+            .menu { position: absolute; top: var(--nav-h); left: 0; right: 0; flex-direction: column; align-items: stretch; gap: 2px; height: auto; max-height: calc(100vh - var(--nav-h)); overflow-y: auto; padding: 12px 16px 20px; background: var(--bg-deep); border-top: 1px solid rgba(255,255,255,.1); box-shadow: 0 24px 40px rgba(0,0,0,.3); display: none; }
+            .navbar.open .menu { display: flex; }
+            .nav-link { height: 48px; width: 100%; justify-content: flex-start; }
+            .nav-link.active::after { display: none; }
+            .dd { flex-direction: column; align-items: stretch; }
+            .dd > .nav-link .caret { margin-left: auto; }
+            .dd-panel { position: static; display: none; min-width: 0; margin: 2px 0 6px 12px; padding: 4px; background: rgba(255,255,255,.06); border: 0; border-left: 2px solid rgba(92,208,238,.4); border-radius: 0 10px 10px 0; box-shadow: none; opacity: 1; visibility: visible; transform: none; }
+            .dd-panel::before { display: none; }
+            .dd.open > .dd-panel { display: block; }
+            .dd-panel a { color: #d3e6f2; }
+            .dd-panel a svg { color: var(--cyan); }
+            .dd-panel a:hover, .dd-panel a.active { background: rgba(255,255,255,.1); color: #fff; padding-left: 12px; }
+            .dd-panel a.logout { color: #ffb4ac; }
+            .dd-panel a.logout svg { color: #ffb4ac; }
+            .dd-panel a.logout:hover { background: rgba(255,120,110,.16); color: #ffd7d2; }
+            .dd-sep { background: rgba(255,255,255,.12); }
+            .user { margin-left: 0; margin-top: 8px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,.12); }
+
+            .layout { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 640px) {
+            .hero { flex-wrap: wrap; padding: 26px 22px; }
+            .hero-ic { width: 58px; height: 58px; }
+            .panel { padding: 22px 18px; }
+            .row { grid-template-columns: 1fr; gap: 0; }
+            .actions .btn { width: 100%; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * { transition: none !important; animation: none !important; }
+        }
+
+        .stocks { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .stocks div { padding: 12px 8px; border-radius: 14px; background: var(--canvas); text-align: center; }
+        .stocks small { display: block; font-size: .7rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+        .stocks b { display: block; margin-top: 2px; font-size: 1.4rem; font-weight: 800; color: var(--heading); }
+        .sbar { display: block; height: 8px; margin-top: 14px; overflow: hidden; border-radius: 8px; background: var(--border); }
+        .sbar i { display: block; width: 0; height: 100%; background: var(--ok); transition: width .3s, background .3s; }
+        .sbar i.low { background: var(--gold); }
+        .sbar i.none { background: var(--danger); }
+
+    </style>
+</head>
+<body>
+
+<header class="navbar" id="navbar">
+    <div class="nav-inner">
+
+        <a class="brand" href="/myapp/adminhome_get/" aria-label="LabTrack admin home">
+            <span class="brand-mark">
+                <svg width="23" height="23" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M12 2.5l8 3v6c0 5-3.3 8.6-8 10-4.7-1.4-8-5-8-10v-6l8-3z" stroke="#08203a" stroke-width="1.9" stroke-linejoin="round"/>
+                    <path d="M10.5 8.5h3M11 8.5v3l-2 3.6a.9.9 0 0 0 .8 1.3h4.4a.9.9 0 0 0 .8-1.3l-2-3.6v-3" stroke="#08203a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </span>
+            LabTrack
+        </a>
+
+        <button type="button" class="burger" id="burger" aria-label="Open menu" aria-controls="menu" aria-expanded="false">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </button>
+
+        <nav class="menu" id="menu" aria-label="Main">
+
+            <a class="nav-link" href="/myapp/adminhome_get/" data-match="adminhome">Home</a>
+
+            <div class="dd">
+                <button type="button" class="nav-link dd-btn" aria-expanded="false" aria-haspopup="true">
+                    Management
+                    <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+                </button>
+                <div class="dd-panel">
+                    <a href="/myapp/view_dept/" data-match="dept,course,subject">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6"/></svg>
+                        Manage Department
+                    </a>
+                    <a href="/myapp/view_student/" data-match="student">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 9L12 4 2 9l10 5 10-5z"/><path d="M6 11.5V16c0 1.5 2.7 3 6 3s6-1.5 6-3v-4.5"/></svg>
+                        View Students
+                    </a>
+                    <a href="/myapp/view_staff/" data-match="staff">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.5 3.3-5.5 6.5-5.5s5.7 2 6.5 5.5"/><circle cx="17.5" cy="9" r="2.5"/><path d="M17 14.5c2.5.2 4.3 1.8 5 4.5"/></svg>
+                        Manage Staff
+                    </a>
+                    <a href="/myapp/view_lab_coordinator/" data-match="lab_coordinator">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.2-4 4-6 8-6s6.8 2 8 6"/></svg>
+                        View Lab Coordinators
+                    </a>
+                    <a href="/myapp/view_lab/" data-match="view_lab/,add_lab_get,add_lab_post,edit_lab_get,edit_lab_post,delete_lab/,schedule,equipment">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.8 3h10.4a2 2 0 0 0 1.8-3l-5-9V3"/><path d="M7.5 15h9"/></svg>
+                        Manage Labs
+                    </a>
+                </div>
+            </div>
+
+            <a class="nav-link" href="/myapp/view_lab_submissions_admin/" data-match="lab_submissions">Lab Submissions</a>
+
+            <a class="nav-link" href="/myapp/admin_reports/" data-match="admin_reports">Reports</a>
+
+            <div class="dd">
+                <button type="button" class="nav-link dd-btn" aria-expanded="false" aria-haspopup="true">
+                    Complaints &amp; Reviews
+                    <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+                </button>
+                <div class="dd-panel">
+                    <a href="/myapp/view_complaints_admin/" data-match="complaint">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9.5 17h-19L12 3z"/><path d="M12 10v4M12 17.5v.01"/></svg>
+                        View Complaints
+                    </a>
+                    <a href="/myapp/view_feedback_admin/" data-match="feedback">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/><path d="M8.5 12h7"/></svg>
+                        View Feedback
+                    </a>
+                </div>
+            </div>
+
+            <div class="dd right user">
+                <button type="button" class="nav-link dd-btn" aria-expanded="false" aria-haspopup="true">
+                    <span class="avatar" aria-hidden="true">A</span>
+                    Admin
+                    <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+                </button>
+                <div class="dd-panel">
+                    <a href="/myapp/change_password_get/" data-match="change_password">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+                        Change Password
+                    </a>
+                    <div class="dd-sep"></div>
+                    <a href="/myapp/logout_get/" class="logout" id="logoutLink">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+                        Logout
+                    </a>
+                </div>
+            </div>
+
+        </nav>
+    </div>
+</header>
+
+{% if messages %}
+<div class="toasts" role="status" aria-live="polite">
+    {% for message in messages %}
+    <div class="toast {{ message.tags }}">
+        <span>{{ message }}</span>
+        <button type="button" aria-label="Dismiss" data-dismiss>&times;</button>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<main class="container">
+
+<nav class="crumbs" aria-label="Breadcrumb">
+    <a href="/myapp/adminhome_get/">Home</a>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+    <a href="/myapp/view_lab/">Labs</a>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+    <a href="/myapp/view_equipment/{{ data.LAB.id }}/">Equipment</a>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+    <b>Edit Equipment</b>
+</nav>
+<header class="hero">
+    <span class="hero-ic" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#08203a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-9-5-9 5v8l9 5 9-5V8z"/><path d="M3 8l9 5 9-5M12 13v8"/></svg>
+    </span>
+    <div class="hero-text">
+        <h1>Edit Equipment <span>{{ data.equipment_name }}</span></h1>
+        <p>Update the details, stock count and condition of this equipment.</p>
+    </div>
+    <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.8 3h10.4a2 2 0 0 0 1.8-3l-5-9V3"/><path d="M7.5 15h9"/></svg> {{ data.LAB.lab_name }}</span>
+</header>
+
+<div class="layout">
+
+<section class="panel" aria-labelledby="form-title">
+    <div class="panel-head">
+        <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16v4z"/><path d="M13.5 6.5l4 4"/></svg></span>
+        <div><h2 id="form-title">Equipment Details</h2><p>Fields marked <span style="color:var(--danger)">*</span> are required.</p></div>
+    </div>
+<div class="form-alert" id="formAlert" role="alert">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.01"/></svg>
+    <span id="formAlertText">Please fix the highlighted fields.</span>
+</div>
+<form method="post" action="/myapp/edit_equipment_post/" id="theForm" novalidate autocomplete="off">
+    {% csrf_token %}
+
+    <input type="hidden" name="id" value="{{ data.id }}">
+
+<div class="field" id="f-equipment_name">
+    <label for="equipment_name"><span>Equipment Name<span class="req">*</span></span><span class="count" id="nameCount">0 / 0</span></label>
+    <div class="control"><svg class="lead" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 8l-9-5-9 5v8l9 5 9-5V8z"/><path d="M3 8l9 5 9-5M12 13v8"/></svg><input type="text" id="equipment_name" name="equipment_name" value="{{ data.equipment_name }}" placeholder="e.g. Digital Oscilloscope" maxlength="100" aria-describedby="equipment_nameHint" aria-invalid="false"><svg class="state good" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/></svg><svg class="state bad" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.01"/></svg></div>
+    <p class="hint" id="equipment_nameHint">2 to 100 characters. Letters, numbers, spaces and . , - &amp; ( ) / only.</p>
+
+</div>
+<div class="field" id="f-category">
+    <label for="category"><span>Category<span class="req">*</span></span></label>
+    <div class="control"><svg class="lead" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12V4a1 1 0 0 1 1-1h8l9 9-9 9-9-9z"/><circle cx="8" cy="8" r="1.5"/></svg><input type="text" id="category" name="category" value="{{ data.category }}" placeholder="e.g. Measuring Instrument" maxlength="50" aria-describedby="categoryHint" aria-invalid="false"><svg class="state good" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/></svg><svg class="state bad" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.01"/></svg></div>
+    <p class="hint" id="categoryHint">2 to 50 characters. Letters, numbers, spaces and . , - &amp; / only.</p>
+
+</div>
+    <div class="row">
+<div class="field" id="f-quantity">
+    <label for="quantity"><span>Total Quantity<span class="req">*</span></span></label>
+    <div class="control"><svg class="lead" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 9h14M5 15h14M10 4L8 20M16 4l-2 16"/></svg><input type="number" id="quantity" name="quantity" value="{{ data.quantity }}" placeholder="e.g. 20" min="1" max="9999" step="1" inputmode="numeric" aria-describedby="quantityHint" aria-invalid="false"><svg class="state good" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/></svg><svg class="state bad" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.01"/></svg></div>
+    <p class="hint" id="quantityHint">Whole number between 1 and 9999.</p>
+
+</div>
+<div class="field" id="f-available_quantity">
+    <label for="available_quantity"><span>Available Quantity<span class="req">*</span></span></label>
+    <div class="control"><svg class="lead" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="3"/><path d="M8 12.5l3 3 5-6"/></svg><input type="number" id="available_quantity" name="available_quantity" value="{{ data.available_quantity }}" placeholder="e.g. 18" min="0" max="9999" step="1" inputmode="numeric" aria-describedby="available_quantityHint" aria-invalid="false"><svg class="state good" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/></svg><svg class="state bad" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.01"/></svg></div>
+    <p class="hint" id="available_quantityHint">Whole number from 0 up to the total quantity.</p>
+
+</div>
+    </div>
+<div class="field" id="f-status">
+    <label for="status"><span>Status<span class="req">*</span></span></label>
+    <div class="control"><svg class="lead" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg><select id="status" name="status" class="placeholder" aria-describedby="statusHint" aria-invalid="false">
+    <option value="">Select Status</option>
+    <option value="Available" {% if data.status == 'Available' %}selected{% endif %}>Available</option>
+    <option value="Unavailable" {% if data.status == 'Unavailable' %}selected{% endif %}>Unavailable</option>
+    <option value="Maintenance" {% if data.status == 'Maintenance' %}selected{% endif %}>Maintenance</option>
+</select><svg class="state good" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/></svg><svg class="state bad" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.01"/></svg></div>
+    <p class="hint" id="statusHint">Choose the current condition of this equipment.</p>
+
+</div>
+    <div class="actions">
+        <button type="submit" class="btn btn-primary" id="submitBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l4 4 10-10"/></svg><span id="submitText">Update Equipment</span></button>
+        <button type="reset" class="btn btn-ghost">Reset</button>
+        <a class="btn btn-ghost" href="/myapp/view_equipment/{{ data.LAB.id }}/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg>Back to Equipment</a>
+    </div>
+</form>
+</section>
+
+<aside class="side">
+    <div class="dept-card"><small>Lab</small><h3>{{ data.LAB.lab_name }}</h3><p>This equipment is kept here.</p><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.8 3h10.4a2 2 0 0 0 1.8-3l-5-9V3"/><path d="M7.5 15h9"/></svg></div>
+    <div class="panel"><h3>Stock overview</h3>
+        <div class="stocks"><div><small>Total</small><b id="sTotal">0</b></div><div><small>Available</small><b id="sAvail">0</b></div><div><small>In use</small><b id="sUse">0</b></div></div>
+        <span class="sbar" aria-hidden="true"><i id="sBar"></i></span>
+    </div>
+    <div class="panel"><h3>Before you save</h3>
+<ul class="rules">
+<li><span class="dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l4 4 10-10"/></svg></span><div><b>Available cannot exceed total</b>Available quantity must always be equal to or less than the total quantity.</div></li>
+<li><span class="dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l4 4 10-10"/></svg></span><div><b>Keep the count honest</b>Update available quantity whenever equipment is damaged, lost or sent for repair.</div></li>
+<li><span class="dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l4 4 10-10"/></svg></span><div><b>Set the right status</b>Use Maintenance while equipment is being repaired and Unavailable when it cannot be used.</div></li>
+</ul>
+    </div>
+</aside>
+</div>
+
+<footer class="footer">
+    <span>&copy; LabTrack &middot; College Lab, Subject &amp; Management System</span>
+    <span>Admin Panel</span>
+</footer>
+
+</main>
+
+<!-- Logout confirmation -->
+<dialog id="logoutDialog" aria-labelledby="logoutTitle">
+    <h2 id="logoutTitle">Log out of LabTrack?</h2>
+    <p>You will need to sign in again to use the admin panel.</p>
+    <div class="dialog-actions">
+        <button type="button" class="btn btn-ghost" id="cancelLogout">Stay signed in</button>
+        <button type="button" class="btn btn-primary" id="confirmLogout">Log out</button>
+    </div>
+</dialog>
+
+<script>
+(function () {
+    /* ---------- Navbar ---------- */
+    var navbar = document.getElementById('navbar');
+    var burger = document.getElementById('burger');
+    var dds = Array.prototype.slice.call(document.querySelectorAll('.dd'));
+
+    function closeAll(except) {
+        dds.forEach(function (d) {
+            if (d !== except) {
+                d.classList.remove('open');
+                d.querySelector('.dd-btn').setAttribute('aria-expanded', 'false');
+            }
+        });
+    }
+
+    dds.forEach(function (d) {
+        var btn = d.querySelector('.dd-btn');
+        btn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            var open = !d.classList.contains('open');
+            closeAll(d);
+            d.classList.toggle('open', open);
+            btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+        });
+    });
+
+    document.addEventListener('click', function (e) { if (!e.target.closest('.dd')) closeAll(); });
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+            closeAll();
+            navbar.classList.remove('open');
+            burger.setAttribute('aria-expanded', 'false');
+        }
+    });
+
+    burger.addEventListener('click', function () {
+        var open = !navbar.classList.contains('open');
+        navbar.classList.toggle('open', open);
+        burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+        burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    });
+
+    var path = window.location.pathname;
+    var matched = false;
+    Array.prototype.forEach.call(document.querySelectorAll('.menu a[data-match]'), function (a) {
+        if (matched) return;
+        var hit = a.getAttribute('data-match').split(',').some(function (t) { return path.indexOf(t) !== -1; });
+        if (hit) {
+            matched = true;
+            a.classList.add('active');
+            a.setAttribute('aria-current', 'page');
+            var parent = a.closest('.dd');
+            if (parent) parent.querySelector('.dd-btn').classList.add('active');
+        }
+    });
+
+    Array.prototype.forEach.call(document.querySelectorAll('.toast'), function (t) {
+        var remove = function () { if (t.parentNode) t.parentNode.removeChild(t); };
+        t.querySelector('[data-dismiss]').addEventListener('click', remove);
+        setTimeout(remove, 6000);
+    });
+
+    var link = document.getElementById('logoutLink');
+    var dlg = document.getElementById('logoutDialog');
+    var cancel = document.getElementById('cancelLogout');
+    var confirmBtn = document.getElementById('confirmLogout');
+    link.addEventListener('click', function (e) {
+        if (typeof dlg.showModal !== 'function') return;
+        e.preventDefault();
+        closeAll();
+        navbar.classList.remove('open');
+        dlg.showModal();
+        cancel.focus();
+    });
+    cancel.addEventListener('click', function () { dlg.close(); });
+    confirmBtn.addEventListener('click', function () { window.location.href = link.getAttribute('href'); });
+    dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
+
+
+    /* ---------- Validation engine ---------- */
+    var $ = function (id) { return document.getElementById(id); };
+    var form = $('theForm');
+    var alertBox = $('formAlert');
+    var alertText = $('formAlertText');
+    var submitBtn = $('submitBtn');
+    var submitText = $('submitText');
+    var SUBMIT_LABEL = submitText.textContent;
+    var fields = [];
+
+    function hideAlert() { alertBox.classList.remove('show'); }
+
+    function addField(c) {
+        c.touched = false;
+        c.def = c.hint.textContent;
+        c.check = function (show) {
+            var err = c.validate();
+            c.wrap.classList.remove('is-invalid', 'is-valid');
+            c.inputs.forEach(function (i) { i.setAttribute('aria-invalid', show && err ? 'true' : 'false'); });
+            if (c.onCheck) c.onCheck(err, show);
+            if (!show) { c.hint.textContent = c.def; return !err; }
+            if (err) { c.wrap.classList.add('is-invalid'); c.hint.textContent = err; }
+            else { c.wrap.classList.add('is-valid'); c.hint.textContent = c.ok ? c.ok() : 'Looks good.'; }
+            return !err;
+        };
+        c.inputs.forEach(function (i) {
+            i.addEventListener('input', function () { c.check(c.touched); hideAlert(); });
+            i.addEventListener('change', function () { c.touched = true; c.check(true); hideAlert(); });
+            if (!c.noBlur) i.addEventListener('blur', function () { c.touched = true; c.check(true); });
+        });
+        fields.push(c);
+        return c;
+    }
+
+    function flagError(c, msg) {
+        c.touched = true;
+        c.wrap.classList.remove('is-valid');
+        c.wrap.classList.add('is-invalid');
+        c.hint.textContent = msg;
+    }
+
+    function tidy(el) { el.value = el.value.trim().replace(/\s{2,}/g, ' '); }
+
+    form.addEventListener('submit', function (e) {
+        var bad = [];
+        fields.forEach(function (c) {
+            if (c.trim) tidy(c.inputs[0]);
+            c.touched = true;
+            if (!c.check(true)) bad.push(c);
+        });
+        if (bad.length) {
+            e.preventDefault();
+            alertText.textContent = bad.length === 1
+                ? 'Please fix the highlighted field before saving.'
+                : 'Please fix the ' + bad.length + ' highlighted fields before saving.';
+            alertBox.classList.add('show');
+            (bad[0].focusEl || bad[0].inputs[0]).focus();
+            bad[0].wrap.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            return;
+        }
+        if (form.dataset.submitting === '1') { e.preventDefault(); return; }
+        form.dataset.submitting = '1';
+        submitBtn.disabled = true;
+        submitText.textContent = 'Saving...';
+    });
+
+    form.addEventListener('reset', function () {
+        setTimeout(function () {
+            fields.forEach(function (c) { c.touched = false; c.check(false); });
+            hideAlert();
+            if (window.onFormReset) window.onFormReset();
+            (fields[0].focusEl || fields[0].inputs[0]).focus();
+        }, 0);
+    });
+
+    window.addEventListener('pageshow', function () {
+        form.dataset.submitting = '0';
+        submitBtn.disabled = false;
+        submitText.textContent = SUBMIT_LABEL;
+    });
+
+    function pad(n) { return (n < 10 ? '0' : '') + n; }
+    function toISO(d) { return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); }
+    function parseISO(s) {
+        var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s);
+        if (!m) return null;
+        var y = +m[1], mo = +m[2], d = +m[3];
+        var dt = new Date(y, mo - 1, d);
+        if (dt.getFullYear() !== y || dt.getMonth() !== mo - 1 || dt.getDate() !== d) return null;
+        return dt;
+    }
+    function setCount(el, len, max) {
+        el.textContent = len + ' / ' + max;
+        el.classList.toggle('warn', len >= max * 0.9);
+    }
+
+    function textError(el, label, o) {
+        var raw = el.value, v = raw.trim();
+        if (v === '') return label + ' is required.';
+        if (raw !== raw.replace(/^\s+/, '')) return label + ' cannot start with a space.';
+        if (v.length < o.min) return label + ' must be at least ' + o.min + ' characters.';
+        if (v.length > o.max) return label + ' cannot exceed ' + o.max + ' characters.';
+        if (/^\d+$/.test(v)) return label + ' cannot contain only numbers.';
+        if (!o.re.test(v)) return o.reMsg;
+        if (!/[A-Za-z]/.test(v)) return label + ' must include at least one letter.';
+        if (/\s{2,}/.test(v)) return 'Remove extra consecutive spaces.';
+        if (o.rep && o.rep.test(v)) return 'Remove repeated special characters.';
+        return '';
+    }
+    function intError(el, label, min, max) {
+        var raw = el.value.trim();
+        if (raw === '') return (el.validity && el.validity.badInput) ? 'Enter numbers only, with no letters or symbols.' : label + ' is required.';
+        if (!/^-?\d+(\.\d+)?$/.test(raw)) return 'Enter numbers only, with no letters or symbols.';
+        var n = Number(raw);
+        if (!isFinite(n)) return 'Enter a valid number.';
+        if (n % 1 !== 0) return label + ' must be a whole number (no decimals).';
+        if (n < min) return label + ' must be at least ' + min + '.';
+        if (n > max) return label + ' cannot be more than ' + max + '.';
+        return '';
+    }
+    function wholeOnly(el, c) {
+        el.addEventListener('keydown', function (e) {
+            if (['e', 'E', '+', '-', '.', ','].indexOf(e.key) !== -1) { e.preventDefault(); flagError(c, 'Only whole numbers are allowed.'); }
+        });
+        el.addEventListener('wheel', function () { el.blur(); }, { passive: true });
+        el.addEventListener('paste', function (e) {
+            var t = (e.clipboardData || window.clipboardData).getData('text').trim();
+            if (!/^\d+$/.test(t)) { e.preventDefault(); flagError(c, 'Only whole numbers are allowed.'); }
+        });
+    }
+
+    var nm = $('equipment_name'), nmCount = $('nameCount'), cat = $('category');
+    var qty = $('quantity'), av = $('available_quantity'), st = $('status');
+    var sTotal = $('sTotal'), sAvail = $('sAvail'), sUse = $('sUse'), sBar = $('sBar');
+
+    function validNum(el, min, max) { return intError(el, 'x', min, max) === '' ? Number(el.value) : null; }
+    function updateStock() {
+        var t = validNum(qty, 1, 9999), a = validNum(av, 0, 9999);
+        sTotal.textContent = t === null ? '-' : t;
+        sAvail.textContent = a === null ? '-' : a;
+        if (t !== null && a !== null && a <= t) {
+            sUse.textContent = t - a;
+            var pct = t > 0 ? (a / t) * 100 : 0;
+            sBar.style.width = pct + '%';
+            sBar.className = a === 0 ? 'none' : (pct <= 25 ? 'low' : '');
+        } else {
+            sUse.textContent = '-';
+            sBar.style.width = '0%';
+        }
+    }
+
+    addField({
+        inputs: [nm], wrap: $('f-equipment_name'), hint: $('equipment_nameHint'), trim: true,
+        validate: function () {
+            return textError(nm, 'Equipment name', { min: 2, max: 100, re: /^[A-Za-z0-9][A-Za-z0-9 .,&()\/\-]*$/,
+                reMsg: 'Use only letters, numbers, spaces and . , - & ( ) / characters.', rep: /([.,\-&\/])\1{1,}/ });
+        },
+        onCheck: function () { setCount(nmCount, nm.value.length, 100); }
+    });
+    addField({
+        inputs: [cat], wrap: $('f-category'), hint: $('categoryHint'), trim: true,
+        validate: function () {
+            return textError(cat, 'Category', { min: 2, max: 50, re: /^[A-Za-z0-9][A-Za-z0-9 .,&\/\-]*$/,
+                reMsg: 'Use only letters, numbers, spaces and . , - & / characters.', rep: /([.,\-&\/])\1{1,}/ });
+        }
+    });
+
+    var fQty = addField({
+        inputs: [qty], wrap: $('f-quantity'), hint: $('quantityHint'),
+        validate: function () { return intError(qty, 'Total quantity', 1, 9999); },
+        ok: function () { return 'Total: ' + Number(qty.value) + ' units.'; },
+        onCheck: updateStock
+    });
+    var fAv = addField({
+        inputs: [av], wrap: $('f-available_quantity'), hint: $('available_quantityHint'),
+        validate: function () {
+            var e = intError(av, 'Available quantity', 0, 9999);
+            if (e) return e;
+            var t = validNum(qty, 1, 9999);
+            if (t !== null && Number(av.value) > t) return 'Available quantity cannot be more than total quantity (' + t + ').';
+            return '';
+        },
+        ok: function () { return Number(av.value) + ' of ' + (validNum(qty, 1, 9999) || '?') + ' units available.'; },
+        onCheck: updateStock
+    });
+    var fSt = addField({
+        inputs: [st], wrap: $('f-status'), hint: $('statusHint'),
+        validate: function () {
+            if (st.value === '') return 'Please select a status.';
+            if (['Available', 'Unavailable', 'Maintenance'].indexOf(st.value) === -1) return 'Please select a valid status.';
+            return '';
+        },
+        ok: function () {
+            var a = validNum(av, 0, 9999);
+            if (st.value === 'Available' && a === 0) return 'Selected: Available. Heads up: available quantity is 0.';
+            return 'Selected: ' + st.value + '.';
+        },
+        onCheck: function () { st.classList.toggle('placeholder', st.value === ''); }
+    });
+    wholeOnly(qty, fQty);
+    wholeOnly(av, fAv);
+    qty.addEventListener('input', function () { if (av.value !== '') { fAv.touched = true; fAv.check(true); } });
+    av.addEventListener('input', function () { if (fSt.touched) fSt.check(true); });
+
+    window.onFormReset = function () { setCount(nmCount, nm.value.length, 100); setTimeout(updateStock, 0); };
+    setCount(nmCount, nm.value.length, 100);
+    updateStock();
+    nm.focus();
+
+})();
+</script>
+
+</body>
+</html>

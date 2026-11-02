@@ -1,0 +1,947 @@
+{##}
+{#<!DOCTYPE html>#}
+{#<html>#}
+{#<head>#}
+{#    <title>Admin Reports</title>#}
+{#</head>#}
+{#<body>#}
+{##}
+{#    <h1>LabTrack - Admin Reports</h1>#}
+{##}
+{#    <p><a href="/myapp/adminhome_get/">Back to Admin Home</a></p>#}
+{##}
+{#    <hr>#}
+{##}
+{#    <h2>1. Lab Submission Report</h2>#}
+{##}
+{#    <table border="1" cellpadding="5">#}
+{#        <tr>#}
+{#            <th>Sl No</th>#}
+{#            <th>Student Name</th>#}
+{#            <th>Lab Exercise</th>#}
+{#            <th>File</th>#}
+{#            <th>Submitted Date</th>#}
+{#            <th>Status</th>#}
+{#            <th>Grade</th>#}
+{#            <th>Feedback</th>#}
+{#        </tr>#}
+{##}
+{#        {% for s in submissions %}#}
+{#        <tr>#}
+{#            <td>{{ forloop.counter }}</td>#}
+{#            <td>{{ s.STUDENT.name }}</td>#}
+{#            <td>{{ s.INSTRUCTION.title }}</td>#}
+{#            <td><a href="{{ s.file.url }}">View File</a></td>#}
+{#            <td>{{ s.submitted_date }}</td>#}
+{#            <td>{{ s.status }}</td>#}
+{#            <td>{{ s.grade }}</td>#}
+{#            <td>{{ s.feedback }}</td>#}
+{#        </tr>#}
+{#        {% empty %}#}
+{#        <tr>#}
+{#            <td colspan="8">No submissions found.</td>#}
+{#        </tr>#}
+{#        {% endfor %}#}
+{#    </table>#}
+{##}
+{#    <hr>#}
+{##}
+{#    <h2>2. Equipment Fine Report</h2>#}
+{##}
+{#    <table border="1" cellpadding="5">#}
+{#        <tr>#}
+{#            <th>Sl No</th>#}
+{#            <th>Student Name</th>#}
+{#            <th>Equipment</th>#}
+{#            <th>Quantity</th>#}
+{#            <th>Damage Description</th>#}
+{#            <th>Fine Amount</th>#}
+{#            <th>Status</th>#}
+{#        </tr>#}
+{##}
+{#        {% for f in fines %}#}
+{#        <tr>#}
+{#            <td>{{ forloop.counter }}</td>#}
+{#            <td>{{ f.STUDENT.name }}</td>#}
+{#            <td>{{ f.EQUIPMENT.equipment_name }}</td>#}
+{#            <td>{{ f.quantity }}</td>#}
+{#            <td>{{ f.damage_description }}</td>#}
+{#            <td>{{ f.fine_amount }}</td>#}
+{#            <td>{{ f.status }}</td>#}
+{#        </tr>#}
+{#        {% empty %}#}
+{#        <tr>#}
+{#            <td colspan="7">No fines found.</td>#}
+{#        </tr>#}
+{#        {% endfor %}#}
+{#    </table>#}
+{##}
+{#    <hr>#}
+{##}
+{#    <h2>3. Equipment Status Report</h2>#}
+{##}
+{#    <table border="1" cellpadding="5">#}
+{#        <tr>#}
+{#            <th>Sl No</th>#}
+{#            <th>Equipment Name</th>#}
+{#            <th>Category</th>#}
+{#            <th>Lab</th>#}
+{#            <th>Total Quantity</th>#}
+{#            <th>Available Quantity</th>#}
+{#            <th>Equipment Status</th>#}
+{#        </tr>#}
+{##}
+{#        {% for e in equipment %}#}
+{#        <tr>#}
+{#            <td>{{ forloop.counter }}</td>#}
+{#            <td>{{ e.equipment_name }}</td>#}
+{#            <td>{{ e.category }}</td>#}
+{#            <td>{{ e.LAB.lab_name }}</td>#}
+{#            <td>{{ e.quantity }}</td>#}
+{#            <td>{{ e.available_quantity }}</td>#}
+{#            <td>{{ e.status }}</td>#}
+{#        </tr>#}
+{#        {% empty %}#}
+{#        <tr>#}
+{#            <td colspan="7">No equipment found.</td>#}
+{#        </tr>#}
+{#        {% endfor %}#}
+{#    </table>#}
+{##}
+{#</body>#}
+{#</html>#}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Admin Reports - LabTrack</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-top: #164a63;
+            --bg-mid: #0d3048;
+            --bg-deep: #08203a;
+            --cyan: #5cd0ee;
+            --teal: #0b84a8;
+            --teal-dark: #086a89;
+            --heading: #0d2b3e;
+            --text: #14283a;
+            --muted: #5d7183;
+            --surface: #ffffff;
+            --canvas: #f1f6fb;
+            --border: #dae6f1;
+            --field: #e9f1fc;
+            --field-line: #c8d9ee;
+            --tile: #e2f4fa;
+            --danger: #c0291f;
+            --danger-bg: #fdeceb;
+            --ok: #1c7c54;
+            --ok-bg: #e3f6ec;
+            --gold: #fbbf24;
+            --nav-h: 68px;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+            color: var(--text);
+            background:
+                radial-gradient(900px 420px at 100% 0%, rgba(92,208,238,.14), transparent 60%),
+                radial-gradient(700px 380px at 0% 40%, rgba(11,132,168,.07), transparent 60%),
+                var(--canvas);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a { color: inherit; text-decoration: none; }
+
+        /* ================= NAVBAR ================= */
+        .navbar {
+            position: sticky; top: 0; z-index: 100; color: #fff;
+            background:
+                radial-gradient(ellipse at 90% -40%, rgba(92,208,238,.28), transparent 55%),
+                linear-gradient(100deg, var(--bg-top) 0%, var(--bg-mid) 45%, var(--bg-deep) 100%);
+            box-shadow: 0 6px 20px rgba(8,32,58,.25);
+        }
+        .nav-inner { max-width: 1280px; height: var(--nav-h); margin: 0 auto; padding: 0 clamp(16px, 3vw, 36px); display: flex; align-items: center; gap: 28px; }
+        .brand { display: flex; align-items: center; gap: 12px; font-size: 1.3rem; font-weight: 800; letter-spacing: -0.02em; color: #fff; flex: none; }
+        .brand-mark { width: 40px; height: 40px; display: grid; place-items: center; border-radius: 11px; background: var(--cyan); transition: transform .25s ease; }
+        .brand:hover .brand-mark { transform: rotate(-8deg) scale(1.06); }
+
+        .menu { flex: 1; display: flex; align-items: center; gap: 4px; height: 100%; }
+        .nav-link { position: relative; display: inline-flex; align-items: center; gap: 7px; height: 42px; padding: 0 14px; font: inherit; font-size: .92rem; font-weight: 600; color: #cfe3ef; background: transparent; border: 0; border-radius: 10px; cursor: pointer; white-space: nowrap; transition: background .2s, color .2s; }
+        .nav-link:hover, .dd.open > .nav-link { background: rgba(255,255,255,.11); color: #fff; }
+        .nav-link:focus-visible { outline: 2px solid var(--cyan); outline-offset: 1px; }
+        .nav-link.active { color: #fff; background: rgba(92,208,238,.16); }
+        .nav-link.active::after { content: ""; position: absolute; left: 14px; right: 14px; bottom: -13px; height: 3px; border-radius: 3px 3px 0 0; background: var(--cyan); }
+
+        .caret { width: 14px; height: 14px; transition: transform .2s; }
+        .dd.open .caret { transform: rotate(180deg); }
+        .dd { position: relative; display: flex; align-items: center; }
+
+        .dd-panel { position: absolute; top: calc(100% + 12px); left: 0; min-width: 240px; padding: 8px; background: #fff; color: var(--text); border: 1px solid var(--border); border-radius: 14px; box-shadow: 0 22px 44px rgba(8,32,58,.22); opacity: 0; visibility: hidden; transform: translateY(8px); transition: opacity .18s, transform .18s, visibility .18s; }
+        .dd-panel::before { content: ""; position: absolute; left: 0; right: 0; top: -14px; height: 14px; }
+        .dd.open > .dd-panel { opacity: 1; visibility: visible; transform: translateY(0); }
+
+        @media (hover: hover) and (min-width: 961px) {
+            .dd:hover > .dd-panel { opacity: 1; visibility: visible; transform: translateY(0); }
+            .dd:hover > .nav-link { background: rgba(255,255,255,.11); color: #fff; }
+            .dd:hover .caret { transform: rotate(180deg); }
+        }
+
+        .dd.right .dd-panel { left: auto; right: 0; }
+        .dd-panel a { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 9px; font-size: .92rem; font-weight: 600; color: var(--heading); transition: background .15s, color .15s, padding .15s; }
+        .dd-panel a svg { width: 18px; height: 18px; flex: none; color: var(--teal); }
+        .dd-panel a:hover { background: var(--tile); color: var(--teal-dark); padding-left: 16px; }
+        .dd-panel a:focus-visible { outline: 2px solid var(--teal); outline-offset: -2px; }
+        .dd-panel a.active { background: var(--tile); color: var(--teal-dark); }
+        .dd-panel a.logout { color: var(--danger); }
+        .dd-panel a.logout svg { color: var(--danger); }
+        .dd-panel a.logout:hover { background: var(--danger-bg); color: var(--danger); }
+        .dd-sep { height: 1px; margin: 6px 4px; background: var(--border); }
+
+        .user { margin-left: auto; }
+        .avatar { width: 30px; height: 30px; display: grid; place-items: center; border-radius: 50%; background: var(--cyan); color: var(--bg-deep); font-size: .82rem; font-weight: 800; }
+
+        .burger { display: none; margin-left: auto; width: 44px; height: 44px; place-items: center; border: 0; border-radius: 11px; background: rgba(255,255,255,.1); color: #fff; cursor: pointer; }
+        .burger:hover { background: rgba(255,255,255,.18); }
+        .burger:focus-visible { outline: 2px solid var(--cyan); }
+        .burger svg { width: 22px; height: 22px; }
+
+        /* ================= PAGE ================= */
+        .container { max-width: 1280px; margin: 0 auto; padding: 32px clamp(16px, 3vw, 36px) 56px; }
+
+        .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 50px; padding: 0 26px; font: inherit; font-size: .95rem; font-weight: 700; border-radius: 12px; border: 1.5px solid transparent; cursor: pointer; transition: background .2s, transform .15s, box-shadow .2s, border-color .2s; }
+        .btn svg { width: 18px; height: 18px; }
+        .btn:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+        .btn-primary { background: var(--teal); color: #fff; box-shadow: 0 8px 16px rgba(11,132,168,.25); }
+        .btn-primary:hover { background: var(--teal-dark); transform: translateY(-2px); box-shadow: 0 12px 22px rgba(11,132,168,.32); }
+        .btn-primary:disabled { opacity: .7; cursor: wait; transform: none; }
+        .btn-ghost { background: #fff; color: var(--heading); border-color: var(--border); }
+        .btn-ghost:hover { background: var(--canvas); border-color: #b8cde0; transform: translateY(-2px); }
+
+        .toasts { position: fixed; top: calc(var(--nav-h) + 16px); right: 16px; z-index: 200; display: grid; gap: 10px; width: min(92vw, 360px); }
+        .toast { display: flex; align-items: flex-start; gap: 12px; padding: 14px 16px; background: #fff; border: 1px solid var(--border); border-left: 4px solid var(--teal); border-radius: 12px; box-shadow: 0 16px 34px rgba(8,32,58,.18); font-size: .92rem; line-height: 1.45; animation: toast-in .3s ease both; }
+        .toast.error { border-left-color: var(--danger); }
+        .toast.success { border-left-color: var(--ok); }
+        .toast button { margin-left: auto; border: 0; background: transparent; color: var(--muted); font-size: 1.2rem; line-height: 1; cursor: pointer; }
+        @keyframes toast-in { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+
+        dialog { width: min(92vw, 400px); padding: 28px; border: 0; border-radius: 18px; color: var(--text); box-shadow: 0 30px 70px rgba(8,32,58,.35); }
+        dialog::backdrop { background: rgba(6,19,40,.55); backdrop-filter: blur(2px); }
+        dialog h2 { margin: 0 0 8px; font-size: 1.3rem; font-weight: 800; color: var(--heading); }
+        dialog p { margin: 0 0 24px; color: var(--muted); line-height: 1.55; }
+        .dialog-actions { display: flex; gap: 10px; justify-content: flex-end; }
+
+        /* ================= HEADER ================= */
+        .crumbs { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 14px; font-size: .84rem; font-weight: 600; color: var(--muted); }
+        .crumbs a { transition: color .2s; }
+        .crumbs a:hover { color: var(--teal); }
+        .crumbs svg { width: 14px; height: 14px; }
+        .crumbs b { color: var(--heading); }
+
+        .hero {
+            position: relative; display: flex; align-items: center; justify-content: space-between; gap: 24px;
+            padding: 32px 38px; border-radius: 24px; color: #fff; overflow: hidden;
+            background: radial-gradient(ellipse at 92% 0%, rgba(92,208,238,.34), transparent 55%), linear-gradient(135deg, var(--bg-top), var(--bg-deep));
+            box-shadow: 0 20px 40px rgba(8,32,58,.22);
+        }
+        .hero::before { content: ""; position: absolute; inset: 0; background-image: radial-gradient(rgba(255,255,255,.09) 1px, transparent 1px); background-size: 24px 24px; pointer-events: none; }
+        .hero::after { content: ""; position: absolute; right: -70px; bottom: -100px; width: 280px; height: 280px; border-radius: 50%; border: 2px dashed rgba(92,208,238,.35); pointer-events: none; }
+        .hero > * { position: relative; z-index: 1; }
+        .hero-ic { width: 70px; height: 70px; flex: none; display: grid; place-items: center; border-radius: 20px; background: linear-gradient(145deg, var(--cyan), var(--teal)); box-shadow: 0 14px 28px rgba(0,0,0,.3); transform: rotate(-6deg); transition: transform .3s; }
+        .hero:hover .hero-ic { transform: rotate(0) scale(1.05); }
+        .hero-ic svg { width: 34px; height: 34px; }
+        .hero-text { flex: 1; min-width: 0; }
+        .hero h1 { margin: 0 0 6px; font-size: clamp(1.5rem, 2.6vw, 2.1rem); font-weight: 800; letter-spacing: -0.03em; }
+        .hero h1 span { color: var(--cyan); }
+        .hero p { margin: 0; color: #b9d3e3; line-height: 1.55; }
+        .chip { flex: none; display: inline-flex; align-items: center; gap: 8px; padding: 9px 16px; border-radius: 999px; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.22); font-size: .85rem; font-weight: 700; }
+        .chip svg { width: 16px; height: 16px; }
+
+        /* ================= LAYOUT ================= */
+        .layout { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 22px; margin-top: 26px; align-items: start; }
+        .panel { padding: 30px; background: var(--surface); border: 1px solid var(--border); border-radius: 22px; box-shadow: 0 12px 28px rgba(8,32,58,.06); }
+        .panel-head { display: flex; align-items: center; gap: 14px; margin-bottom: 24px; padding-bottom: 18px; border-bottom: 1px solid var(--border); }
+        .panel-head .ic { width: 46px; height: 46px; flex: none; display: grid; place-items: center; border-radius: 14px; background: var(--tile); color: var(--teal); }
+        .panel-head .ic svg { width: 22px; height: 22px; }
+        .panel-head h2 { margin: 0; font-size: 1.15rem; font-weight: 800; color: var(--heading); }
+        .panel-head p { margin: 2px 0 0; font-size: .86rem; color: var(--muted); }
+
+        /* ================= FORM ================= */
+        .field { margin-bottom: 22px; }
+        .field label { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; font-size: .88rem; font-weight: 700; color: var(--heading); }
+        .field label .req { color: var(--danger); margin-left: 3px; }
+
+        .control { position: relative; }
+        .control > svg.lead { position: absolute; left: 16px; top: 50%; width: 19px; height: 19px; transform: translateY(-50%); color: #7d93a8; pointer-events: none; transition: color .2s; z-index: 1; }
+        .control input, .control select {
+            width: 100%; height: 54px; padding: 0 46px 0 48px; font: inherit; font-weight: 500; color: var(--text);
+            background: var(--field); border: 1.5px solid var(--field-line); border-radius: 13px;
+            transition: border-color .2s, box-shadow .2s, background .2s;
+        }
+        .control select { appearance: none; -webkit-appearance: none; cursor: pointer; padding-right: 74px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235d7183' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+            background-repeat: no-repeat; background-position: right 44px center; background-size: 16px; }
+        .control select:invalid, .control select.placeholder { color: #8aa0b5; font-weight: 400; }
+        .control select option { color: var(--text); }
+        .control input::placeholder { color: #8aa0b5; font-weight: 400; }
+        .control input:hover, .control select:hover { border-color: #8fb4d2; }
+        .control input:focus, .control select:focus { outline: none; background-color: #fff; border-color: var(--teal); box-shadow: 0 0 0 4px rgba(11,132,168,.16); }
+        .control:focus-within > svg.lead { color: var(--teal); }
+
+        .control .state { position: absolute; right: 14px; top: 50%; width: 22px; height: 22px; transform: translateY(-50%) scale(.6); opacity: 0; transition: opacity .2s, transform .2s; pointer-events: none; }
+        .field.is-invalid .control input, .field.is-invalid .control select { border-color: var(--danger); background-color: #fffafa; }
+        .field.is-invalid .control input:focus, .field.is-invalid .control select:focus { box-shadow: 0 0 0 4px rgba(192,41,31,.14); }
+        .field.is-invalid .control > svg.lead { color: var(--danger); }
+        .field.is-invalid .state.bad { opacity: 1; transform: translateY(-50%) scale(1); color: var(--danger); }
+        .field.is-valid .control input, .field.is-valid .control select { border-color: #35a574; background-color: #fbfffd; }
+        .field.is-valid .state.good { opacity: 1; transform: translateY(-50%) scale(1); color: var(--ok); }
+
+        .hint { display: flex; align-items: flex-start; gap: 6px; min-height: 1.3em; margin: 8px 2px 0; font-size: .83rem; line-height: 1.4; color: var(--muted); }
+        .field.is-invalid .hint { color: var(--danger); font-weight: 600; }
+        .field.is-invalid .control { animation: shake .35s; }
+        @keyframes shake { 20%, 60% { transform: translateX(-5px); } 40%, 80% { transform: translateX(5px); } }
+
+        .presets { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 10px; }
+        .presets span { font-size: .8rem; font-weight: 600; color: var(--muted); }
+        .presets button { padding: 6px 14px; font: inherit; font-size: .82rem; font-weight: 700; color: var(--teal-dark); background: var(--tile); border: 1px solid transparent; border-radius: 999px; cursor: pointer; transition: background .2s, color .2s, transform .15s; }
+        .presets button:hover { background: var(--teal); color: #fff; transform: translateY(-2px); }
+        .presets button:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+
+        .row { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+
+        .form-alert { display: none; align-items: center; gap: 10px; margin-bottom: 20px; padding: 12px 14px; border-radius: 12px; background: var(--danger-bg); border: 1px solid #f3c2be; color: var(--danger); font-size: .88rem; font-weight: 600; }
+        .form-alert.show { display: flex; animation: toast-in .25s ease both; }
+        .form-alert svg { width: 18px; height: 18px; flex: none; }
+
+        .summary { display: none; align-items: center; gap: 12px; margin-bottom: 22px; padding: 14px 16px; border-radius: 14px; background: var(--ok-bg); border: 1px solid #b9e4cd; color: var(--ok); font-size: .9rem; font-weight: 600; line-height: 1.45; }
+        .summary.show { display: flex; animation: toast-in .25s ease both; }
+        .summary svg { width: 20px; height: 20px; flex: none; }
+
+        .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 8px; padding-top: 22px; border-top: 1px solid var(--border); }
+        .actions .btn-primary { flex: 1; min-width: 180px; }
+
+        /* ================= SIDE ================= */
+        .side { display: grid; gap: 18px; }
+        .dept-card { position: relative; padding: 24px; border-radius: 22px; color: #fff; overflow: hidden; background: radial-gradient(ellipse at 100% 0%, rgba(92,208,238,.35), transparent 60%), linear-gradient(135deg, var(--teal), var(--bg-mid)); box-shadow: 0 16px 32px rgba(8,32,58,.2); transition: transform .25s; }
+        .dept-card:hover { transform: translateY(-4px); }
+        .dept-card small { display: block; margin-bottom: 6px; font-size: .78rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #bfe6f3; }
+        .dept-card h3 { margin: 0 0 4px; font-size: 1.3rem; font-weight: 800; letter-spacing: -0.02em; }
+        .dept-card p { margin: 0; font-size: .86rem; color: #cfe9f3; }
+        .dept-card svg { position: absolute; right: 18px; bottom: 14px; width: 70px; height: 70px; color: rgba(255,255,255,.16); }
+
+        .rules { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+        .rules li { display: flex; gap: 12px; padding: 12px 14px; border-radius: 14px; background: var(--canvas); font-size: .86rem; line-height: 1.5; color: var(--text); transition: transform .2s, background .2s; }
+        .rules li:hover { transform: translateX(4px); background: var(--tile); }
+        .rules .dot { width: 28px; height: 28px; flex: none; display: grid; place-items: center; border-radius: 50%; background: var(--teal); color: #fff; }
+        .rules .dot svg { width: 14px; height: 14px; }
+        .rules b { display: block; color: var(--heading); }
+        .side .panel { padding: 24px; }
+        .side .panel h3 { margin: 0 0 14px; font-size: 1.05rem; font-weight: 800; color: var(--heading); }
+
+        .footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; margin-top: 48px; padding-top: 20px; border-top: 1px solid var(--border); font-size: .82rem; color: #8196a8; }
+
+        /* ================= RESPONSIVE ================= */
+        @media (max-width: 960px) {
+            .burger { display: grid; }
+            .nav-inner { gap: 12px; }
+            .menu { position: absolute; top: var(--nav-h); left: 0; right: 0; flex-direction: column; align-items: stretch; gap: 2px; height: auto; max-height: calc(100vh - var(--nav-h)); overflow-y: auto; padding: 12px 16px 20px; background: var(--bg-deep); border-top: 1px solid rgba(255,255,255,.1); box-shadow: 0 24px 40px rgba(0,0,0,.3); display: none; }
+            .navbar.open .menu { display: flex; }
+            .nav-link { height: 48px; width: 100%; justify-content: flex-start; }
+            .nav-link.active::after { display: none; }
+            .dd { flex-direction: column; align-items: stretch; }
+            .dd > .nav-link .caret { margin-left: auto; }
+            .dd-panel { position: static; display: none; min-width: 0; margin: 2px 0 6px 12px; padding: 4px; background: rgba(255,255,255,.06); border: 0; border-left: 2px solid rgba(92,208,238,.4); border-radius: 0 10px 10px 0; box-shadow: none; opacity: 1; visibility: visible; transform: none; }
+            .dd-panel::before { display: none; }
+            .dd.open > .dd-panel { display: block; }
+            .dd-panel a { color: #d3e6f2; }
+            .dd-panel a svg { color: var(--cyan); }
+            .dd-panel a:hover, .dd-panel a.active { background: rgba(255,255,255,.1); color: #fff; padding-left: 12px; }
+            .dd-panel a.logout { color: #ffb4ac; }
+            .dd-panel a.logout svg { color: #ffb4ac; }
+            .dd-panel a.logout:hover { background: rgba(255,120,110,.16); color: #ffd7d2; }
+            .dd-sep { background: rgba(255,255,255,.12); }
+            .user { margin-left: 0; margin-top: 8px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,.12); }
+
+            .layout { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 640px) {
+            .hero { flex-wrap: wrap; padding: 26px 22px; }
+            .hero-ic { width: 58px; height: 58px; }
+            .panel { padding: 22px 18px; }
+            .row { grid-template-columns: 1fr; gap: 0; }
+            .actions .btn { width: 100%; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * { transition: none !important; animation: none !important; }
+        }
+
+        .stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; margin-top: 26px; }
+        .stat { display: flex; align-items: center; gap: 16px; padding: 22px; background: var(--surface); border: 1px solid var(--border); border-radius: 20px; box-shadow: 0 12px 28px rgba(8,32,58,.06); transition: transform .2s, box-shadow .2s; }
+        .stat:hover { transform: translateY(-3px); box-shadow: 0 18px 34px rgba(8,32,58,.1); }
+        .stat .ic { width: 52px; height: 52px; flex: none; display: grid; place-items: center; border-radius: 15px; background: var(--tile); color: var(--teal); }
+        .stat .ic svg { width: 24px; height: 24px; }
+        .stat small { display: block; font-size: .78rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+        .stat b { display: block; margin: 2px 0; font-size: 1.7rem; font-weight: 800; letter-spacing: -0.02em; color: var(--heading); }
+        .stat span.sub { font-size: .82rem; color: var(--muted); }
+
+        .jump { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 22px; }
+        .jump span { font-size: .82rem; font-weight: 700; color: var(--muted); }
+        .jump a { padding: 8px 16px; font-size: .84rem; font-weight: 700; color: var(--teal-dark); background: var(--tile); border-radius: 999px; transition: background .2s, color .2s, transform .15s; }
+        .jump a:hover { background: var(--teal); color: #fff; transform: translateY(-2px); }
+        .jump a:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+
+        .report { margin-top: 26px; scroll-margin-top: calc(var(--nav-h) + 16px); }
+        .toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+        .search { position: relative; flex: 1; min-width: 220px; }
+        .search > svg { position: absolute; left: 14px; top: 50%; width: 18px; height: 18px; transform: translateY(-50%); color: #7d93a8; pointer-events: none; }
+        .search input { width: 100%; height: 48px; padding: 0 44px 0 42px; font: inherit; font-weight: 500; color: var(--text); background: var(--field); border: 1.5px solid var(--field-line); border-radius: 12px; transition: border-color .2s, box-shadow .2s, background .2s; }
+        .search input::placeholder { color: #8aa0b5; font-weight: 400; }
+        .search input:hover { border-color: #8fb4d2; }
+        .search input:focus { outline: none; background: #fff; border-color: var(--teal); box-shadow: 0 0 0 4px rgba(11,132,168,.16); }
+        .search.bad input { border-color: var(--danger); background: #fffafa; }
+        .search .clear { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); width: 32px; height: 32px; display: none; place-items: center; border: 0; border-radius: 9px; background: transparent; color: var(--muted); font-size: 1.2rem; line-height: 1; cursor: pointer; }
+        .search .clear.show { display: grid; }
+        .search .clear:hover { background: var(--tile); color: var(--teal); }
+        .toolbar select { height: 48px; min-width: 170px; padding: 0 14px; font: inherit; font-weight: 600; color: var(--heading); background: var(--field); border: 1.5px solid var(--field-line); border-radius: 12px; cursor: pointer; transition: border-color .2s, box-shadow .2s; }
+        .toolbar select:hover { border-color: #8fb4d2; }
+        .toolbar select:focus { outline: none; border-color: var(--teal); box-shadow: 0 0 0 4px rgba(11,132,168,.16); }
+        .toolbar select:disabled, .search input:disabled { opacity: .55; cursor: not-allowed; }
+        .rcount { margin-left: auto; font-size: .84rem; font-weight: 700; color: var(--muted); white-space: nowrap; }
+        .shint { min-height: 1.3em; margin: 8px 2px 14px; font-size: .83rem; color: var(--muted); }
+        .shint.bad { color: var(--danger); font-weight: 600; }
+
+        .tablewrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 16px; }
+        table { width: 100%; min-width: 760px; border-collapse: collapse; font-size: .9rem; }
+        th { padding: 13px 16px; text-align: left; white-space: nowrap; background: var(--canvas); border-bottom: 1px solid var(--border); font-size: .74rem; font-weight: 800; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); }
+        td { padding: 13px 16px; vertical-align: top; border-bottom: 1px solid var(--border); color: var(--text); line-height: 1.45; }
+        tbody tr { transition: background .15s; }
+        tbody tr:hover { background: #f6fbfe; }
+        tbody tr:last-child td { border-bottom: 0; }
+        td.num { color: var(--muted); font-weight: 700; width: 56px; }
+        td.strong { font-weight: 700; color: var(--heading); }
+        .empty-row td, .nomatch td { padding: 40px 16px; text-align: center; font-weight: 600; color: var(--muted); }
+
+        .badge { display: inline-flex; align-items: center; padding: 4px 11px; border-radius: 999px; font-size: .78rem; font-weight: 700; text-transform: capitalize; background: var(--tile); color: var(--teal-dark); }
+        .badge.ok { background: var(--ok-bg); color: var(--ok); }
+        .badge.warn { background: #fff4d6; color: #8a5a00; }
+        .badge.bad { background: var(--danger-bg); color: var(--danger); }
+        .file-link { font-weight: 700; color: var(--teal-dark); border-bottom: 1.5px solid transparent; transition: border-color .2s; }
+        .file-link:hover { border-bottom-color: var(--teal); }
+        .money { font-weight: 700; color: var(--heading); white-space: nowrap; }
+        .bar { display: block; width: 90px; height: 6px; margin-top: 6px; overflow: hidden; border-radius: 6px; background: var(--border); }
+        .bar i { display: block; width: 0; height: 100%; background: var(--ok); transition: width .4s; }
+        .bar.low i { background: var(--gold); }
+        .bar.none i { background: var(--danger); }
+        .btn-print { height: 46px; }
+
+        @media (max-width: 960px) { .stats { grid-template-columns: 1fr; } }
+        @media (max-width: 640px) { .toolbar select { flex: 1; } .rcount { margin-left: 0; width: 100%; } }
+
+        @media print {
+            .navbar, .toasts, .toolbar, .shint, .jump, .crumbs, .footer, .btn-print, .hero::after { display: none !important; }
+            body { background: #fff; }
+            .container { padding: 0; }
+            .hero { box-shadow: none; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .panel, .stat { box-shadow: none; break-inside: avoid; }
+            .tablewrap { overflow: visible; }
+            table { min-width: 0; font-size: .8rem; }
+            th, .badge { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        }
+
+    </style>
+</head>
+<body>
+
+<header class="navbar" id="navbar">
+    <div class="nav-inner">
+
+        <a class="brand" href="/myapp/adminhome_get/" aria-label="LabTrack admin home">
+            <span class="brand-mark">
+                <svg width="23" height="23" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M12 2.5l8 3v6c0 5-3.3 8.6-8 10-4.7-1.4-8-5-8-10v-6l8-3z" stroke="#08203a" stroke-width="1.9" stroke-linejoin="round"/>
+                    <path d="M10.5 8.5h3M11 8.5v3l-2 3.6a.9.9 0 0 0 .8 1.3h4.4a.9.9 0 0 0 .8-1.3l-2-3.6v-3" stroke="#08203a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </span>
+            LabTrack
+        </a>
+
+        <button type="button" class="burger" id="burger" aria-label="Open menu" aria-controls="menu" aria-expanded="false">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </button>
+
+        <nav class="menu" id="menu" aria-label="Main">
+
+            <a class="nav-link" href="/myapp/adminhome_get/" data-match="adminhome">Home</a>
+
+            <div class="dd">
+                <button type="button" class="nav-link dd-btn" aria-expanded="false" aria-haspopup="true">
+                    Management
+                    <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+                </button>
+                <div class="dd-panel">
+                    <a href="/myapp/view_dept/" data-match="dept,course,subject">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6"/></svg>
+                        Manage Department
+                    </a>
+                    <a href="/myapp/view_student/" data-match="student">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 9L12 4 2 9l10 5 10-5z"/><path d="M6 11.5V16c0 1.5 2.7 3 6 3s6-1.5 6-3v-4.5"/></svg>
+                        View Students
+                    </a>
+                    <a href="/myapp/view_staff/" data-match="staff">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.5 3.3-5.5 6.5-5.5s5.7 2 6.5 5.5"/><circle cx="17.5" cy="9" r="2.5"/><path d="M17 14.5c2.5.2 4.3 1.8 5 4.5"/></svg>
+                        Manage Staff
+                    </a>
+                    <a href="/myapp/view_lab_coordinator/" data-match="lab_coordinator">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.2-4 4-6 8-6s6.8 2 8 6"/></svg>
+                        View Lab Coordinators
+                    </a>
+                    <a href="/myapp/view_lab/" data-match="view_lab/,add_lab_get,add_lab_post,edit_lab_get,edit_lab_post,delete_lab/,schedule,equipment">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.8 3h10.4a2 2 0 0 0 1.8-3l-5-9V3"/><path d="M7.5 15h9"/></svg>
+                        Manage Labs
+                    </a>
+                </div>
+            </div>
+
+            <a class="nav-link" href="/myapp/view_lab_submissions_admin/" data-match="lab_submissions">Lab Submissions</a>
+
+            <a class="nav-link" href="/myapp/admin_reports/" data-match="admin_reports">Reports</a>
+
+            <div class="dd">
+                <button type="button" class="nav-link dd-btn" aria-expanded="false" aria-haspopup="true">
+                    Complaints &amp; Reviews
+                    <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+                </button>
+                <div class="dd-panel">
+                    <a href="/myapp/view_complaints_admin/" data-match="complaint">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9.5 17h-19L12 3z"/><path d="M12 10v4M12 17.5v.01"/></svg>
+                        View Complaints
+                    </a>
+                    <a href="/myapp/view_feedback_admin/" data-match="feedback">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/><path d="M8.5 12h7"/></svg>
+                        View Feedback
+                    </a>
+                </div>
+            </div>
+
+            <div class="dd right user">
+                <button type="button" class="nav-link dd-btn" aria-expanded="false" aria-haspopup="true">
+                    <span class="avatar" aria-hidden="true">A</span>
+                    Admin
+                    <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+                </button>
+                <div class="dd-panel">
+                    <a href="/myapp/change_password_get/" data-match="change_password">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+                        Change Password
+                    </a>
+                    <div class="dd-sep"></div>
+                    <a href="/myapp/logout_get/" class="logout" id="logoutLink">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+                        Logout
+                    </a>
+                </div>
+            </div>
+
+        </nav>
+    </div>
+</header>
+
+{% if messages %}
+<div class="toasts" role="status" aria-live="polite">
+    {% for message in messages %}
+    <div class="toast {{ message.tags }}">
+        <span>{{ message }}</span>
+        <button type="button" aria-label="Dismiss" data-dismiss>&times;</button>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<main class="container">
+
+<nav class="crumbs" aria-label="Breadcrumb">
+    <a href="/myapp/adminhome_get/">Home</a>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+    <b>Reports</b>
+</nav>
+<header class="hero">
+    <span class="hero-ic" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#08203a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16M7 20V11M12 20V5M17 20v-8"/></svg>
+    </span>
+    <div class="hero-text">
+        <h1>LabTrack <span>Admin Reports</span></h1>
+        <p>Lab submissions, equipment fines and equipment status in one place.</p>
+    </div>
+    <button type="button" class="btn btn-ghost btn-print" id="printBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 9V3h10v6M7 17H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2"/><rect x="7" y="14" width="10" height="7" rx="1"/></svg> Print Reports</button>
+</header>
+
+<div class="stats">
+<div class="stat"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg></span><div><small>Lab submissions</small><b id="stat-sub">0</b><span class="sub" id="stat-sub-s"></span></div></div>
+<div class="stat"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M14.8 9.2c-.5-.8-1.5-1.2-2.8-1.2-1.7 0-2.8.8-2.8 2 0 3 5.6 1.3 5.6 4.2 0 1.2-1.1 2-2.8 2-1.4 0-2.4-.5-3-1.4M12 6v2M12 16v2"/></svg></span><div><small>Equipment fines</small><b id="stat-fine">0</b><span class="sub" id="stat-fine-s"></span></div></div>
+<div class="stat"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 8l-9-5-9 5v8l9 5 9-5V8z"/><path d="M3 8l9 5 9-5M12 13v8"/></svg></span><div><small>Equipment items</small><b id="stat-eq">0</b><span class="sub" id="stat-eq-s"></span></div></div>
+</div>
+
+<div class="jump"><span>Jump to:</span><a href="#sec-submissions">Lab Submissions</a><a href="#sec-fines">Equipment Fines</a><a href="#sec-equipment">Equipment Status</a></div>
+
+<section class="panel report" id="sec-submissions" data-name="Lab Submission Report" aria-labelledby="sec-submissions-title">
+    <div class="panel-head">
+        <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg></span>
+        <div><h2 id="sec-submissions-title">1. Lab Submission Report</h2><p>Student work submitted for lab exercises.</p></div>
+    </div>
+    <div class="toolbar">
+        <div class="search" role="search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+            <input type="search" class="rsearch" placeholder="Search student, exercise, date or feedback" maxlength="50" autocomplete="off" aria-label="Search lab submission report" aria-describedby="sec-submissions-hint">
+            <button type="button" class="clear" aria-label="Clear search">&times;</button>
+        </div>
+        <select class="rstatus" aria-label="Filter lab submission report by status"><option value="">All statuses</option></select>
+        <span class="rcount" aria-live="polite"></span>
+    </div>
+    <p class="shint" id="sec-submissions-hint">Search by any column. Type at least 2 characters.</p>
+    <div class="tablewrap">
+    <table>
+        <thead><tr><th scope="col">Sl No</th><th scope="col">Student Name</th><th scope="col">Lab Exercise</th><th scope="col">File</th><th scope="col">Submitted Date</th><th scope="col">Status</th><th scope="col">Grade</th><th scope="col">Feedback</th></tr></thead>
+        <tbody>
+        {% for s in submissions %}
+        <tr data-status="{{ s.status|lower }}">
+            <td class="num">{{ forloop.counter }}</td>
+            <td class="strong">{{ s.STUDENT.name }}</td>
+            <td>{{ s.INSTRUCTION.title }}</td>
+            <td>{% if s.file %}<a class="file-link" href="{{ s.file.url }}" target="_blank" rel="noopener">View File</a>{% else %}&mdash;{% endif %}</td>
+            <td>{{ s.submitted_date }}</td>
+            <td class="st">{{ s.status }}</td>
+            <td>{{ s.grade|default:"&mdash;" }}</td>
+            <td>{{ s.feedback|default:"&mdash;" }}</td>
+        </tr>
+        {% empty %}
+        <tr class="empty-row"><td colspan="8">No submissions found.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </div>
+</section>
+
+<section class="panel report" id="sec-fines" data-name="Equipment Fine Report" aria-labelledby="sec-fines-title">
+    <div class="panel-head">
+        <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M14.8 9.2c-.5-.8-1.5-1.2-2.8-1.2-1.7 0-2.8.8-2.8 2 0 3 5.6 1.3 5.6 4.2 0 1.2-1.1 2-2.8 2-1.4 0-2.4-.5-3-1.4M12 6v2M12 16v2"/></svg></span>
+        <div><h2 id="sec-fines-title">2. Equipment Fine Report</h2><p>Fines charged for damaged or lost equipment.</p></div>
+    </div>
+    <div class="toolbar">
+        <div class="search" role="search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+            <input type="search" class="rsearch" placeholder="Search student, equipment or description" maxlength="50" autocomplete="off" aria-label="Search equipment fine report" aria-describedby="sec-fines-hint">
+            <button type="button" class="clear" aria-label="Clear search">&times;</button>
+        </div>
+        <select class="rstatus" aria-label="Filter equipment fine report by status"><option value="">All statuses</option></select>
+        <span class="rcount" aria-live="polite"></span>
+    </div>
+    <p class="shint" id="sec-fines-hint">Search by any column. Type at least 2 characters.</p>
+    <div class="tablewrap">
+    <table>
+        <thead><tr><th scope="col">Sl No</th><th scope="col">Student Name</th><th scope="col">Equipment</th><th scope="col">Quantity</th><th scope="col">Damage Description</th><th scope="col">Fine Amount</th><th scope="col">Status</th></tr></thead>
+        <tbody>
+        {% for f in fines %}
+        <tr data-status="{{ f.status|lower }}">
+            <td class="num">{{ forloop.counter }}</td>
+            <td class="strong">{{ f.STUDENT.name }}</td>
+            <td>{{ f.EQUIPMENT.equipment_name }}</td>
+            <td>{{ f.quantity }}</td>
+            <td>{{ f.damage_description|default:"&mdash;" }}</td>
+            <td class="money" data-amount="{{ f.fine_amount }}">&#8377;{{ f.fine_amount }}</td>
+            <td class="st">{{ f.status }}</td>
+        </tr>
+        {% empty %}
+        <tr class="empty-row"><td colspan="7">No fines found.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </div>
+</section>
+
+<section class="panel report" id="sec-equipment" data-name="Equipment Status Report" aria-labelledby="sec-equipment-title">
+    <div class="panel-head">
+        <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 8l-9-5-9 5v8l9 5 9-5V8z"/><path d="M3 8l9 5 9-5M12 13v8"/></svg></span>
+        <div><h2 id="sec-equipment-title">3. Equipment Status Report</h2><p>Stock and availability of equipment in every lab.</p></div>
+    </div>
+    <div class="toolbar">
+        <div class="search" role="search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+            <input type="search" class="rsearch" placeholder="Search equipment, category or lab" maxlength="50" autocomplete="off" aria-label="Search equipment status report" aria-describedby="sec-equipment-hint">
+            <button type="button" class="clear" aria-label="Clear search">&times;</button>
+        </div>
+        <select class="rstatus" aria-label="Filter equipment status report by status"><option value="">All statuses</option></select>
+        <span class="rcount" aria-live="polite"></span>
+    </div>
+    <p class="shint" id="sec-equipment-hint">Search by any column. Type at least 2 characters.</p>
+    <div class="tablewrap">
+    <table>
+        <thead><tr><th scope="col">Sl No</th><th scope="col">Equipment Name</th><th scope="col">Category</th><th scope="col">Lab</th><th scope="col">Total Quantity</th><th scope="col">Available Quantity</th><th scope="col">Equipment Status</th></tr></thead>
+        <tbody>
+        {% for e in equipment %}
+        <tr data-status="{{ e.status|lower }}">
+            <td class="num">{{ forloop.counter }}</td>
+            <td class="strong">{{ e.equipment_name }}</td>
+            <td>{{ e.category }}</td>
+            <td>{{ e.LAB.lab_name }}</td>
+            <td data-total="{{ e.quantity }}">{{ e.quantity }}</td>
+            <td data-avail="{{ e.available_quantity }}">{{ e.available_quantity }}<span class="bar" aria-hidden="true"><i></i></span></td>
+            <td class="st">{{ e.status }}</td>
+        </tr>
+        {% empty %}
+        <tr class="empty-row"><td colspan="7">No equipment found.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </div>
+</section>
+
+<footer class="footer">
+    <span>&copy; LabTrack &middot; College Lab, Subject &amp; Management System</span>
+    <span>Admin Panel</span>
+</footer>
+
+</main>
+
+<!-- Logout confirmation -->
+<dialog id="logoutDialog" aria-labelledby="logoutTitle">
+    <h2 id="logoutTitle">Log out of LabTrack?</h2>
+    <p>You will need to sign in again to use the admin panel.</p>
+    <div class="dialog-actions">
+        <button type="button" class="btn btn-ghost" id="cancelLogout">Stay signed in</button>
+        <button type="button" class="btn btn-primary" id="confirmLogout">Log out</button>
+    </div>
+</dialog>
+
+<script>
+(function () {
+    /* ---------- Navbar ---------- */
+    var navbar = document.getElementById('navbar');
+    var burger = document.getElementById('burger');
+    var dds = Array.prototype.slice.call(document.querySelectorAll('.dd'));
+
+    function closeAll(except) {
+        dds.forEach(function (d) {
+            if (d !== except) {
+                d.classList.remove('open');
+                d.querySelector('.dd-btn').setAttribute('aria-expanded', 'false');
+            }
+        });
+    }
+
+    dds.forEach(function (d) {
+        var btn = d.querySelector('.dd-btn');
+        btn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            var open = !d.classList.contains('open');
+            closeAll(d);
+            d.classList.toggle('open', open);
+            btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+        });
+    });
+
+    document.addEventListener('click', function (e) { if (!e.target.closest('.dd')) closeAll(); });
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+            closeAll();
+            navbar.classList.remove('open');
+            burger.setAttribute('aria-expanded', 'false');
+        }
+    });
+
+    burger.addEventListener('click', function () {
+        var open = !navbar.classList.contains('open');
+        navbar.classList.toggle('open', open);
+        burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+        burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    });
+
+    var path = window.location.pathname;
+    var matched = false;
+    Array.prototype.forEach.call(document.querySelectorAll('.menu a[data-match]'), function (a) {
+        if (matched) return;
+        var hit = a.getAttribute('data-match').split(',').some(function (t) { return path.indexOf(t) !== -1; });
+        if (hit) {
+            matched = true;
+            a.classList.add('active');
+            a.setAttribute('aria-current', 'page');
+            var parent = a.closest('.dd');
+            if (parent) parent.querySelector('.dd-btn').classList.add('active');
+        }
+    });
+
+    Array.prototype.forEach.call(document.querySelectorAll('.toast'), function (t) {
+        var remove = function () { if (t.parentNode) t.parentNode.removeChild(t); };
+        t.querySelector('[data-dismiss]').addEventListener('click', remove);
+        setTimeout(remove, 6000);
+    });
+
+    var link = document.getElementById('logoutLink');
+    var dlg = document.getElementById('logoutDialog');
+    var cancel = document.getElementById('cancelLogout');
+    var confirmBtn = document.getElementById('confirmLogout');
+    link.addEventListener('click', function (e) {
+        if (typeof dlg.showModal !== 'function') return;
+        e.preventDefault();
+        closeAll();
+        navbar.classList.remove('open');
+        dlg.showModal();
+        cancel.focus();
+    });
+    cancel.addEventListener('click', function () { dlg.close(); });
+    confirmBtn.addEventListener('click', function () { window.location.href = link.getAttribute('href'); });
+    dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
+
+
+    /* ---------- Reports ---------- */
+    var $ = function (id) { return document.getElementById(id); };
+
+    function classify(t) {
+        t = t.toLowerCase();
+        if (/(reject|unpaid|damag|lost|overdue|fail|unavailable|broken|out of stock|inactive|not )/.test(t)) return 'bad';
+        if (/(approv|paid|complet|good|available|graded|accept|return|resolv|active|working)/.test(t)) return 'ok';
+        if (/(pend|review|submit|partial|process|issued|progress|maintenance|low|repair)/.test(t)) return 'warn';
+        return '';
+    }
+    function num(v) { var n = parseFloat(v); return isFinite(n) ? n : 0; }
+    function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+
+    var summary = {};
+
+    Array.prototype.forEach.call(document.querySelectorAll('.report'), function (rep) {
+        var tbody = rep.querySelector('tbody');
+        var rows = Array.prototype.slice.call(tbody.querySelectorAll('tr:not(.empty-row)'));
+        var search = rep.querySelector('.rsearch');
+        var wrap = rep.querySelector('.search');
+        var clear = rep.querySelector('.clear');
+        var sel = rep.querySelector('.rstatus');
+        var count = rep.querySelector('.rcount');
+        var hint = rep.querySelector('.shint');
+        var HINT_DEFAULT = hint.textContent;
+        var cols = rep.querySelectorAll('thead th').length;
+
+        /* Status badges and filter options */
+        var statuses = {};
+        rows.forEach(function (r) {
+            var c = r.querySelector('td.st');
+            if (c) {
+                var t = c.textContent.trim();
+                c.textContent = '';
+                var b = document.createElement('span');
+                b.className = 'badge ' + classify(t);
+                b.textContent = t || 'Not set';
+                c.appendChild(b);
+            }
+            var st = (r.getAttribute('data-status') || '').trim();
+            r.setAttribute('data-status', st);
+            if (st) statuses[st] = true;
+            r.setAttribute('data-text', r.textContent.toLowerCase().replace(/\s+/g, ' '));
+        });
+        Object.keys(statuses).sort().forEach(function (s) {
+            var o = document.createElement('option');
+            o.value = s;
+            o.textContent = cap(s);
+            sel.appendChild(o);
+        });
+
+        /* "No match" row */
+        var nomatch = document.createElement('tr');
+        nomatch.className = 'nomatch';
+        nomatch.hidden = true;
+        nomatch.innerHTML = '<td colspan="' + cols + '">No records match your search or filter.</td>';
+        tbody.appendChild(nomatch);
+
+        function apply() {
+            var raw = search.value;
+            var q = raw.trim().toLowerCase();
+            var err = '';
+            if (raw.length > 0 && q === '') err = 'Search cannot be only spaces.';
+            else if (q.length === 1) err = 'Type at least 2 characters to search.';
+            else if (/[<>]/.test(q)) err = 'The characters < and > are not allowed.';
+            wrap.classList.toggle('bad', !!err);
+            hint.classList.toggle('bad', !!err);
+            hint.textContent = err || HINT_DEFAULT;
+            if (err) q = '';
+            clear.classList.toggle('show', raw.length > 0);
+
+            var st = sel.value, shown = 0;
+            rows.forEach(function (r) {
+                var ok = (!q || r.getAttribute('data-text').indexOf(q) !== -1) &&
+                         (!st || r.getAttribute('data-status') === st);
+                r.hidden = !ok;
+                if (ok) shown++;
+            });
+            nomatch.hidden = !(rows.length > 0 && shown === 0);
+            count.textContent = rows.length ? 'Showing ' + shown + ' of ' + rows.length : 'No records';
+        }
+
+        if (!rows.length) {
+            search.disabled = true;
+            sel.disabled = true;
+            hint.textContent = 'There are no records to search yet.';
+        }
+        search.addEventListener('input', apply);
+        sel.addEventListener('change', apply);
+        search.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') { search.value = ''; apply(); }
+        });
+        clear.addEventListener('click', function () { search.value = ''; apply(); search.focus(); });
+        apply();
+
+        summary[rep.id] = rows;
+    });
+
+    /* ---------- Summary cards ---------- */
+    var subRows = summary['sec-submissions'] || [];
+    var fineRows = summary['sec-fines'] || [];
+    var eqRows = summary['sec-equipment'] || [];
+
+    $('stat-sub').textContent = subRows.length;
+    $('stat-sub-s').textContent = subRows.length ? 'Total submissions on record' : 'No submissions yet';
+
+    var totalFine = 0;
+    fineRows.forEach(function (r) {
+        var c = r.querySelector('td[data-amount]');
+        if (c) totalFine += num(c.getAttribute('data-amount'));
+    });
+    $('stat-fine').textContent = fineRows.length;
+    $('stat-fine-s').textContent = fineRows.length ? 'Total \u20B9' + totalFine.toLocaleString('en-IN', { maximumFractionDigits: 2 }) : 'No fines yet';
+
+    var totalQty = 0, availQty = 0;
+    eqRows.forEach(function (r) {
+        var t = r.querySelector('td[data-total]');
+        var a = r.querySelector('td[data-avail]');
+        var tq = t ? num(t.getAttribute('data-total')) : 0;
+        var aq = a ? num(a.getAttribute('data-avail')) : 0;
+        totalQty += tq;
+        availQty += aq;
+        var bar = r.querySelector('.bar');
+        if (bar) {
+            var pct = tq > 0 ? Math.max(0, Math.min(100, (aq / tq) * 100)) : 0;
+            bar.firstElementChild.style.width = pct + '%';
+            if (aq <= 0) bar.classList.add('none');
+            else if (pct <= 25) bar.classList.add('low');
+        }
+    });
+    $('stat-eq').textContent = eqRows.length;
+    $('stat-eq-s').textContent = eqRows.length ? availQty + ' of ' + totalQty + ' units available' : 'No equipment yet';
+
+    $('printBtn').addEventListener('click', function () { window.print(); });
+
+})();
+</script>
+
+</body>
+</html>
+

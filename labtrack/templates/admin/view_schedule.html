@@ -1,0 +1,814 @@
+{##}
+{#<!DOCTYPE html>#}
+{#<html>#}
+{#<head>#}
+{#    <title>View Lab Schedules - LabTrack</title>#}
+{#</head>#}
+{#<body>#}
+{##}
+{#    <h2>Schedules for {{ lab.lab_name }}</h2>#}
+{##}
+{#    <table border="1">#}
+{#        <tr>#}
+{#            <th>Sl No</th>#}
+{#            <th>Subject</th>#}
+{#            <th>Subject Code</th>#}
+{#            <th>Course</th>#}
+{#            <th>Department</th>#}
+{#            <th>Date</th>#}
+{#            <th>Hour</th>#}
+{#            <th>Assign Coordinator</th>#}
+{#            <th>Action</th>#}
+{#        </tr>#}
+{##}
+{#        {% for i in data %}#}
+{#        <tr>#}
+{#            <td>{{ forloop.counter }}</td>#}
+{#            <td>{{ i.SUBJECT.subject_name }}</td>#}
+{#            <td>{{ i.SUBJECT.subject_code }}</td>#}
+{#            <td>{{ i.SUBJECT.COURSE.course_name }}</td>#}
+{#            <td>{{ i.SUBJECT.COURSE.DEPARTMENT.department_name }}</td>#}
+{#            <td>{{ i.day }}</td>#}
+{#            <td>{{ i.hour }}</td>#}
+{#            <td>#}
+{#                <a href="/myapp/edit_schedule_get/{{ i.id }}/?course_id={{ course_id }}">Edit</a>#}
+{#                |#}
+{#                <a href="/myapp/delete_schedule/{{ i.id }}/?course_id={{ course_id }}" onclick="return confirm('Are you sure you want to delete this schedule?')">Delete</a>#}
+{#            </td>#}
+{#        </tr>#}
+{#        {% empty %}#}
+{#        <tr>#}
+{#            <td colspan="8">No schedules added for this lab.</td>#}
+{#        </tr>#}
+{#        {% endfor %}#}
+{#    </table>#}
+{##}
+{#    <br>#}
+{#    <a href="/myapp/add_schedule_get/{{ lab.id }}/?course_id={{ course_id }}">Add Schedule</a>#}
+{#    <br><br>#}
+{##}
+{#    <a href="/myapp/view_subject/{{ course_id }}/">Back to Subjects</a>#}
+{##}
+{#</body>#}
+{#</html>#}
+{##}
+{##}
+{#<!DOCTYPE html>#}
+{#<html>#}
+{#<head>#}
+{#    <title>View Lab Schedules - LabTrack</title>#}
+{#</head>#}
+{#<body>#}
+{##}
+{#    <h2>Schedules for {{ lab.lab_name }}</h2>#}
+{##}
+{#    <table border="1">#}
+{#        <tr>#}
+{#            <th>Sl No</th>#}
+{#            <th>Subject</th>#}
+{#            <th>Subject Code</th>#}
+{#            <th>Course</th>#}
+{#            <th>Department</th>#}
+{#            <th>Date</th>#}
+{#            <th>Hour</th>#}
+{#            <th>Assign Coordinator</th>#}
+{#            <th>Action</th>#}
+{#        </tr>#}
+{##}
+{#        {% for i in data %}#}
+{#        <tr>#}
+{#            <td>{{ forloop.counter }}</td>#}
+{#            <td>{{ i.SUBJECT.subject_name }}</td>#}
+{#            <td>{{ i.SUBJECT.subject_code }}</td>#}
+{#            <td>{{ i.SUBJECT.COURSE.course_name }}</td>#}
+{#            <td>{{ i.SUBJECT.COURSE.DEPARTMENT.department_name }}</td>#}
+{#            <td>{{ i.day }}</td>#}
+{#            <td>{{ i.hour }}</td>#}
+{##}
+{#            <td>#}
+{#                {% if assignment %}#}
+{#                    Assigned#}
+{#                {% else %}#}
+{#                    <a href="/myapp/assign_lab_coordinator_get/{{ lab.id }}/">Assign Coordinator</a>#}
+{#                {% endif %}#}
+{#            </td>#}
+{##}
+{#            <td>#}
+{#                <a href="/myapp/edit_schedule_get/{{ i.id }}/?course_id={{ course_id }}">Edit</a>#}
+{#                |#}
+{#                <a href="/myapp/delete_schedule/{{ i.id }}/?course_id={{ course_id }}" onclick="return confirm('Are you sure you want to delete this schedule?')">Delete</a>#}
+{#            </td>#}
+{#        </tr>#}
+{#        {% empty %}#}
+{#        <tr>#}
+{#            <td colspan="9">No schedules added for this lab.</td>#}
+{#        </tr>#}
+{#        {% endfor %}#}
+{#    </table>#}
+{##}
+{#    <br>#}
+{#    <a href="/myapp/add_schedule_get/{{ lab.id }}/?course_id={{ course_id }}">Add Schedule</a>#}
+{##}
+{#    <br><br>#}
+{#    <a href="/myapp/view_subject/{{ course_id }}/">Back to Subjects</a>#}
+{##}
+{#</body>#}
+{#</html>#}
+
+
+
+{##}
+{#<!DOCTYPE html>#}
+{#<html>#}
+{#<head>#}
+{#    <title>View Lab Schedules - LabTrack</title>#}
+{#</head>#}
+{#<body>#}
+{##}
+{#    <h2>Schedules for {{ lab.lab_name }}</h2>#}
+{##}
+{#    {% for message in messages %}#}
+{#        <p>{{ message }}</p>#}
+{#    {% endfor %}#}
+{##}
+{#    <table border="1">#}
+{#        <tr>#}
+{#            <th>Sl No</th>#}
+{#            <th>Subject</th>#}
+{#            <th>Subject Code</th>#}
+{#            <th>Course</th>#}
+{#            <th>Department</th>#}
+{#            <th>Date</th>#}
+{#            <th>Hour</th>#}
+{#            <th>Assign Coordinator</th>#}
+{#            <th>Action</th>#}
+{#        </tr>#}
+{##}
+{#        {% for i in data %}#}
+{#        <tr>#}
+{#            <td>{{ forloop.counter }}</td>#}
+{#            <td>{{ i.SUBJECT.subject_name }}</td>#}
+{#            <td>{{ i.SUBJECT.subject_code }}</td>#}
+{#            <td>{{ i.SUBJECT.COURSE.course_name }}</td>#}
+{#            <td>{{ i.SUBJECT.COURSE.DEPARTMENT.department_name }}</td>#}
+{#            <td>{{ i.day }}</td>#}
+{#            <td>{{ i.hour }}</td>#}
+{##}
+{#            <td>#}
+{#                {% if i.status == 'pending' %}#}
+{#                    <a href="/myapp/assign_lab_coordinator_get/{{ lab.id }}/">Assign Coordinator</a>#}
+{##}
+{#                    {% else %}#}
+{#                     <p>assigned</p>#}
+{#                {% endif %}#}{% load l10n %}<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>View Lab Schedules - LabTrack</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-top: #164a63; --bg-mid: #0d3048; --bg-deep: #08203a;
+            --cyan: #5cd0ee; --teal: #0b84a8; --teal-dark: #086a89;
+            --heading: #0d2b3e; --text: #14283a; --muted: #5d7183;
+            --surface: #ffffff; --canvas: #f1f6fb; --border: #dae6f1;
+            --field: #e9f1fc; --field-line: #c8d9ee; --tile: #e2f4fa;
+            --danger: #c0291f; --danger-bg: #fdeceb;
+            --ok: #1c7c54; --ok-bg: #e3f6ec; --gold: #fbbf24;
+            --nav-h: 68px;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; }
+        body { margin: 0; min-height: 100vh; font-family: "Plus Jakarta Sans", system-ui, sans-serif; color: var(--text); background: radial-gradient(900px 420px at 100% 0%, rgba(92,208,238,.14), transparent 60%), radial-gradient(700px 380px at 0% 40%, rgba(11,132,168,.07), transparent 60%), var(--canvas); -webkit-font-smoothing: antialiased; }
+        a { color: inherit; text-decoration: none; }
+        [hidden] { display: none !important; }
+
+        /* ================= NAVBAR ================= */
+        .navbar { position: sticky; top: 0; z-index: 100; color: #fff; background: radial-gradient(ellipse at 90% -40%, rgba(92,208,238,.28), transparent 55%), linear-gradient(100deg, var(--bg-top) 0%, var(--bg-mid) 45%, var(--bg-deep) 100%); box-shadow: 0 6px 20px rgba(8,32,58,.25); }
+        .nav-inner { max-width: 1280px; height: var(--nav-h); margin: 0 auto; padding: 0 clamp(16px, 3vw, 36px); display: flex; align-items: center; gap: 28px; }
+        .brand { display: flex; align-items: center; gap: 12px; font-size: 1.3rem; font-weight: 800; letter-spacing: -0.02em; color: #fff; flex: none; }
+        .brand-mark { width: 40px; height: 40px; display: grid; place-items: center; border-radius: 11px; background: var(--cyan); transition: transform .25s ease; }
+        .brand:hover .brand-mark { transform: rotate(-8deg) scale(1.06); }
+        .menu { flex: 1; display: flex; align-items: center; gap: 4px; height: 100%; }
+        .nav-link { position: relative; display: inline-flex; align-items: center; gap: 7px; height: 42px; padding: 0 14px; font: inherit; font-size: .92rem; font-weight: 600; color: #cfe3ef; background: transparent; border: 0; border-radius: 10px; cursor: pointer; white-space: nowrap; transition: background .2s, color .2s; }
+        .nav-link:hover, .dd.open > .nav-link { background: rgba(255,255,255,.11); color: #fff; }
+        .nav-link:focus-visible { outline: 2px solid var(--cyan); outline-offset: 1px; }
+        .nav-link.active { color: #fff; background: rgba(92,208,238,.16); }
+        .nav-link.active::after { content: ""; position: absolute; left: 14px; right: 14px; bottom: -13px; height: 3px; border-radius: 3px 3px 0 0; background: var(--cyan); }
+        .caret { width: 14px; height: 14px; transition: transform .2s; }
+        .dd.open .caret { transform: rotate(180deg); }
+        .dd { position: relative; display: flex; align-items: center; }
+        .dd-panel { position: absolute; top: calc(100% + 12px); left: 0; min-width: 240px; padding: 8px; background: #fff; color: var(--text); border: 1px solid var(--border); border-radius: 14px; box-shadow: 0 22px 44px rgba(8,32,58,.22); opacity: 0; visibility: hidden; transform: translateY(8px); transition: opacity .18s, transform .18s, visibility .18s; }
+        .dd-panel::before { content: ""; position: absolute; left: 0; right: 0; top: -14px; height: 14px; }
+        .dd.open > .dd-panel { opacity: 1; visibility: visible; transform: translateY(0); }
+        @media (hover: hover) and (min-width: 961px) { .dd:hover > .dd-panel { opacity: 1; visibility: visible; transform: translateY(0); } .dd:hover > .nav-link { background: rgba(255,255,255,.11); color: #fff; } .dd:hover .caret { transform: rotate(180deg); } }
+        .dd.right .dd-panel { left: auto; right: 0; }
+        .dd-panel a { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 9px; font-size: .92rem; font-weight: 600; color: var(--heading); transition: background .15s, color .15s, padding .15s; }
+        .dd-panel a svg { width: 18px; height: 18px; flex: none; color: var(--teal); }
+        .dd-panel a:hover, .dd-panel a.active { background: var(--tile); color: var(--teal-dark); padding-left: 16px; }
+        .dd-panel a.logout { color: var(--danger); } .dd-panel a.logout svg { color: var(--danger); }
+        .dd-panel a.logout:hover { background: var(--danger-bg); color: var(--danger); }
+        .dd-sep { height: 1px; margin: 6px 4px; background: var(--border); }
+        .user { margin-left: auto; }
+        .avatar { width: 30px; height: 30px; display: grid; place-items: center; border-radius: 50%; background: var(--cyan); color: var(--bg-deep); font-size: .82rem; font-weight: 800; }
+        .burger { display: none; margin-left: auto; width: 44px; height: 44px; place-items: center; border: 0; border-radius: 11px; background: rgba(255,255,255,.1); color: #fff; cursor: pointer; }
+        .burger svg { width: 22px; height: 22px; }
+
+        /* ================= TOAST NOTIFICATIONS ================= */
+        .toasts { position: fixed; top: calc(var(--nav-h) + 16px); right: 16px; z-index: 200; display: grid; gap: 10px; width: min(92vw, 360px); }
+        .toast { display: flex; align-items: flex-start; gap: 12px; padding: 14px 16px; background: #fff; border: 1px solid var(--border); border-left: 4px solid var(--teal); border-radius: 12px; box-shadow: 0 16px 34px rgba(8,32,58,.18); font-size: .92rem; line-height: 1.45; animation: toast-in .3s ease both; }
+        .toast button { margin-left: auto; border: 0; background: transparent; color: var(--muted); font-size: 1.2rem; line-height: 1; cursor: pointer; }
+        @keyframes toast-in { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* ================= PAGE STRUCTURE ================= */
+        .container { max-width: 1280px; margin: 0 auto; padding: 32px clamp(16px, 3vw, 36px) 56px; }
+        .crumbs { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 14px; font-size: .84rem; font-weight: 600; color: var(--muted); }
+        .crumbs a:hover { color: var(--teal); } .crumbs svg { width: 14px; height: 14px; } .crumbs b { color: var(--heading); }
+
+        .hero { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 32px 38px; border-radius: 24px; color: #fff; overflow: hidden; background: radial-gradient(ellipse at 92% 0%, rgba(92,208,238,.34), transparent 55%), linear-gradient(135deg, var(--bg-top), var(--bg-deep)); box-shadow: 0 20px 40px rgba(8,32,58,.22); }
+        .hero::before { content: ""; position: absolute; inset: 0; background-image: radial-gradient(rgba(255,255,255,.09) 1px, transparent 1px); background-size: 24px 24px; pointer-events: none; }
+        .hero::after { content: ""; position: absolute; right: -70px; bottom: -100px; width: 280px; height: 280px; border-radius: 50%; border: 2px dashed rgba(92,208,238,.35); pointer-events: none; }
+        .hero > * { position: relative; z-index: 1; }
+        .hero-ic { width: 70px; height: 70px; flex: none; display: grid; place-items: center; border-radius: 20px; background: linear-gradient(145deg, var(--cyan), var(--teal)); box-shadow: 0 14px 28px rgba(0,0,0,.3); transform: rotate(-6deg); transition: transform .3s; }
+        .hero:hover .hero-ic { transform: rotate(0) scale(1.05); }
+        .hero-ic svg { width: 34px; height: 34px; }
+        .hero-text { flex: 1; min-width: 0; }
+        .hero h1 { margin: 0 0 6px; font-size: clamp(1.5rem, 2.6vw, 2.1rem); font-weight: 800; letter-spacing: -0.03em; }
+        .hero h1 span { color: var(--cyan); }
+        .hero p { margin: 0; color: #b9d3e3; line-height: 1.55; }
+
+        .chip { flex: none; display: inline-flex; align-items: center; gap: 8px; padding: 9px 16px; border-radius: 999px; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.22); font-size: .85rem; font-weight: 700; }
+
+        /* ================= BUTTONS ================= */
+        .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 50px; padding: 0 26px; font: inherit; font-size: .95rem; font-weight: 700; border-radius: 12px; border: 1.5px solid transparent; cursor: pointer; transition: background .2s, transform .15s, box-shadow .2s, border-color .2s; }
+        .btn svg { width: 18px; height: 18px; }
+        .btn:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+        .btn-primary { background: var(--teal); color: #fff; box-shadow: 0 8px 16px rgba(11,132,168,.25); }
+        .btn-primary:hover { background: var(--teal-dark); transform: translateY(-2px); box-shadow: 0 12px 22px rgba(11,132,168,.32); }
+        .btn-ghost { background: #fff; color: var(--heading); border-color: var(--border); }
+        .btn-ghost:hover { background: var(--canvas); border-color: #b8cde0; transform: translateY(-2px); }
+        .btn-sm { height: 36px; padding: 0 16px; font-size: .84rem; border-radius: 10px; }
+        .btn-danger { color: var(--danger); background: var(--danger-bg); border-color: #f3c2be; }
+        .btn-danger:hover { background: #fbe3e1; border-color: var(--danger); color: var(--danger); }
+
+        /* ================= STATS & PANELS ================= */
+        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 16px; margin-top: 26px; }
+        .stat { padding: 18px 22px; background: var(--surface); border: 1px solid var(--border); border-radius: 18px; box-shadow: 0 12px 28px rgba(8,32,58,.05); transition: transform .2s; }
+        .stat:hover { transform: translateY(-3px); }
+        .stat small { display: block; margin-bottom: 4px; font-size: .74rem; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); }
+        .stat b { font-size: 1.8rem; font-weight: 800; letter-spacing: -0.02em; color: var(--heading); }
+        .stat.ok b { color: var(--ok); }
+        .stat.warn b { color: #b26a00; }
+        .stat.muted-stat b { color: var(--muted); }
+
+        .panel { padding: 30px; background: var(--surface); border: 1px solid var(--border); border-radius: 22px; box-shadow: 0 12px 28px rgba(8,32,58,.06); margin-top: 22px; }
+        .panel-head { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-bottom: 24px; padding-bottom: 18px; border-bottom: 1px solid var(--border); }
+        .panel-title { display: flex; align-items: center; gap: 14px; }
+        .panel-title .ic { width: 46px; height: 46px; flex: none; display: grid; place-items: center; border-radius: 14px; background: var(--tile); color: var(--teal); }
+        .panel-title .ic svg { width: 22px; height: 22px; }
+        .panel-title h2 { margin: 0; font-size: 1.15rem; font-weight: 800; color: var(--heading); }
+        .panel-title p { margin: 2px 0 0; font-size: .86rem; color: var(--muted); }
+
+        /* ================= FORM / FILTERS ================= */
+        .filters { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 16px; align-items: start; margin-bottom: 16px; }
+        .field { margin-bottom: 0; }
+        .field label { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; font-size: .88rem; font-weight: 700; color: var(--heading); }
+        .control { position: relative; }
+        .control > svg.lead { position: absolute; left: 16px; top: 50%; width: 19px; height: 19px; transform: translateY(-50%); color: #7d93a8; pointer-events: none; transition: color .2s; z-index: 1; }
+        .control input, .control select { width: 100%; height: 54px; padding: 0 46px 0 48px; font: inherit; font-weight: 500; color: var(--text); background: var(--field); border: 1.5px solid var(--field-line); border-radius: 13px; transition: border-color .2s, box-shadow .2s, background .2s; }
+        .control select { appearance: none; cursor: pointer; padding-right: 74px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235d7183' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 44px center; background-size: 16px; }
+        .control input:focus, .control select:focus { outline: none; background-color: #fff; border-color: var(--teal); box-shadow: 0 0 0 4px rgba(11,132,168,.16); }
+        .control:focus-within > svg.lead { color: var(--teal); }
+        .control .state { position: absolute; right: 14px; top: 50%; width: 22px; height: 22px; transform: translateY(-50%) scale(.6); opacity: 0; transition: opacity .2s, transform .2s; pointer-events: none; }
+        .field.is-invalid .control input, .field.is-invalid .control select { border-color: var(--danger); background-color: #fffafa; }
+        .field.is-invalid .control input:focus { box-shadow: 0 0 0 4px rgba(192,41,31,.14); }
+        .field.is-invalid .control > svg.lead { color: var(--danger); }
+        .field.is-invalid .state.bad { opacity: 1; transform: translateY(-50%) scale(1); color: var(--danger); }
+        .field.is-valid .control input, .field.is-valid .control select { border-color: #35a574; background-color: #fbfffd; }
+        .field.is-valid .state.good { opacity: 1; transform: translateY(-50%) scale(1); color: var(--ok); }
+        .hint { display: flex; align-items: flex-start; gap: 6px; min-height: 1.3em; margin: 8px 2px 0; font-size: .83rem; line-height: 1.4; color: var(--muted); }
+        .field.is-invalid .hint { color: var(--danger); font-weight: 600; }
+        .field.is-invalid .control { animation: shake .35s; }
+        @keyframes shake { 20%, 60% { transform: translateX(-5px); } 40%, 80% { transform: translateX(5px); } }
+
+        .filter-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid var(--border); font-size: .88rem; font-weight: 600; color: var(--muted); }
+
+        /* ================= TABLE ================= */
+        .table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 16px; background: #fff; }
+        table.tbl { width: 100%; border-collapse: collapse; min-width: 900px; font-size: .88rem; }
+        .tbl th { padding: 14px 16px; text-align: left; white-space: nowrap; font-size: .74rem; font-weight: 800; letter-spacing: .07em; text-transform: uppercase; color: var(--teal-dark); background: var(--tile); border-bottom: 2px solid var(--field-line); }
+        .tbl td { padding: 14px 16px; vertical-align: middle; border-top: 1px solid var(--border); color: var(--text); }
+        .tbl tbody tr { transition: background .15s; }
+        .tbl tbody tr:hover { background: var(--canvas); }
+        .tbl td.strong { font-weight: 700; color: var(--heading); }
+        .tbl td.nowrap { white-space: nowrap; }
+        .tbl .empty-row td, .tbl #noMatch td { padding: 44px 16px; text-align: center; color: var(--muted); font-weight: 600; }
+
+        .badge { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 999px; font-size: .75rem; font-weight: 700; white-space: nowrap; }
+        .badge::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+        .badge.active { background: var(--ok-bg); color: var(--ok); }
+        .badge.pending { background: #fff4d6; color: #8a5a00; }
+
+        .actions-cell { display: flex; gap: 8px; align-items: center; }
+        .sub-text { font-size: 0.78rem; font-weight: 500; color: var(--muted); margin-top: 2px; }
+
+        /* ================= EXPIRED & NEXT ROW STYLING ================= */
+        .row-expired { background-color: #f8fafc !important; opacity: 0.65; }
+        .row-expired td { color: #94a3b8 !important; }
+        .row-expired .strong { color: #64748b !important; }
+        .row-expired .sub-text { color: #94a3b8 !important; }
+        .row-expired .badge.active, .row-expired .badge.pending { background: #e2e8f0; color: #64748b; }
+        .row-expired .btn-primary { background: #cbd5e1 !important; color: #fff !important; pointer-events: none; box-shadow: none; border-color: transparent; }
+
+        .row-next { background-color: #fffdf5 !important; }
+        .badge.next { background: var(--gold); color: #6c4e00; animation: pulse 2s infinite; display: inline-flex; margin-top: 4px; padding: 4px 10px; font-size: 0.7rem; letter-spacing: 0.04em; text-transform: uppercase; }
+        .badge.next::before { display: none; }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(251, 191, 36, 0.4); } 70% { box-shadow: 0 0 0 5px rgba(251, 191, 36, 0); } 100% { box-shadow: 0 0 0 0 rgba(251, 191, 36, 0); } }
+
+        /* ================= DIALOGS ================= */
+        dialog { width: min(92vw, 400px); padding: 28px; border: 0; border-radius: 18px; color: var(--text); box-shadow: 0 30px 70px rgba(8,32,58,.35); }
+        dialog::backdrop { background: rgba(6,19,40,.55); backdrop-filter: blur(2px); }
+        dialog h2 { margin: 0 0 8px; font-size: 1.3rem; font-weight: 800; color: var(--heading); }
+        dialog p { margin: 0 0 24px; color: var(--muted); line-height: 1.55; }
+        .dialog-actions { display: flex; gap: 10px; justify-content: flex-end; }
+
+        .footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; margin-top: 48px; padding-top: 20px; border-top: 1px solid var(--border); font-size: .82rem; color: #8196a8; }
+
+        /* ================= RESPONSIVE ================= */
+        @media (max-width: 960px) {
+            .burger { display: grid; }
+            .nav-inner { gap: 12px; }
+            .menu { position: absolute; top: var(--nav-h); left: 0; right: 0; flex-direction: column; align-items: stretch; gap: 2px; height: auto; max-height: calc(100vh - var(--nav-h)); overflow-y: auto; padding: 12px 16px 20px; background: var(--bg-deep); display: none; }
+            .navbar.open .menu { display: flex; }
+            .nav-link { height: 48px; width: 100%; justify-content: flex-start; }
+            .dd { flex-direction: column; align-items: stretch; }
+            .dd > .nav-link .caret { margin-left: auto; }
+            .dd-panel { position: static; display: none; margin: 2px 0 6px 12px; padding: 4px; background: rgba(255,255,255,.06); border: 0; border-left: 2px solid rgba(92,208,238,.4); border-radius: 0 10px 10px 0; opacity: 1; visibility: visible; transform: none; box-shadow: none; }
+            .dd.open > .dd-panel { display: block; }
+            .dd-panel a { color: #d3e6f2; }
+            .user { margin-left: 0; margin-top: 8px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,.12); }
+        }
+        @media (max-width: 640px) {
+            .hero { flex-wrap: wrap; padding: 26px 22px; }
+            .hero-ic { width: 58px; height: 58px; }
+            .panel { padding: 22px 18px; }
+            .panel-head { flex-direction: column; align-items: flex-start; }
+            .panel-head .btn { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="navbar" id="navbar">
+    <div class="nav-inner">
+        <a class="brand" href="/myapp/adminhome_get/" aria-label="LabTrack admin home">
+            <span class="brand-mark">
+                <svg width="23" height="23" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M12 2.5l8 3v6c0 5-3.3 8.6-8 10-4.7-1.4-8-5-8-10v-6l8-3z" stroke="#08203a" stroke-width="1.9" stroke-linejoin="round"/>
+                    <path d="M10.5 8.5h3M11 8.5v3l-2 3.6a.9.9 0 0 0 .8 1.3h4.4a.9.9 0 0 0 .8-1.3l-2-3.6v-3" stroke="#08203a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </span>
+            LabTrack
+        </a>
+        <button type="button" class="burger" id="burger" aria-label="Open menu" aria-expanded="false">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </button>
+        <nav class="menu" id="menu" aria-label="Main">
+            <a class="nav-link" href="/myapp/adminhome_get/" data-match="adminhome">Home</a>
+            <div class="dd">
+                <button type="button" class="nav-link dd-btn active" aria-expanded="false" aria-haspopup="true">
+                    Management
+                    <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+                </button>
+                <div class="dd-panel">
+                    <a href="/myapp/view_dept/" data-match="dept">Manage Department</a>
+                    <a href="/myapp/view_student/" data-match="student">View Students</a>
+                    <a href="/myapp/view_staff/" data-match="staff">Manage Staff</a>
+                    <a href="/myapp/view_lab_coordinator/" data-match="lab_coordinator">View Lab Coordinators</a>
+                    <a href="/myapp/view_lab/" class="active" data-match="lab">Manage Labs</a>
+                </div>
+            </div>
+            <a class="nav-link" href="/myapp/view_lab_submissions_admin/">Lab Submissions</a>
+            <a class="nav-link" href="/myapp/admin_reports/">Reports</a>
+            <div class="dd right user">
+                <button type="button" class="nav-link dd-btn" aria-expanded="false" aria-haspopup="true">
+                    <span class="avatar">A</span> Admin
+                    <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+                </button>
+                <div class="dd-panel">
+                    <a href="/myapp/change_password_get/">Change Password</a>
+                    <div class="dd-sep"></div>
+                    <a href="/myapp/logout_get/" class="logout" id="logoutLink">Logout</a>
+                </div>
+            </div>
+        </nav>
+    </div>
+</header>
+
+{% if messages %}
+<div class="toasts" role="status" aria-live="polite">
+    {% for message in messages %}
+    <div class="toast">
+        <span>{{ message }}</span>
+        <button type="button" aria-label="Dismiss" data-dismiss>&times;</button>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<main class="container">
+
+<nav class="crumbs" aria-label="Breadcrumb">
+    <a href="/myapp/adminhome_get/">Home</a>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+    <a href="/myapp/view_lab/">Labs</a>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+    <b>{{ lab.lab_name }} Schedules</b>
+</nav>
+
+<header class="hero">
+    <span class="hero-ic" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#08203a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/><path d="M16 18h.01"/></svg>
+    </span>
+    <div class="hero-text">
+        <h1>Lab <span>Schedules</span></h1>
+        <p>Manage timetables, subjects, and assign coordinators for {{ lab.lab_name }}. Expired schedules are moved to the bottom.</p>
+    </div>
+    <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> {{ data|length }} Timings</span>
+</header>
+
+<div class="stats">
+    <div class="stat"><small>Total Schedules</small><b id="stTotal">0</b></div>
+    <div class="stat ok"><small>Upcoming</small><b id="stUpcoming">0</b></div>
+    <div class="stat warn"><small>Pending Assignment</small><b id="stPending">0</b></div>
+    <div class="stat muted-stat"><small>Expired</small><b id="stExpired">0</b></div>
+</div>
+
+<section class="panel" aria-labelledby="tbl-title">
+    <div class="panel-head">
+        <div class="panel-title">
+            <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
+            <div><h2 id="tbl-title">Timetable Configuration</h2><p>Configure classes and coordinate lab hours.</p></div>
+        </div>
+        <a href="/myapp/add_schedule_get/{{ lab.id }}/?course_id={{ course_id }}" class="btn btn-primary">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add Schedule
+        </a>
+    </div>
+
+    <!-- Filters integrated within the same panel -->
+    <div class="filters">
+        <div class="field" id="f-search">
+            <label for="search"><span>Search</span></label>
+            <div class="control">
+                <svg class="lead" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+                <input type="text" id="search" placeholder="Subject, code, or course" maxlength="50" autocomplete="off" aria-describedby="searchHint" aria-invalid="false">
+                <svg class="state good" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/></svg>
+                <svg class="state bad" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.01"/></svg>
+            </div>
+            <p class="hint" id="searchHint">Up to 50 characters. Letters, numbers, spaces and @ . + - _ allowed.</p>
+        </div>
+        <div class="field" id="f-status">
+            <label for="status"><span>Assignment Status</span></label>
+            <div class="control">
+                <svg class="lead" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                <select id="status" aria-describedby="statusHint" aria-invalid="false">
+                    <option value="">All Statuses</option>
+                    <option value="pending">Pending</option>
+                    <option value="assigned">Assigned</option>
+                </select>
+                <svg class="state good" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/></svg>
+                <svg class="state bad" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.01"/></svg>
+            </div>
+            <p class="hint" id="statusHint">Filter by assignment status.</p>
+        </div>
+    </div>
+    <div class="filter-foot">
+        <span id="resultCount" aria-live="polite">Showing 0 of 0 records</span>
+        <button type="button" class="btn btn-ghost btn-sm" id="resetFilters">Clear filters</button>
+    </div>
+
+    <!-- Table follows immediately below the filters -->
+    <div class="table-wrap">
+    <table class="tbl">
+        <thead>
+            <tr>
+                <th style="width: 60px;">Sl No</th>
+                <th>Subject &amp; Code</th>
+                <th>Course Details</th>
+                <th>Schedule Info</th>
+{#                <th>Coordinator Status</th>#}
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for i in data %}
+        <tr>
+            <td class="row-index">{{ forloop.counter }}</td>
+            <td class="nowrap">
+                <div class="strong">{{ i.SUBJECT.subject_name }}</div>
+                <div class="sub-text">{{ i.SUBJECT.subject_code }}</div>
+            </td>
+            <td class="nowrap">
+                <div class="strong">{{ i.SUBJECT.COURSE.course_name }}</div>
+                <div class="sub-text">{{ i.SUBJECT.COURSE.DEPARTMENT.department_name }}</div>
+            </td>
+            <td class="nowrap schedule-cell">
+                <div class="strong">{{ i.day }}</div>
+                <div class="sub-text">{{ i.hour }}</div>
+            </td>
+{#            <td class="nowrap status-cell">#}
+{#                {% if i.status == 'pending' %}#}
+{#                    <a href="/myapp/assign_lab_coordinator_get/{{ lab.id }}/" class="btn btn-sm btn-primary assign-btn" style="padding: 0 12px; height: 32px; font-size: 0.78rem;">#}
+{#                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>#}
+{#                        Assign#}
+{#                    </a>#}
+{#                {% else %}#}
+{#                    <span class="badge active orig-badge">Assigned</span>#}
+{#                {% endif %}#}
+{#            </td>#}
+            <td>
+                <div class="actions-cell">
+                    <a href="/myapp/edit_schedule_get/{{ i.id }}/?course_id={{ course_id }}" class="btn btn-ghost btn-sm" aria-label="Edit" title="Edit">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                    </a>
+                    <button type="button" class="btn btn-ghost btn-danger btn-sm" aria-label="Delete" title="Delete" onclick="requestDelete('{{ i.SUBJECT.subject_name|escapejs }}', '/myapp/delete_schedule/{{ i.id }}/?course_id={{ course_id }}')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+                    </button>
+                </div>
+            </td>
+        </tr>
+        {% empty %}
+        <tr class="empty-row"><td colspan="6">No schedules configured for this lab.</td></tr>
+        {% endfor %}
+        <tr id="noMatch" hidden><td colspan="6">No schedules match your search or filters.</td></tr>
+        </tbody>
+    </table>
+    </div>
+</section>
+
+<footer class="footer">
+    <span>&copy; LabTrack &middot; College Lab, Subject &amp; Management System</span>
+    <span>Admin Panel</span>
+</footer>
+
+</main>
+
+<!-- Logout Dialog -->
+<dialog id="logoutDialog" aria-labelledby="logoutTitle">
+    <h2 id="logoutTitle">Log out of LabTrack?</h2>
+    <p>You will need to sign in again to use the admin panel.</p>
+    <div class="dialog-actions">
+        <button type="button" class="btn btn-ghost" onclick="this.closest('dialog').close()">Stay signed in</button>
+        <a href="/myapp/logout_get/" class="btn btn-primary">Log out</a>
+    </div>
+</dialog>
+
+<!-- Delete Dialog -->
+<dialog id="deleteDialog" aria-labelledby="deleteTitle">
+    <h2 id="deleteTitle">Delete Schedule?</h2>
+    <p>Are you sure you want to delete the schedule for <b id="delName"></b>? This action cannot be undone.</p>
+    <div class="dialog-actions">
+        <button type="button" class="btn btn-ghost" onclick="this.closest('dialog').close()">Cancel</button>
+        <a href="#" id="confirmDelete" class="btn btn-primary btn-danger">Yes, Delete</a>
+    </div>
+</dialog>
+
+<script>
+(function () {
+    /* ---------- Navbar & Toast Dismissal ---------- */
+    var navbar = document.getElementById('navbar'), burger = document.getElementById('burger');
+    var dds = document.querySelectorAll('.dd');
+
+    function closeAll(except) {
+        dds.forEach(d => {
+            if (d !== except) { d.classList.remove('open'); d.querySelector('.dd-btn').setAttribute('aria-expanded', 'false'); }
+        });
+    }
+
+    dds.forEach(d => {
+        let btn = d.querySelector('.dd-btn');
+        btn.addEventListener('click', e => {
+            e.stopPropagation();
+            let open = !d.classList.contains('open');
+            closeAll(d);
+            d.classList.toggle('open', open);
+            btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+        });
+    });
+
+    document.addEventListener('click', e => { if (!e.target.closest('.dd')) closeAll(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeAll(); });
+
+    burger.addEventListener('click', () => {
+        let open = !navbar.classList.contains('open');
+        navbar.classList.toggle('open', open);
+        burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+
+    document.querySelectorAll('.toast').forEach(t => {
+        const remove = () => { if(t.parentNode) t.parentNode.removeChild(t); };
+        t.querySelector('[data-dismiss]').addEventListener('click', remove);
+        setTimeout(remove, 6000);
+    });
+
+    document.getElementById('logoutLink').addEventListener('click', function(e) {
+        e.preventDefault();
+        closeAll();
+        document.getElementById('logoutDialog').showModal();
+    });
+
+    window.requestDelete = function(name, url) {
+        document.getElementById('delName').textContent = name;
+        document.getElementById('confirmDelete').href = url;
+        document.getElementById('deleteDialog').showModal();
+    };
+
+
+    /* ---------- Time-Travel, Sorting & Filtering Engine ---------- */
+    var tbody = document.querySelector('.tbl tbody');
+    var rawRows = Array.from(tbody.querySelectorAll('tr[data-row]'));
+    var noMatch = document.getElementById('noMatch');
+    var countEl = document.getElementById('resultCount');
+    var fSearch = document.getElementById('search');
+    var fStatus = document.getElementById('status');
+    var allFilters = [fSearch, fStatus];
+    var now = new Date();
+
+    // 1. Parse dates and mark expired
+    rawRows.forEach(r => {
+        var dayStr = r.getAttribute('data-day');
+        var timeStr = r.getAttribute('data-time') || '';
+
+        // Attempt robust date parsing (Date + Time)
+        var d = new Date(dayStr + ' ' + timeStr);
+        if (isNaN(d.getTime())) {
+            d = new Date(dayStr); // fallback to just date parsing
+        }
+
+        // If it's completely unparseable, we assume it's in the distant future to prevent burying it
+        r._dateObj = isNaN(d.getTime()) ? new Date(8640000000000000) : d;
+
+        // Schedule is expired if it's strictly in the past
+        r._isExpired = r._dateObj < now;
+
+        // Build searchable index
+        let subject = r.querySelector('.strong').textContent.trim();
+        let code = r.querySelectorAll('.sub-text')[0].textContent.trim();
+        let course = r.querySelectorAll('td')[2].querySelector('.strong').textContent.trim();
+        r._s = (subject + ' ' + code + ' ' + course).replace(/\s+/g, ' ').toLowerCase();
+    });
+
+    // 2. Sort Logic (Upcoming closest first, Expired most recent first)
+    var upcoming = rawRows.filter(r => !r._isExpired).sort((a, b) => a._dateObj - b._dateObj);
+    var expired = rawRows.filter(r => r._isExpired).sort((a, b) => b._dateObj - a._dateObj);
+
+    // The master sorted array
+    var sortedRows = upcoming.concat(expired);
+
+    // 3. Apply classes, reorganize DOM, and highlight "Next"
+    sortedRows.forEach((r, idx) => {
+        // Append row in the newly sorted order
+        tbody.appendChild(r);
+
+        if (r._isExpired) {
+            r.classList.add('row-expired');
+            // Change UI for expired row
+            let statusCell = r.querySelector('.status-cell');
+            if(statusCell) {
+                let assignBtn = statusCell.querySelector('.assign-btn');
+                let origBadge = statusCell.querySelector('.orig-badge');
+                if(assignBtn) {
+                    assignBtn.outerHTML = '<span class="badge expired">Expired (Unassigned)</span>';
+                } else if(origBadge) {
+                    origBadge.className = 'badge expired';
+                    origBadge.textContent = 'Expired (Assigned)';
+                }
+            }
+        }
+    });
+
+    // Tag the "Next Schedule"
+    if (upcoming.length > 0) {
+        var nextRow = upcoming[0];
+        nextRow.classList.add('row-next');
+        var scheduleCell = nextRow.querySelector('.schedule-cell');
+        if(scheduleCell) {
+            let nextBadge = document.createElement('div');
+            nextBadge.innerHTML = '<span class="badge next">Next Schedule</span>';
+            scheduleCell.appendChild(nextBadge.firstElementChild);
+        }
+    }
+
+    // Prevent standard rows from un-sorting the table later
+    // Keep 'noMatch' row at the absolute bottom
+    if (noMatch) tbody.appendChild(noMatch);
+
+    // 4. Filtering Logic on the sorted array
+    allFilters.forEach(el => el._def = document.getElementById(el.id + 'Hint').textContent);
+
+    function setState(el, err, okMsg) {
+        var w = document.getElementById('f-' + el.id), h = document.getElementById(el.id + 'Hint');
+        w.classList.remove('is-invalid', 'is-valid');
+        el.setAttribute('aria-invalid', err ? 'true' : 'false');
+        if (err) { w.classList.add('is-invalid'); h.textContent = err; }
+        else if (okMsg) { w.classList.add('is-valid'); h.textContent = okMsg; }
+        else h.textContent = el._def;
+    }
+
+    function readSearch() {
+        var raw = fSearch.value, v = raw.trim();
+        if (raw === '') { setState(fSearch, ''); return { ok: true, q: '' }; }
+        if (v === '') { setState(fSearch, 'Search cannot be only spaces.'); return { ok: false, q: '' }; }
+        if (v.length > 50) { setState(fSearch, 'Maximum 50 characters allowed.'); return { ok: false, q: '' }; }
+        if (/[<>]/.test(v)) { setState(fSearch, 'Invalid characters < > not allowed.'); return { ok: false, q: '' }; }
+        setState(fSearch, '', 'Searching for "' + v + '".');
+        return { ok: true, q: v.toLowerCase() };
+    }
+
+    function apply() {
+        var s = readSearch();
+
+        var shown = 0, upcomingCount = 0, expiredCount = 0, pendingCount = 0;
+
+        // Loop over the globally sorted rows
+        sortedRows.forEach(r => {
+            var show = true;
+            if (s.ok && s.q && r._s.indexOf(s.q) === -1) show = false;
+            if (fStatus.value && r.getAttribute('data-status') !== fStatus.value) show = false;
+
+            r.hidden = !show;
+            if (show) {
+                shown++;
+                // Update SL No to keep sequence intact after filter
+                r.querySelector('.row-index').textContent = shown;
+
+                if (r._isExpired) {
+                    expiredCount++;
+                } else {
+                    upcomingCount++;
+                }
+
+                if (r.getAttribute('data-status') === 'pending' && !r._isExpired) {
+                    pendingCount++;
+                }
+            }
+        });
+
+        countEl.textContent = 'Showing ' + shown + ' of ' + sortedRows.length + ' record' + (sortedRows.length === 1 ? '' : 's');
+        if(noMatch) noMatch.hidden = !(sortedRows.length > 0 && shown === 0);
+
+        // Update top stats panels
+        document.getElementById('stTotal').textContent = shown;
+        document.getElementById('stUpcoming').textContent = upcomingCount;
+        document.getElementById('stPending').textContent = pendingCount;
+        document.getElementById('stExpired').textContent = expiredCount;
+    }
+
+    fSearch.addEventListener('input', apply);
+    fStatus.addEventListener('change', apply);
+
+    document.getElementById('resetFilters').addEventListener('click', () => {
+        allFilters.forEach(el => el.value = '');
+        apply();
+        fSearch.focus();
+    });
+
+    // Execute on boot
+    apply();
+})();
+</script>
+</body>
+</html>
+{#            </td>#}
+{##}
+{#            <td>#}
+{#                <a href="/myapp/edit_schedule_get/{{ i.id }}/?course_id={{ course_id }}">Edit</a>#}
+{#                |#}
+{#                <a href="/myapp/delete_schedule/{{ i.id }}/?course_id={{ course_id }}" onclick="return confirm('Are you sure you want to delete this schedule?')">Delete</a>#}
+{#            </td>#}
+{#        </tr>#}
+{#        {% empty %}#}
+{#        <tr>#}
+{#            <td colspan="9">No schedules added for this lab.</td>#}
+{#        </tr>#}
+{#        {% endfor %}#}
+{#    </table>#}
+{##}
+{#    <br>#}
+{#    <a href="/myapp/add_schedule_get/{{ lab.id }}/?course_id={{ course_id }}">Add Schedule</a>#}
+{##}
+{#    <br><br>#}
+{#    <a href="/myapp/adminhome_get/">Back to Home</a>#}
+{##}
+{#</body>#}
+{#</html>#}
+
+
+
+

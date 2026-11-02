@@ -1,0 +1,659 @@
+{##}
+{#<!DOCTYPE html>#}
+{#<html>#}
+{#<head>#}
+{#    <title>Fine and Damage</title>#}
+{#</head>#}
+{#<body>#}
+{##}
+{#<h2>Enter Fine and Damage Details</h2>#}
+{##}
+{#<p>Student Name: {{ a.STUDENT.name }}</p>#}
+{#<p>Lab Name: {{ a.EQUIPMENT.LAB.lab_name }}</p>#}
+{#<p>Equipment Name: {{ a.EQUIPMENT.equipment_name }}</p>#}
+{#<p>Quantity: {{ a.quantity }}</p>#}
+{##}
+{#<form method="post">#}
+{#    {% csrf_token %}#}
+{##}
+{#    <label>Damage Description:</label>#}
+{#    <br>#}
+{#    <textarea name="damage_description" rows="5" cols="40" required>{{ a.damage_description }}</textarea>#}
+{##}
+{#    <br><br>#}
+{##}
+{#    <label>Fine Amount:</label>#}
+{#    <br>#}
+{#    <input type="number" name="fine_amount" min="0" step="0.01" value="{{ a.fine_amount }}" required>#}
+{##}
+{#    <br><br>#}
+{##}
+{#    <button type="submit">Submit</button>#}
+{#</form>#}
+{##}
+{#<br>#}
+{##}
+{#<a href="/myapp/lab_view_equipment_requests/">Back to Equipment Requests</a>#}
+{##}
+{#</body>#}
+{#</html>#}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Fine and Damage - LabTrack</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-top: #164a63; --bg-mid: #0d3048; --bg-deep: #08203a;
+            --cyan: #5cd0ee; --teal: #0b84a8; --teal-dark: #086a89;
+            --heading: #0d2b3e; --text: #14283a; --muted: #5d7183;
+            --surface: #ffffff; --canvas: #f1f6fb; --border: #dae6f1;
+            --field: #e9f1fc; --field-line: #c8d9ee; --tile: #e2f4fa;
+            --danger: #c0291f; --danger-bg: #fdeceb;
+            --ok: #1c7c54; --ok-bg: #e3f6ec; --gold: #fbbf24; --nav-h: 68px;
+        }
+        *, *::before, *::after { box-sizing: border-box; }
+        body { margin: 0; min-height: 100vh; font-family: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; color: var(--text); background: var(--canvas); -webkit-font-smoothing: antialiased; }
+        a { color: inherit; text-decoration: none; }
+
+        /* NAVBAR */
+        .navbar { position: sticky; top: 0; z-index: 100; color: #fff;
+            background: radial-gradient(ellipse at 90% -40%, rgba(92,208,238,.28), transparent 55%), linear-gradient(100deg, var(--bg-top) 0%, var(--bg-mid) 45%, var(--bg-deep) 100%);
+            box-shadow: 0 6px 20px rgba(8,32,58,.25); }
+        .nav-inner { max-width: 1280px; height: var(--nav-h); margin: 0 auto; padding: 0 clamp(16px, 3vw, 36px); display: flex; align-items: center; gap: 28px; }
+        .brand { display: flex; align-items: center; gap: 12px; font-size: 1.3rem; font-weight: 800; letter-spacing: -0.02em; color: #fff; flex: none; }
+        .brand-mark { width: 40px; height: 40px; display: grid; place-items: center; border-radius: 11px; background: var(--cyan); transition: transform .25s ease; }
+        .brand:hover .brand-mark { transform: rotate(-8deg) scale(1.06); }
+        .menu { flex: 1; display: flex; align-items: center; gap: 4px; height: 100%; }
+        .nav-link { position: relative; display: inline-flex; align-items: center; gap: 7px; height: 42px; padding: 0 14px; font: inherit; font-size: .92rem; font-weight: 600; color: #cfe3ef; background: transparent; border: 0; border-radius: 10px; cursor: pointer; white-space: nowrap; transition: background .2s, color .2s; }
+        .nav-link:hover, .dd.open > .nav-link { background: rgba(255,255,255,.11); color: #fff; }
+        .nav-link:focus-visible { outline: 2px solid var(--cyan); outline-offset: 1px; }
+        .nav-link.active { color: #fff; background: rgba(92,208,238,.16); }
+        .nav-link.active::after { content: ""; position: absolute; left: 14px; right: 14px; bottom: -13px; height: 3px; border-radius: 3px 3px 0 0; background: var(--cyan); }
+        .caret { width: 14px; height: 14px; transition: transform .2s; }
+        .dd.open .caret { transform: rotate(180deg); }
+        .dd { position: relative; display: flex; align-items: center; }
+        .dd-panel { position: absolute; top: calc(100% + 12px); left: 0; min-width: 240px; padding: 8px; background: #fff; color: var(--text); border: 1px solid var(--border); border-radius: 14px; box-shadow: 0 22px 44px rgba(8,32,58,.22); opacity: 0; visibility: hidden; transform: translateY(8px); transition: opacity .18s, transform .18s, visibility .18s; }
+        .dd-panel::before { content: ""; position: absolute; left: 0; right: 0; top: -14px; height: 14px; }
+        .dd.open > .dd-panel { opacity: 1; visibility: visible; transform: translateY(0); }
+        @media (hover: hover) and (min-width: 961px) {
+            .dd:hover > .dd-panel { opacity: 1; visibility: visible; transform: translateY(0); }
+            .dd:hover > .nav-link { background: rgba(255,255,255,.11); color: #fff; }
+            .dd:hover .caret { transform: rotate(180deg); }
+        }
+        .dd.right .dd-panel { left: auto; right: 0; }
+        .dd-panel a { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 9px; font-size: .92rem; font-weight: 600; color: var(--heading); transition: background .15s, color .15s, padding .15s; }
+        .dd-panel a svg { width: 18px; height: 18px; flex: none; color: var(--teal); transition: color .15s; }
+        .dd-panel a:hover { background: var(--tile); color: var(--teal-dark); padding-left: 16px; }
+        .dd-panel a:focus-visible { outline: 2px solid var(--teal); outline-offset: -2px; }
+        .dd-panel a.active { background: var(--tile); color: var(--teal-dark); }
+        .dd-panel a.logout { color: var(--danger); }
+        .dd-panel a.logout svg { color: var(--danger); }
+        .dd-panel a.logout:hover { background: var(--danger-bg); color: var(--danger); }
+        .dd-sep { height: 1px; margin: 6px 4px; background: var(--border); }
+        .user { margin-left: auto; }
+        .avatar { width: 30px; height: 30px; display: grid; place-items: center; border-radius: 50%; background: var(--cyan); color: var(--bg-deep); font-size: .82rem; font-weight: 800; }
+        .burger { display: none; margin-left: auto; width: 44px; height: 44px; place-items: center; border: 0; border-radius: 11px; background: rgba(255,255,255,.1); color: #fff; cursor: pointer; }
+        .burger:hover { background: rgba(255,255,255,.18); }
+        .burger:focus-visible { outline: 2px solid var(--cyan); }
+        .burger svg { width: 22px; height: 22px; }
+
+        /* PAGE */
+        .container { max-width: 1280px; margin: 0 auto; padding: 36px clamp(16px, 3vw, 36px) 56px; }
+        .page-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 24px; }
+        .page-head h1 { margin: 0 0 4px; font-size: 1.8rem; font-weight: 800; letter-spacing: -0.03em; color: var(--heading); }
+        .page-head p { margin: 0; color: var(--muted); }
+
+        .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 46px; padding: 0 22px; font: inherit; font-size: .95rem; font-weight: 700; border-radius: 11px; border: 1.5px solid transparent; cursor: pointer; transition: background .2s, transform .15s, box-shadow .2s, border-color .2s; }
+        .btn:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+        .btn-primary { background: var(--teal); color: #fff; box-shadow: 0 8px 16px rgba(11,132,168,.25); }
+        .btn-primary:hover { background: var(--teal-dark); transform: translateY(-2px); box-shadow: 0 12px 22px rgba(11,132,168,.32); }
+        .btn-ghost { background: #fff; color: var(--heading); border-color: var(--border); }
+        .btn-ghost:hover { background: var(--canvas); border-color: #b8cde0; }
+        .btn-danger { background: var(--danger); color: #fff; }
+        .btn-danger:hover { background: #a11f17; transform: translateY(-2px); }
+
+        .panel { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 24px; }
+
+        .field { margin-bottom: 18px; }
+        .field label { display: block; margin-bottom: 8px; font-size: .88rem; font-weight: 700; color: var(--heading); }
+        .field input, .field select, .field textarea { width: 100%; padding: 0 16px; height: 52px; font: inherit; color: var(--text); background: var(--field); border: 1.5px solid var(--field-line); border-radius: 12px; transition: border-color .2s, box-shadow .2s, background .2s; }
+        .field textarea { height: auto; min-height: 110px; padding: 14px 16px; resize: vertical; }
+        .field input:hover, .field select:hover, .field textarea:hover { border-color: #8fb4d2; }
+        .field input:focus, .field select:focus, .field textarea:focus { outline: none; background: #fff; border-color: var(--teal); box-shadow: 0 0 0 4px rgba(11,132,168,.16); }
+        .field .hint { min-height: 1.2em; margin: 6px 0 0; font-size: .83rem; color: var(--danger); }
+
+        /* Django messages (toasts) */
+        .toasts { position: fixed; top: calc(var(--nav-h) + 16px); right: 16px; z-index: 200; display: grid; gap: 10px; width: min(92vw, 360px); }
+        .toast { display: flex; align-items: flex-start; gap: 12px; padding: 14px 16px; background: #fff; border: 1px solid var(--border); border-left: 4px solid var(--teal); border-radius: 12px; box-shadow: 0 16px 34px rgba(8,32,58,.18); font-size: .92rem; line-height: 1.45; animation: toast-in .3s ease both; }
+        .toast.error, .toast.danger { border-left-color: var(--danger); }
+        .toast.success { border-left-color: var(--ok); }
+        .toast.warning { border-left-color: var(--gold); }
+        .toast .t-icon { width: 20px; height: 20px; flex: none; margin-top: 1px; color: var(--teal); }
+        .toast.error .t-icon, .toast.danger .t-icon { color: var(--danger); }
+        .toast.success .t-icon { color: var(--ok); }
+        .toast.warning .t-icon { color: #b7791f; }
+        .toast button { margin-left: auto; border: 0; background: transparent; color: var(--muted); font-size: 1.2rem; line-height: 1; cursor: pointer; }
+        @keyframes toast-in { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Logout dialog */
+        dialog { width: min(92vw, 400px); padding: 28px; border: 0; border-radius: 18px; color: var(--text); box-shadow: 0 30px 70px rgba(8,32,58,.35); }
+        dialog::backdrop { background: rgba(6,19,40,.55); backdrop-filter: blur(2px); }
+        dialog h2 { margin: 0 0 8px; font-size: 1.3rem; font-weight: 800; color: var(--heading); }
+        dialog p { margin: 0 0 24px; color: var(--muted); line-height: 1.55; }
+        .dialog-actions { display: flex; gap: 10px; justify-content: flex-end; }
+
+        /* FORM */
+        .container.narrow { max-width: 860px; }
+        .form-panel { padding: clamp(22px, 3vw, 38px); }
+        .req-note { margin: 0 0 24px; color: var(--muted); font-size: .86rem; }
+        .req { color: var(--danger); margin-left: 3px; }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 24px; }
+        .form-grid .full { grid-column: 1 / -1; }
+        .help-text { margin: 6px 0 0; font-size: .82rem; color: var(--muted); }
+        .field .valid { border-color: #7cc9a6; }
+        .field .invalid { border-color: var(--danger); background: #fffafa; }
+        .field .invalid:focus { box-shadow: 0 0 0 4px rgba(192,41,31,.14); }
+        .field select { appearance: none; -webkit-appearance: none; padding-right: 44px; cursor: pointer;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%235d7183' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+            background-repeat: no-repeat; background-position: right 16px center; }
+        .field-meta { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+        .field-meta .hint { flex: 1; }
+        .counter { margin-top: 6px; font-size: .8rem; color: var(--muted); white-space: nowrap; }
+        .counter.over { color: var(--danger); font-weight: 700; }
+        .form-error { margin-bottom: 22px; padding: 13px 16px; background: var(--danger-bg); color: var(--danger); border: 1px solid #f1c3bf; border-left: 4px solid var(--danger); border-radius: 10px; font-size: .92rem; font-weight: 600; }
+        .form-error[hidden] { display: none; }
+        .form-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 12px; padding-top: 24px; border-top: 1px solid var(--border); }
+        .form-actions .btn-primary { min-width: 190px; }
+        .btn[disabled] { opacity: .75; cursor: progress; transform: none; }
+        .back-link { display: inline-block; margin-top: 22px; font-size: .92rem; font-weight: 700; color: var(--teal); background: linear-gradient(currentColor, currentColor) 0 100% / 0 2px no-repeat; padding-bottom: 2px; transition: background-size .25s ease, color .2s; }
+        .back-link:hover { background-size: 100% 2px; color: var(--teal-dark); }
+        .back-link:focus-visible { outline: 2px solid var(--teal); outline-offset: 3px; border-radius: 3px; }
+
+        /* MOBILE */
+        @media (max-width: 960px) {
+            .burger { display: grid; }
+            .nav-inner { gap: 12px; }
+            .menu { position: absolute; top: var(--nav-h); left: 0; right: 0; flex-direction: column; align-items: stretch; gap: 2px; height: auto; max-height: calc(100vh - var(--nav-h)); overflow-y: auto; padding: 12px 16px 20px; background: var(--bg-deep); border-top: 1px solid rgba(255,255,255,.1); box-shadow: 0 24px 40px rgba(0,0,0,.3); display: none; }
+            .navbar.open .menu { display: flex; }
+            .nav-link { height: 48px; width: 100%; justify-content: flex-start; }
+            .nav-link.active::after { display: none; }
+            .dd { flex-direction: column; align-items: stretch; }
+            .dd > .nav-link .caret { margin-left: auto; }
+            .dd-panel { position: static; display: none; min-width: 0; margin: 2px 0 6px 12px; padding: 4px; background: rgba(255,255,255,.06); border: 0; border-left: 2px solid rgba(92,208,238,.4); border-radius: 0 10px 10px 0; box-shadow: none; opacity: 1; visibility: visible; transform: none; }
+            .dd-panel::before { display: none; }
+            .dd.open > .dd-panel { display: block; }
+            .dd-panel a { color: #d3e6f2; }
+            .dd-panel a svg { color: var(--cyan); }
+            .dd-panel a:hover, .dd-panel a.active { background: rgba(255,255,255,.1); color: #fff; padding-left: 12px; }
+            .dd-panel a.logout, .dd-panel a.logout svg { color: #ffb4ac; }
+            .dd-panel a.logout:hover { background: rgba(255,120,110,.16); color: #ffd7d2; }
+            .dd-sep { background: rgba(255,255,255,.12); }
+            .user { margin-left: 0; margin-top: 8px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,.12); }
+        }
+        @media (max-width: 720px) {
+            .form-grid { grid-template-columns: 1fr; }
+            .form-actions .btn { width: 100%; }
+        }
+        @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+
+        /* LAB COORDINATOR FORM PAGES */
+        .field input[type="file"] { height: auto; padding: 10px 12px; cursor: pointer; }
+        .field input[type="file"]::file-selector-button { margin-right: 14px; padding: 9px 16px; font: inherit; font-size: .88rem; font-weight: 700; color: #fff; background: var(--teal); border: 0; border-radius: 8px; cursor: pointer; transition: background .2s; }
+        .field input[type="file"]::file-selector-button:hover { background: var(--teal-dark); }
+        .file-info { display: none; align-items: center; gap: 10px; margin-top: 10px; padding: 10px 14px; border-radius: 10px; background: var(--tile); color: var(--teal-dark); font-size: .86rem; font-weight: 700; word-break: break-all; }
+        .file-info.show { display: flex; }
+        .file-info svg { width: 18px; height: 18px; flex: none; }
+        .prefix { position: relative; }
+        .prefix > span { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); font-weight: 800; color: var(--muted); pointer-events: none; }
+        .prefix input { padding-left: 36px; }
+        .info-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-bottom: 28px; }
+        .info { display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: var(--canvas); border: 1px solid var(--border); border-radius: 14px; transition: border-color .2s, transform .2s; }
+        .info:hover { border-color: var(--teal); transform: translateY(-2px); }
+        .info .ic { width: 42px; height: 42px; flex: none; display: grid; place-items: center; border-radius: 12px; background: var(--tile); color: var(--teal); }
+        .info .ic svg { width: 21px; height: 21px; }
+        .info small { display: block; font-size: .72rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
+        .info b { display: block; font-size: .95rem; color: var(--heading); word-break: break-word; }
+        .section-label { margin: 0 0 14px; font-size: 1rem; font-weight: 800; color: var(--heading); }
+        dialog .target { display: block; margin: -8px 0 20px; padding: 10px 14px; border-radius: 10px; background: var(--tile); color: var(--teal-dark); font-weight: 700; word-break: break-word; }
+        @media (max-width: 720px) { .info-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+<header class="navbar" id="navbar">
+    <div class="nav-inner">
+
+        <a class="brand" href="/myapp/lab_home/" aria-label="LabTrack lab coordinator home">
+            <span class="brand-mark">
+                <svg width="23" height="23" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M12 2.5l8 3v6c0 5-3.3 8.6-8 10-4.7-1.4-8-5-8-10v-6l8-3z" stroke="#08203a" stroke-width="1.9" stroke-linejoin="round"/>
+                    <path d="M10.5 8.5h3M11 8.5v3l-2 3.6a.9.9 0 0 0 .8 1.3h4.4a.9.9 0 0 0 .8-1.3l-2-3.6v-3" stroke="#08203a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </span>
+            LabTrack
+        </a>
+
+        <button type="button" class="burger" id="burger" aria-label="Open menu" aria-controls="menu" aria-expanded="false">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </button>
+
+        <nav class="menu" id="menu" aria-label="Main">
+
+            <a class="nav-link" href="/myapp/lab_home/" data-match="lab_home">Home</a>
+
+            <div class="dd">
+                <button type="button" class="nav-link dd-btn" aria-expanded="false" aria-haspopup="true">
+                    My Lab
+                    <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+                </button>
+                <div class="dd-panel">
+                    <a href="/myapp/lab_view_assigned_lab/" data-match="assigned_lab,lab_view_schedules">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.8 3h10.4a2 2 0 0 0 1.8-3l-5-9V3"/><path d="M7.5 15h9"/></svg>
+                        View Assigned Lab
+                    </a>
+                    <a href="/myapp/lab_view_exercises/" data-match="exercises">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
+                        View Lab Exercises
+                    </a>
+                </div>
+            </div>
+
+            <div class="dd">
+                <button type="button" class="nav-link dd-btn" aria-expanded="false" aria-haspopup="true">
+                    References
+                    <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+                </button>
+                <div class="dd-panel">
+                    <a href="/myapp/lab_view_references/" data-match="lab_view_references">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2V5z"/><path d="M8 7h7M8 11h5"/></svg>
+                        View References
+                    </a>
+                    <a href="/myapp/lab_add_reference/" data-match="lab_add_reference">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+                        Add Reference
+                    </a>
+                </div>
+            </div>
+
+            <a class="nav-link" href="/myapp/lab_view_equipment_requests/" data-match="equipment_requests,lab_assign_equipment,lab_fine_damage">Equipment</a>
+
+            <a class="nav-link" href="/myapp/lab_send_notification/" data-match="send_notification">Notifications</a>
+
+            <div class="dd right user">
+                <button type="button" class="nav-link dd-btn" aria-expanded="false" aria-haspopup="true">
+                    <span class="avatar" aria-hidden="true">L</span>
+                    Coordinator
+                    <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+                </button>
+                <div class="dd-panel">
+                    <a href="/myapp/lab_view_profile/" data-match="lab_view_profile">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.2-4 4-6 8-6s6.8 2 8 6"/></svg>
+                        View Profile
+                    </a>
+                    <a href="/myapp/change_password_get/" data-match="change_password">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+                        Change Password
+                    </a>
+                    <div class="dd-sep"></div>
+                    <a href="/myapp/logout_get/" class="logout" id="logoutLink">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+                        Logout
+                    </a>
+                </div>
+            </div>
+
+        </nav>
+    </div>
+</header>
+
+<!-- Django messages -->
+<div class="toasts" id="toasts" role="status" aria-live="polite">
+    {% if messages %}
+    {% for i in messages %}
+    <div class="toast {{ i.tags }}">
+        <svg class="t-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.01"/></svg>
+        <span>{{ i }}</span>
+        <button type="button" aria-label="Dismiss" data-dismiss>&times;</button>
+    </div>
+    {% endfor %}
+    {% endif %}
+</div>
+
+<main class="container narrow">
+    <div class="page-head">
+        <div>
+            <h1>Enter Fine and Damage Details</h1>
+            <p>Record any damage to the equipment and the fine to apply.</p>
+        </div>
+    </div>
+
+    <section class="panel form-panel">
+        <h2 class="section-label">Equipment details</h2>
+        <div class="info-grid">
+            <div class="info"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.2-4 4-6 8-6s6.8 2 8 6"/></svg></span><div><small>Student</small><b>{{ a.STUDENT.name }}</b></div></div>
+            <div class="info"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.8 3h10.4a2 2 0 0 0 1.8-3l-5-9V3"/><path d="M7.5 15h9"/></svg></span><div><small>Lab</small><b>{{ a.EQUIPMENT.LAB.lab_name }}</b></div></div>
+            <div class="info"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.6 2.6-2.4-.6-.6-2.4 2.6-2.6z"/></svg></span><div><small>Equipment</small><b>{{ a.EQUIPMENT.equipment_name }}</b></div></div>
+            <div class="info"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h10"/></svg></span><div><small>Quantity</small><b>{{ a.quantity }}</b></div></div>
+        </div>
+        <form method="post" id="pageForm" novalidate>
+            {% csrf_token %}
+
+            <div class="form-error" id="formError" role="alert" hidden></div>
+            <h2 class="section-label">Fine and damage</h2>
+            <p class="req-note"><span class="req" aria-hidden="true" style="margin:0">*</span> Required field</p>
+
+            <div class="form-grid">
+                <div class="field full">
+                    <label for="damage_description">Damage description<span class="req" aria-hidden="true">*</span></label>
+                    <textarea id="damage_description" name="damage_description" rows="5" placeholder="Describe the damage or loss and its condition." data-count="500" aria-describedby="damage_descriptionHint" required>{% if request.POST.damage_description %}{{ request.POST.damage_description }}{% else %}{{ a.damage_description|default_if_none:'' }}{% endif %}</textarea>
+                    <div class="field-meta">
+                        <p class="hint" id="damage_descriptionHint" aria-live="polite"></p>
+                        <span class="counter" id="damage_descriptionCount" aria-hidden="true">0 / 500</span>
+                    </div>
+                </div>
+
+                <div class="field full">
+                    <label for="fine_amount">Fine amount<span class="req" aria-hidden="true">*</span></label>
+                    <div class="prefix">
+                        <span aria-hidden="true">&#8377;</span>
+                        <input type="text" inputmode="decimal" id="fine_amount" name="fine_amount" value="{% if request.POST.fine_amount %}{{ request.POST.fine_amount }}{% else %}{{ a.fine_amount|default_if_none:'' }}{% endif %}" placeholder="0.00" data-money aria-describedby="fine_amountHint" required autocomplete="off">
+                    </div>
+                    <p class="help-text">Enter 0 if no fine applies. Up to 2 decimal places.</p>
+                    <p class="hint" id="fine_amountHint" aria-live="polite"></p>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary" id="submitBtn">Submit</button>
+                <a class="btn btn-ghost" href="/myapp/lab_view_equipment_requests/">Cancel</a>
+            </div>
+        </form>
+    </section>
+    <a class="back-link" href="/myapp/lab_view_equipment_requests/">Back to Equipment Requests</a>
+</main>
+
+<!-- Logout confirmation -->
+<dialog id="logoutDialog" aria-labelledby="logoutTitle">
+    <h2 id="logoutTitle">Log out of LabTrack?</h2>
+    <p>You will need to sign in again to use the lab coordinator panel.</p>
+    <div class="dialog-actions">
+        <button type="button" class="btn btn-ghost" id="cancelLogout">Stay signed in</button>
+        <button type="button" class="btn btn-primary" id="confirmLogout">Log out</button>
+    </div>
+</dialog>
+
+<script>
+(function () {
+    var navbar = document.getElementById('navbar');
+    var burger = document.getElementById('burger');
+    var dds = Array.prototype.slice.call(document.querySelectorAll('.dd'));
+
+    function closeAll(except) {
+        dds.forEach(function (d) {
+            if (d !== except) {
+                d.classList.remove('open');
+                d.querySelector('.dd-btn').setAttribute('aria-expanded', 'false');
+            }
+        });
+    }
+
+    dds.forEach(function (d) {
+        var btn = d.querySelector('.dd-btn');
+        btn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            var open = !d.classList.contains('open');
+            closeAll(d);
+            d.classList.toggle('open', open);
+            btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+        });
+    });
+
+    document.addEventListener('click', function (e) { if (!e.target.closest('.dd')) closeAll(); });
+
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+            closeAll();
+            navbar.classList.remove('open');
+            burger.setAttribute('aria-expanded', 'false');
+        }
+    });
+
+    burger.addEventListener('click', function () {
+        var open = !navbar.classList.contains('open');
+        navbar.classList.toggle('open', open);
+        burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+        burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    });
+
+    // Mark current page in navbar
+    var path = window.location.pathname;
+    var links = document.querySelectorAll('.menu a[data-match]');
+    var matched = false;
+    Array.prototype.forEach.call(links, function (a) {
+        if (matched) return;
+        var tokens = a.getAttribute('data-match').split(',');
+        if (tokens.some(function (t) { return path.indexOf(t) !== -1; })) {
+            matched = true;
+            a.classList.add('active');
+            a.setAttribute('aria-current', 'page');
+            var parent = a.closest('.dd');
+            if (parent) parent.querySelector('.dd-btn').classList.add('active');
+        }
+    });
+
+    // Toasts: dismiss + auto-hide (shared with JS-created toasts)
+    window.bindToast = function (t) {
+        var remove = function () { if (t.parentNode) t.parentNode.removeChild(t); };
+        var x = t.querySelector('[data-dismiss]');
+        if (x) x.addEventListener('click', remove);
+        setTimeout(remove, 6000);
+    };
+    Array.prototype.forEach.call(document.querySelectorAll('.toast'), window.bindToast);
+
+    // Logout confirmation
+    var link = document.getElementById('logoutLink');
+    var dlg = document.getElementById('logoutDialog');
+    var cancel = document.getElementById('cancelLogout');
+    var confirmBtn = document.getElementById('confirmLogout');
+    link.addEventListener('click', function (e) {
+        if (typeof dlg.showModal !== 'function') return;
+        e.preventDefault();
+        closeAll();
+        navbar.classList.remove('open');
+        dlg.showModal();
+        cancel.focus();
+    });
+    cancel.addEventListener('click', function () { dlg.close(); });
+    confirmBtn.addEventListener('click', function () { window.location.href = link.getAttribute('href'); });
+    dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
+})();
+</script>
+
+<script>
+(function () {
+    var form = document.getElementById('pageForm');
+    var btn = document.getElementById('submitBtn');
+    var banner = document.getElementById('formError');
+    var toasts = document.getElementById('toasts');
+    var confirmDlg = document.getElementById('confirmDialog');
+    var confirmed = false;
+    var touched = {};
+    var BUSY = 'Saving...';
+
+    function byId(id) { return document.getElementById(id); }
+    function words(v) { return v.split(/\s+/).filter(Boolean).length; }
+    function letters(v) { return (v.match(/[A-Za-z]/g) || []).length; }
+
+    function toast(type, text) {
+        var el = document.createElement('div');
+        el.className = 'toast ' + type;
+        el.innerHTML = '<svg class="t-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.01"/></svg><span></span><button type="button" aria-label="Dismiss" data-dismiss>&times;</button>';
+        el.querySelector('span').textContent = text;
+        toasts.appendChild(el);
+        window.bindToast(el);
+    }
+
+    // Reusable text rule: required, length, no < >, no long repeats, min words / letters
+    function textRule(label, lower, min, max, minWords, minLetters) {
+        return function (v) {
+            if (!v) return 'Enter ' + lower + '.';
+            if (v.length < min) return label + ' must be at least ' + min + ' characters.';
+            if (v.length > max) return label + ' must be ' + max + ' characters or fewer.';
+            if (/[<>]/.test(v)) return label + ' cannot contain < or > characters.';
+            if (letters(v) < minLetters) return label + ' must contain meaningful text.';
+            if (minWords && words(v) < minWords) return label + ' must have at least ' + minWords + ' words.';
+            if (/(.)\1{5,}/.test(v)) return label + ' cannot repeat the same character 6 or more times.';
+            return '';
+        };
+    }
+
+    var specs = [
+        { id: 'damage_description', check: textRule('Damage description', 'the damage description', 10, 500, 3, 5) },
+        { id: 'fine_amount', check: function (v) {
+            if (!v) return 'Enter the fine amount.';
+            if (!/^\d+(\.\d{1,2})?$/.test(v)) return 'Enter a valid amount with up to 2 decimal places.';
+            if (parseFloat(v) > 100000) return 'Fine amount cannot be more than \u20B91,00,000.';
+            return '';
+        } }
+    ];
+
+
+    function value(spec) {
+        var el = byId(spec.id);
+        if (el.type === 'file') return (el.files && el.files[0]) || null;
+        return el.tagName === 'SELECT' ? el.value : el.value.trim();
+    }
+
+    function show(spec, msg) {
+        var input = byId(spec.id), hint = byId(spec.id + 'Hint');
+        if (msg) {
+            input.classList.add('invalid'); input.classList.remove('valid');
+            input.setAttribute('aria-invalid', 'true');
+        } else {
+            input.classList.remove('invalid'); input.removeAttribute('aria-invalid');
+            input.classList.toggle('valid', !!value(spec));
+        }
+        if (hint) hint.textContent = msg;
+    }
+
+    function refreshBanner() {
+        if (banner.hidden) return;
+        var n = form.querySelectorAll('.invalid').length;
+        if (!n) { banner.hidden = true; return; }
+        banner.textContent = n === 1 ? 'Fix the highlighted field before saving.' : 'Fix the ' + n + ' highlighted fields before saving.';
+    }
+
+    function validate(spec) {
+        var msg = spec.check(value(spec), byId(spec.id));
+        show(spec, msg);
+        refreshBanner();
+        return msg;
+    }
+
+    specs.forEach(function (spec) {
+        var input = byId(spec.id);
+        var evt = (input.tagName === 'SELECT' || input.type === 'file') ? 'change' : 'input';
+        input.addEventListener('blur', function () { touched[spec.id] = true; validate(spec); });
+        input.addEventListener(evt, function () {
+            if (touched[spec.id] || input.classList.contains('invalid') || evt === 'change') {
+                touched[spec.id] = true;
+                validate(spec);
+            }
+        });
+    });
+
+    // Money input: digits and one dot only, max 2 decimals
+    Array.prototype.forEach.call(form.querySelectorAll('[data-money]'), function (el) {
+        el.addEventListener('input', function () {
+            var v = el.value.replace(/[^0-9.]/g, '');
+            var p = v.split('.');
+            if (p.length > 1) v = p[0] + '.' + p.slice(1).join('').slice(0, 2);
+            el.value = v;
+        });
+    });
+
+    // Character counters
+    var counters = [];
+    Array.prototype.forEach.call(form.querySelectorAll('[data-count]'), function (el) {
+        var out = byId(el.id + 'Count');
+        var max = parseInt(el.getAttribute('data-count'), 10);
+        function upd() {
+            out.textContent = el.value.length + ' / ' + max;
+            out.classList.toggle('over', el.value.length > max);
+        }
+        el.addEventListener('input', upd);
+        counters.push(upd);
+        upd();
+    });
+
+    function startBusy() { btn.disabled = true; btn.textContent = BUSY; }
+
+    form.addEventListener('submit', function (e) {
+        if (confirmed) { startBusy(); return; }
+
+        var firstBad = null, firstMsg = '', count = 0;
+        specs.forEach(function (spec) {
+            var input = byId(spec.id);
+            if (input.type !== 'file' && input.tagName !== 'SELECT') {
+                input.value = input.value.trim().replace(/[ \t]{2,}/g, ' ');
+            }
+            touched[spec.id] = true;
+            var msg = validate(spec);
+            if (msg) { count++; if (!firstBad) { firstBad = input; firstMsg = msg; } }
+        });
+        counters.forEach(function (f) { f(); });
+
+        if (count) {
+            e.preventDefault();
+            banner.textContent = count === 1 ? 'Fix the highlighted field before saving.' : 'Fix the ' + count + ' highlighted fields before saving.';
+            banner.hidden = false;
+            toast('error', firstMsg);
+            firstBad.focus();
+            firstBad.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            return;
+        }
+
+        banner.hidden = true;
+
+        if (confirmDlg && typeof confirmDlg.showModal === 'function') {
+            e.preventDefault();
+            var t = byId('confirmTarget');
+            if (t) t.textContent = byId(t.getAttribute('data-from')).value;
+            confirmDlg.showModal();
+            byId('cancelConfirm').focus();
+            return;
+        }
+        startBusy();
+    });
+
+    if (confirmDlg) {
+        byId('cancelConfirm').addEventListener('click', function () { confirmDlg.close(); });
+        byId('okConfirm').addEventListener('click', function () {
+            confirmed = true;
+            confirmDlg.close();
+            if (form.requestSubmit) form.requestSubmit(); else { startBusy(); form.submit(); }
+        });
+        confirmDlg.addEventListener('click', function (e) { if (e.target === confirmDlg) confirmDlg.close(); });
+    }
+
+    // Refill state after a server-side error
+    specs.forEach(function (spec) {
+        var v = value(spec);
+        if (v && !(v instanceof File)) { touched[spec.id] = true; validate(spec); }
+    });
+
+
+})();
+</script>
+
+</body>
+</html>

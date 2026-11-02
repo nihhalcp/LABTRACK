@@ -1,0 +1,832 @@
+{#<!DOCTYPE html>#}
+{#<html>#}
+{#<head>#}
+{#    <title>My Assigned Labs</title>#}
+{#</head>#}
+{#<body>#}
+{##}
+{#<h2>My Assigned Labs</h2>#}
+{##}
+{#<table border="1">#}
+{#    <tr>#}
+{#        <th>Sl No</th>#}
+{#        <th>Lab Name</th>#}
+{#        <th>Room Number</th>#}
+{#        <th>Subject Name</th>#}
+{#        <th>Subject Code</th>#}
+{#        <th>Course</th>#}
+{#        <th>Semester</th>#}
+{#        <th>Action</th>#}
+{#    </tr>#}
+{##}
+{#    {% for i in data %}#}
+{#    <tr>#}
+{#        <td>{{ forloop.counter }}</td>#}
+{#        <td>{{ i.SUBJECT.LAB.lab_name }}</td>#}
+{#        <td>{{ i.SUBJECT.LAB.room_number }}</td>#}
+{#        <td>{{ i.SUBJECT.subject_name }}</td>#}
+{#        <td>{{ i.SUBJECT.subject_code }}</td>#}
+{#        <td>{{ i.SUBJECT.COURSE.course_name }}</td>#}
+{#        <td>{{ i.SUBJECT.semester }}</td>#}
+{#    <td>#}
+{#    <a href="/myapp/staff_add_exercise/{{ i.SUBJECT.LAB.id }}/">Add Excercise</a><br>#}
+{#        <a href="/myapp/staff_view_instructions/{{ i.SUBJECT.LAB.id }}/">View Excercise</a>#}
+{#</td>#}
+{#    </tr>#}
+{#    {% empty %}#}
+{#    <tr>#}
+{#        <td colspan="7">No labs assigned to you.</td>#}
+{#    </tr>#}
+{#    {% endfor %}#}
+{#</table>#}
+{##}
+{#</body>#}
+{#</html>#}
+
+
+{% load l10n %}<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>My Assigned Labs - LabTrack</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-top: #164a63;
+            --bg-mid: #0d3048;
+            --bg-deep: #08203a;
+            --cyan: #5cd0ee;
+            --teal: #0b84a8;
+            --teal-dark: #086a89;
+            --heading: #0d2b3e;
+            --text: #14283a;
+            --muted: #5d7183;
+            --surface: #ffffff;
+            --canvas: #f1f6fb;
+            --border: #dae6f1;
+            --field: #e9f1fc;
+            --field-line: #c8d9ee;
+            --tile: #e2f4fa;
+            --danger: #c0291f;
+            --danger-bg: #fdeceb;
+            --ok: #1c7c54;
+            --ok-bg: #e3f6ec;
+            --gold: #fbbf24;
+            --nav-h: 68px;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+            color: var(--text);
+            background:
+                radial-gradient(900px 420px at 100% 0%, rgba(92,208,238,.14), transparent 60%),
+                radial-gradient(700px 380px at 0% 40%, rgba(11,132,168,.07), transparent 60%),
+                var(--canvas);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a { color: inherit; text-decoration: none; }
+
+        /* ================= NAVBAR ================= */
+        .navbar {
+            position: sticky; top: 0; z-index: 100; color: #fff;
+            background:
+                radial-gradient(ellipse at 90% -40%, rgba(92,208,238,.28), transparent 55%),
+                linear-gradient(100deg, var(--bg-top) 0%, var(--bg-mid) 45%, var(--bg-deep) 100%);
+            box-shadow: 0 6px 20px rgba(8,32,58,.25);
+        }
+        .nav-inner { max-width: 1280px; height: var(--nav-h); margin: 0 auto; padding: 0 clamp(16px, 3vw, 36px); display: flex; align-items: center; gap: 28px; }
+        .brand { display: flex; align-items: center; gap: 12px; font-size: 1.3rem; font-weight: 800; letter-spacing: -0.02em; color: #fff; flex: none; }
+        .brand-mark { width: 40px; height: 40px; display: grid; place-items: center; border-radius: 11px; background: var(--cyan); transition: transform .25s ease; }
+        .brand:hover .brand-mark { transform: rotate(-8deg) scale(1.06); }
+
+        .menu { flex: 1; display: flex; align-items: center; gap: 4px; height: 100%; }
+        .nav-link { position: relative; display: inline-flex; align-items: center; gap: 7px; height: 42px; padding: 0 14px; font: inherit; font-size: .92rem; font-weight: 600; color: #cfe3ef; background: transparent; border: 0; border-radius: 10px; cursor: pointer; white-space: nowrap; transition: background .2s, color .2s; }
+        .nav-link:hover, .dd.open > .nav-link { background: rgba(255,255,255,.11); color: #fff; }
+        .nav-link:focus-visible { outline: 2px solid var(--cyan); outline-offset: 1px; }
+        .nav-link.active { color: #fff; background: rgba(92,208,238,.16); }
+        .nav-link.active::after { content: ""; position: absolute; left: 14px; right: 14px; bottom: -13px; height: 3px; border-radius: 3px 3px 0 0; background: var(--cyan); }
+
+        .caret { width: 14px; height: 14px; transition: transform .2s; }
+        .dd.open .caret { transform: rotate(180deg); }
+        .dd { position: relative; display: flex; align-items: center; }
+
+        .dd-panel { position: absolute; top: calc(100% + 12px); left: 0; min-width: 240px; padding: 8px; background: #fff; color: var(--text); border: 1px solid var(--border); border-radius: 14px; box-shadow: 0 22px 44px rgba(8,32,58,.22); opacity: 0; visibility: hidden; transform: translateY(8px); transition: opacity .18s, transform .18s, visibility .18s; }
+        .dd-panel::before { content: ""; position: absolute; left: 0; right: 0; top: -14px; height: 14px; }
+        .dd.open > .dd-panel { opacity: 1; visibility: visible; transform: translateY(0); }
+
+        @media (hover: hover) and (min-width: 961px) {
+            .dd:hover > .dd-panel { opacity: 1; visibility: visible; transform: translateY(0); }
+            .dd:hover > .nav-link { background: rgba(255,255,255,.11); color: #fff; }
+            .dd:hover .caret { transform: rotate(180deg); }
+        }
+
+        .dd.right .dd-panel { left: auto; right: 0; }
+        .dd-panel a { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 9px; font-size: .92rem; font-weight: 600; color: var(--heading); transition: background .15s, color .15s, padding .15s; }
+        .dd-panel a svg { width: 18px; height: 18px; flex: none; color: var(--teal); }
+        .dd-panel a:hover { background: var(--tile); color: var(--teal-dark); padding-left: 16px; }
+        .dd-panel a:focus-visible { outline: 2px solid var(--teal); outline-offset: -2px; }
+        .dd-panel a.active { background: var(--tile); color: var(--teal-dark); }
+        .dd-panel a.logout { color: var(--danger); }
+        .dd-panel a.logout svg { color: var(--danger); }
+        .dd-panel a.logout:hover { background: var(--danger-bg); color: var(--danger); }
+        .dd-sep { height: 1px; margin: 6px 4px; background: var(--border); }
+
+        .user { margin-left: auto; }
+        .avatar { width: 30px; height: 30px; display: grid; place-items: center; border-radius: 50%; background: var(--cyan); color: var(--bg-deep); font-size: .82rem; font-weight: 800; }
+
+        .burger { display: none; margin-left: auto; width: 44px; height: 44px; place-items: center; border: 0; border-radius: 11px; background: rgba(255,255,255,.1); color: #fff; cursor: pointer; }
+        .burger:hover { background: rgba(255,255,255,.18); }
+        .burger:focus-visible { outline: 2px solid var(--cyan); }
+        .burger svg { width: 22px; height: 22px; }
+
+        /* ================= PAGE ================= */
+        .container { max-width: 1280px; margin: 0 auto; padding: 32px clamp(16px, 3vw, 36px) 56px; }
+
+        .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 50px; padding: 0 26px; font: inherit; font-size: .95rem; font-weight: 700; border-radius: 12px; border: 1.5px solid transparent; cursor: pointer; transition: background .2s, transform .15s, box-shadow .2s, border-color .2s; }
+        .btn svg { width: 18px; height: 18px; }
+        .btn:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+        .btn-primary { background: var(--teal); color: #fff; box-shadow: 0 8px 16px rgba(11,132,168,.25); }
+        .btn-primary:hover { background: var(--teal-dark); transform: translateY(-2px); box-shadow: 0 12px 22px rgba(11,132,168,.32); }
+        .btn-primary:disabled { opacity: .7; cursor: wait; transform: none; }
+        .btn-ghost { background: #fff; color: var(--heading); border-color: var(--border); }
+        .btn-ghost:hover { background: var(--canvas); border-color: #b8cde0; transform: translateY(-2px); }
+
+        .toasts { position: fixed; top: calc(var(--nav-h) + 16px); right: 16px; z-index: 200; display: grid; gap: 10px; width: min(92vw, 360px); }
+        .toast { display: flex; align-items: flex-start; gap: 12px; padding: 14px 16px; background: #fff; border: 1px solid var(--border); border-left: 4px solid var(--teal); border-radius: 12px; box-shadow: 0 16px 34px rgba(8,32,58,.18); font-size: .92rem; line-height: 1.45; animation: toast-in .3s ease both; }
+        .toast.error { border-left-color: var(--danger); }
+        .toast.success { border-left-color: var(--ok); }
+        .toast button { margin-left: auto; border: 0; background: transparent; color: var(--muted); font-size: 1.2rem; line-height: 1; cursor: pointer; }
+        @keyframes toast-in { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+
+        dialog { width: min(92vw, 400px); padding: 28px; border: 0; border-radius: 18px; color: var(--text); box-shadow: 0 30px 70px rgba(8,32,58,.35); }
+        dialog::backdrop { background: rgba(6,19,40,.55); backdrop-filter: blur(2px); }
+        dialog h2 { margin: 0 0 8px; font-size: 1.3rem; font-weight: 800; color: var(--heading); }
+        dialog p { margin: 0 0 24px; color: var(--muted); line-height: 1.55; }
+        .dialog-actions { display: flex; gap: 10px; justify-content: flex-end; }
+
+        /* ================= HEADER ================= */
+        .crumbs { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 14px; font-size: .84rem; font-weight: 600; color: var(--muted); }
+        .crumbs a { transition: color .2s; }
+        .crumbs a:hover { color: var(--teal); }
+        .crumbs svg { width: 14px; height: 14px; }
+        .crumbs b { color: var(--heading); }
+
+        .hero {
+            position: relative; display: flex; align-items: center; justify-content: space-between; gap: 24px;
+            padding: 32px 38px; border-radius: 24px; color: #fff; overflow: hidden;
+            background: radial-gradient(ellipse at 92% 0%, rgba(92,208,238,.34), transparent 55%), linear-gradient(135deg, var(--bg-top), var(--bg-deep));
+            box-shadow: 0 20px 40px rgba(8,32,58,.22);
+        }
+        .hero::before { content: ""; position: absolute; inset: 0; background-image: radial-gradient(rgba(255,255,255,.09) 1px, transparent 1px); background-size: 24px 24px; pointer-events: none; }
+        .hero::after { content: ""; position: absolute; right: -70px; bottom: -100px; width: 280px; height: 280px; border-radius: 50%; border: 2px dashed rgba(92,208,238,.35); pointer-events: none; }
+        .hero > * { position: relative; z-index: 1; }
+        .hero-ic { width: 70px; height: 70px; flex: none; display: grid; place-items: center; border-radius: 20px; background: linear-gradient(145deg, var(--cyan), var(--teal)); box-shadow: 0 14px 28px rgba(0,0,0,.3); transform: rotate(-6deg); transition: transform .3s; }
+        .hero:hover .hero-ic { transform: rotate(0) scale(1.05); }
+        .hero-ic svg { width: 34px; height: 34px; }
+        .hero-text { flex: 1; min-width: 0; }
+        .hero h1 { margin: 0 0 6px; font-size: clamp(1.5rem, 2.6vw, 2.1rem); font-weight: 800; letter-spacing: -0.03em; }
+        .hero h1 span { color: var(--cyan); }
+        .hero p { margin: 0; color: #b9d3e3; line-height: 1.55; }
+        .chip { flex: none; display: inline-flex; align-items: center; gap: 8px; padding: 9px 16px; border-radius: 999px; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.22); font-size: .85rem; font-weight: 700; }
+        .chip svg { width: 16px; height: 16px; }
+
+        /* ================= LAYOUT ================= */
+        .layout { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 22px; margin-top: 26px; align-items: start; }
+        .panel { padding: 30px; background: var(--surface); border: 1px solid var(--border); border-radius: 22px; box-shadow: 0 12px 28px rgba(8,32,58,.06); }
+        .panel-head { display: flex; align-items: center; gap: 14px; margin-bottom: 24px; padding-bottom: 18px; border-bottom: 1px solid var(--border); }
+        .panel-head .ic { width: 46px; height: 46px; flex: none; display: grid; place-items: center; border-radius: 14px; background: var(--tile); color: var(--teal); }
+        .panel-head .ic svg { width: 22px; height: 22px; }
+        .panel-head h2 { margin: 0; font-size: 1.15rem; font-weight: 800; color: var(--heading); }
+        .panel-head p { margin: 2px 0 0; font-size: .86rem; color: var(--muted); }
+
+        /* ================= FORM ================= */
+        .field { margin-bottom: 22px; }
+        .field label { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; font-size: .88rem; font-weight: 700; color: var(--heading); }
+        .field label .req { color: var(--danger); margin-left: 3px; }
+
+        .control { position: relative; }
+        .control > svg.lead { position: absolute; left: 16px; top: 50%; width: 19px; height: 19px; transform: translateY(-50%); color: #7d93a8; pointer-events: none; transition: color .2s; z-index: 1; }
+        .control input, .control select {
+            width: 100%; height: 54px; padding: 0 46px 0 48px; font: inherit; font-weight: 500; color: var(--text);
+            background: var(--field); border: 1.5px solid var(--field-line); border-radius: 13px;
+            transition: border-color .2s, box-shadow .2s, background .2s;
+        }
+        .control select { appearance: none; -webkit-appearance: none; cursor: pointer; padding-right: 74px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235d7183' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+            background-repeat: no-repeat; background-position: right 44px center; background-size: 16px; }
+        .control select:invalid, .control select.placeholder { color: #8aa0b5; font-weight: 400; }
+        .control select option { color: var(--text); }
+        .control input::placeholder { color: #8aa0b5; font-weight: 400; }
+        .control input:hover, .control select:hover { border-color: #8fb4d2; }
+        .control input:focus, .control select:focus { outline: none; background-color: #fff; border-color: var(--teal); box-shadow: 0 0 0 4px rgba(11,132,168,.16); }
+        .control:focus-within > svg.lead { color: var(--teal); }
+
+        .control .state { position: absolute; right: 14px; top: 50%; width: 22px; height: 22px; transform: translateY(-50%) scale(.6); opacity: 0; transition: opacity .2s, transform .2s; pointer-events: none; }
+        .field.is-invalid .control input, .field.is-invalid .control select { border-color: var(--danger); background-color: #fffafa; }
+        .field.is-invalid .control input:focus, .field.is-invalid .control select:focus { box-shadow: 0 0 0 4px rgba(192,41,31,.14); }
+        .field.is-invalid .control > svg.lead { color: var(--danger); }
+        .field.is-invalid .state.bad { opacity: 1; transform: translateY(-50%) scale(1); color: var(--danger); }
+        .field.is-valid .control input, .field.is-valid .control select { border-color: #35a574; background-color: #fbfffd; }
+        .field.is-valid .state.good { opacity: 1; transform: translateY(-50%) scale(1); color: var(--ok); }
+
+        .hint { display: flex; align-items: flex-start; gap: 6px; min-height: 1.3em; margin: 8px 2px 0; font-size: .83rem; line-height: 1.4; color: var(--muted); }
+        .field.is-invalid .hint { color: var(--danger); font-weight: 600; }
+        .field.is-invalid .control { animation: shake .35s; }
+        @keyframes shake { 20%, 60% { transform: translateX(-5px); } 40%, 80% { transform: translateX(5px); } }
+
+        .presets { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 10px; }
+        .presets span { font-size: .8rem; font-weight: 600; color: var(--muted); }
+        .presets button { padding: 6px 14px; font: inherit; font-size: .82rem; font-weight: 700; color: var(--teal-dark); background: var(--tile); border: 1px solid transparent; border-radius: 999px; cursor: pointer; transition: background .2s, color .2s, transform .15s; }
+        .presets button:hover { background: var(--teal); color: #fff; transform: translateY(-2px); }
+        .presets button:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+
+        .row { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+
+        .form-alert { display: none; align-items: center; gap: 10px; margin-bottom: 20px; padding: 12px 14px; border-radius: 12px; background: var(--danger-bg); border: 1px solid #f3c2be; color: var(--danger); font-size: .88rem; font-weight: 600; }
+        .form-alert.show { display: flex; animation: toast-in .25s ease both; }
+        .form-alert svg { width: 18px; height: 18px; flex: none; }
+
+        .summary { display: none; align-items: center; gap: 12px; margin-bottom: 22px; padding: 14px 16px; border-radius: 14px; background: var(--ok-bg); border: 1px solid #b9e4cd; color: var(--ok); font-size: .9rem; font-weight: 600; line-height: 1.45; }
+        .summary.show { display: flex; animation: toast-in .25s ease both; }
+        .summary svg { width: 20px; height: 20px; flex: none; }
+
+        .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 8px; padding-top: 22px; border-top: 1px solid var(--border); }
+        .actions .btn-primary { flex: 1; min-width: 180px; }
+
+        /* ================= SIDE ================= */
+        .side { display: grid; gap: 18px; }
+        .dept-card { position: relative; padding: 24px; border-radius: 22px; color: #fff; overflow: hidden; background: radial-gradient(ellipse at 100% 0%, rgba(92,208,238,.35), transparent 60%), linear-gradient(135deg, var(--teal), var(--bg-mid)); box-shadow: 0 16px 32px rgba(8,32,58,.2); transition: transform .25s; }
+        .dept-card:hover { transform: translateY(-4px); }
+        .dept-card small { display: block; margin-bottom: 6px; font-size: .78rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #bfe6f3; }
+        .dept-card h3 { margin: 0 0 4px; font-size: 1.3rem; font-weight: 800; letter-spacing: -0.02em; }
+        .dept-card p { margin: 0; font-size: .86rem; color: #cfe9f3; }
+        .dept-card svg { position: absolute; right: 18px; bottom: 14px; width: 70px; height: 70px; color: rgba(255,255,255,.16); }
+
+        .rules { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+        .rules li { display: flex; gap: 12px; padding: 12px 14px; border-radius: 14px; background: var(--canvas); font-size: .86rem; line-height: 1.5; color: var(--text); transition: transform .2s, background .2s; }
+        .rules li:hover { transform: translateX(4px); background: var(--tile); }
+        .rules .dot { width: 28px; height: 28px; flex: none; display: grid; place-items: center; border-radius: 50%; background: var(--teal); color: #fff; }
+        .rules .dot svg { width: 14px; height: 14px; }
+        .rules b { display: block; color: var(--heading); }
+        .side .panel { padding: 24px; }
+        .side .panel h3 { margin: 0 0 14px; font-size: 1.05rem; font-weight: 800; color: var(--heading); }
+
+        .footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; margin-top: 48px; padding-top: 20px; border-top: 1px solid var(--border); font-size: .82rem; color: #8196a8; }
+
+        /* ================= RESPONSIVE ================= */
+        @media (max-width: 960px) {
+            .burger { display: grid; }
+            .nav-inner { gap: 12px; }
+            .menu { position: absolute; top: var(--nav-h); left: 0; right: 0; flex-direction: column; align-items: stretch; gap: 2px; height: auto; max-height: calc(100vh - var(--nav-h)); overflow-y: auto; padding: 12px 16px 20px; background: var(--bg-deep); border-top: 1px solid rgba(255,255,255,.1); box-shadow: 0 24px 40px rgba(0,0,0,.3); display: none; }
+            .navbar.open .menu { display: flex; }
+            .nav-link { height: 48px; width: 100%; justify-content: flex-start; }
+            .nav-link.active::after { display: none; }
+            .dd { flex-direction: column; align-items: stretch; }
+            .dd > .nav-link .caret { margin-left: auto; }
+            .dd-panel { position: static; display: none; min-width: 0; margin: 2px 0 6px 12px; padding: 4px; background: rgba(255,255,255,.06); border: 0; border-left: 2px solid rgba(92,208,238,.4); border-radius: 0 10px 10px 0; box-shadow: none; opacity: 1; visibility: visible; transform: none; }
+            .dd-panel::before { display: none; }
+            .dd.open > .dd-panel { display: block; }
+            .dd-panel a { color: #d3e6f2; }
+            .dd-panel a svg { color: var(--cyan); }
+            .dd-panel a:hover, .dd-panel a.active { background: rgba(255,255,255,.1); color: #fff; padding-left: 12px; }
+            .dd-panel a.logout { color: #ffb4ac; }
+            .dd-panel a.logout svg { color: #ffb4ac; }
+            .dd-panel a.logout:hover { background: rgba(255,120,110,.16); color: #ffd7d2; }
+            .dd-sep { background: rgba(255,255,255,.12); }
+            .user { margin-left: 0; margin-top: 8px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,.12); }
+
+            .layout { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 640px) {
+            .hero { flex-wrap: wrap; padding: 26px 22px; }
+            .hero-ic { width: 58px; height: 58px; }
+            .panel { padding: 22px 18px; }
+            .row { grid-template-columns: 1fr; gap: 0; }
+            .actions .btn { width: 100%; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * { transition: none !important; animation: none !important; }
+        }
+
+        .field label .count { font-size: .78rem; font-weight: 600; color: var(--muted); }
+        .field label .count.warn { color: var(--danger); }
+
+        .control textarea { width: 100%; min-height: 120px; padding: 15px 46px 15px 48px; font: inherit; font-weight: 500; line-height: 1.5; color: var(--text); background: var(--field); border: 1.5px solid var(--field-line); border-radius: 13px; resize: vertical; transition: border-color .2s, box-shadow .2s, background .2s; }
+        .control textarea::placeholder { color: #8aa0b5; font-weight: 400; }
+        .control textarea:hover { border-color: #8fb4d2; }
+        .control textarea:focus { outline: none; background: #fff; border-color: var(--teal); box-shadow: 0 0 0 4px rgba(11,132,168,.16); }
+        .control.ta > svg.lead { top: 19px; transform: none; }
+        .control.ta .state { top: 18px; transform: scale(.6); }
+        .field.is-invalid .control.ta .state.bad, .field.is-valid .control.ta .state.good { transform: scale(1); }
+        .field.is-invalid .control textarea { border-color: var(--danger); background: #fffafa; }
+        .field.is-invalid .control textarea:focus { box-shadow: 0 0 0 4px rgba(192,41,31,.14); }
+        .field.is-invalid .control.ta > svg.lead { color: var(--danger); }
+        .field.is-valid .control textarea { border-color: #35a574; background: #fbfffd; }
+
+        .sect { display: flex; align-items: center; gap: 10px; margin: 32px 0 18px; font-size: .78rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--teal-dark); }
+        .sect::after { content: ""; flex: 1; height: 1px; background: var(--border); }
+        .sect.first { margin-top: 0; }
+
+        .field.pw .control input { padding-right: 96px; }
+        .field.pw .control .state { right: 54px; }
+        .eye { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); width: 38px; height: 38px; display: grid; place-items: center; border: 0; border-radius: 10px; background: transparent; color: #7d93a8; cursor: pointer; transition: background .2s, color .2s; }
+        .eye:hover { background: var(--tile); color: var(--teal); }
+        .eye:focus-visible { outline: 3px solid var(--gold); }
+        .eye svg { width: 20px; height: 20px; }
+        .meter { display: flex; gap: 6px; margin-top: 10px; }
+        .meter i { flex: 1; height: 6px; border-radius: 6px; background: var(--border); transition: background .25s; }
+        .meter[data-s="1"] i:nth-child(-n+1) { background: #e5533d; }
+        .meter[data-s="2"] i:nth-child(-n+2) { background: #f59e0b; }
+        .meter[data-s="3"] i:nth-child(-n+3) { background: #5aa469; }
+        .meter[data-s="4"] i:nth-child(-n+4) { background: var(--ok); }
+        .meter-label { margin-top: 6px; font-size: .8rem; font-weight: 700; color: var(--muted); min-height: 1.2em; }
+
+        .radios { position: relative; display: flex; flex-wrap: wrap; gap: 10px; }
+        .radios input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+        .field .radios label.pill { display: inline-flex; align-items: center; justify-content: flex-start; gap: 8px; margin: 0; height: 50px; padding: 0 22px; font-size: .92rem; font-weight: 600; color: var(--heading); background: var(--field); border: 1.5px solid var(--field-line); border-radius: 13px; cursor: pointer; transition: background .2s, border-color .2s, color .2s, box-shadow .2s; }
+        .field .radios label.pill:hover { border-color: #8fb4d2; }
+        .radios input:checked + label.pill { background: var(--teal); border-color: var(--teal); color: #fff; box-shadow: 0 8px 16px rgba(11,132,168,.22); }
+        .radios input:focus-visible + label.pill { outline: 3px solid var(--gold); outline-offset: 2px; }
+        .field.is-invalid .radios label.pill { border-color: var(--danger); background: #fffafa; }
+        .field.is-invalid .radios { animation: shake .35s; }
+
+        .filebox { display: flex; align-items: center; gap: 16px; padding: 14px; background: var(--field); border: 1.5px dashed var(--field-line); border-radius: 13px; transition: border-color .2s, background .2s; }
+        .field.is-invalid .filebox { border-color: var(--danger); background: #fffafa; animation: shake .35s; }
+        .field.is-valid .filebox { border-color: #35a574; background: #fbfffd; }
+        .thumb { width: 68px; height: 68px; flex: none; display: grid; place-items: center; overflow: hidden; border-radius: 16px; background: #fff; border: 1px solid var(--border); color: #7d93a8; }
+        .thumb img { width: 100%; height: 100%; object-fit: cover; display: none; }
+        .thumb.has img { display: block; }
+        .thumb.has svg { display: none; }
+        .thumb svg { width: 28px; height: 28px; }
+        .fileinfo { flex: 1; min-width: 0; }
+        .fname { display: block; font-size: .88rem; font-weight: 700; color: var(--heading); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .fsize { display: block; margin: 2px 0 8px; font-size: .78rem; color: var(--muted); }
+        .fbtns { display: flex; flex-wrap: wrap; gap: 8px; }
+        .btn-sm { height: 38px; padding: 0 16px; font-size: .84rem; border-radius: 10px; }
+
+        @media (max-width: 640px) { .filebox { flex-wrap: wrap; } }
+
+        /* ===== Page additions ===== */
+        [hidden] { display: none !important; }
+        .control input[type="date"] { padding-right: 76px; }
+        .control input[type="date"]::-webkit-calendar-picker-indicator { margin-right: 22px; cursor: pointer; opacity: .65; }
+        .control input[type="number"] { -moz-appearance: textfield; }
+        .field .radios + .hint { margin-top: 10px; }
+        .field-note { font-weight: 500; color: var(--muted); font-size: .78rem; }
+        .mini { display: grid; gap: 8px; margin-top: 14px; font-size: .86rem; color: #cfe9f3; position: relative; z-index: 1; }
+        .mini div { display: flex; align-items: center; gap: 8px; word-break: break-word; }
+        .mini svg { position: static; width: 16px; height: 16px; flex: none; color: #bfe6f3; }
+        .dept-card .portrait { position: static; width: 64px; height: 64px; margin-bottom: 14px; border-radius: 18px; object-fit: cover; border: 2px solid rgba(255,255,255,.35); display: block; }
+
+        .control input[readonly] { background: var(--canvas); color: var(--muted); cursor: not-allowed; }
+        .fbtns a.btn { text-decoration: none; }
+
+        /* ===== Table / view-page additions ===== */
+        .block { margin-top: 22px; }
+        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 16px; margin-top: 26px; }
+        .stat { padding: 18px 22px; background: var(--surface); border: 1px solid var(--border); border-radius: 18px; box-shadow: 0 12px 28px rgba(8,32,58,.05); transition: transform .2s; }
+        .stat:hover { transform: translateY(-3px); }
+        .stat small { display: block; margin-bottom: 4px; font-size: .74rem; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); }
+        .stat b { font-size: 1.8rem; font-weight: 800; letter-spacing: -0.02em; color: var(--heading); }
+        .stat.warn b { color: #b26a00; } .stat.ok b { color: var(--ok); }
+
+        .filters { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 16px; align-items: start; }
+        .filters .field { margin-bottom: 0; }
+        .filter-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--border); font-size: .88rem; font-weight: 600; color: var(--muted); }
+
+        .table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 16px; background: #fff; }
+        table.tbl { width: 100%; border-collapse: collapse; min-width: 760px; font-size: .9rem; }
+        .tbl th { padding: 14px 16px; text-align: left; white-space: nowrap; font-size: .74rem; font-weight: 800; letter-spacing: .07em; text-transform: uppercase; color: var(--teal-dark); background: var(--tile); }
+        .tbl td { padding: 14px 16px; vertical-align: middle; border-top: 1px solid var(--border); color: var(--text); }
+        .tbl tbody tr { transition: background .15s; }
+        .tbl tbody tr:hover { background: var(--canvas); }
+        .tbl td.strong { font-weight: 700; color: var(--heading); }
+        .tbl td.nowrap { white-space: nowrap; }
+        .tbl td.wrap { min-width: 200px; max-width: 320px; }
+        .clamp { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.5; word-break: break-word; }
+        .muted { color: var(--muted); }
+        .tbl .empty-row td, .tbl #noMatch td { padding: 44px 16px; text-align: center; color: var(--muted); font-weight: 600; }
+
+        .badge { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 999px; font-size: .78rem; font-weight: 700; white-space: nowrap; }
+        .badge::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+        .badge.ok { background: var(--ok-bg); color: var(--ok); }
+        .badge.warn { background: #fff4d6; color: #8a5a00; }
+        .badge.bad { background: var(--danger-bg); color: var(--danger); }
+        .badge.info { background: var(--tile); color: var(--teal-dark); }
+
+        .info { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 20px; }
+        .info > div { padding: 14px 16px; border-radius: 14px; background: var(--canvas); }
+        .info small { display: block; margin-bottom: 4px; font-size: .72rem; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); }
+        .info b { color: var(--heading); }
+        .quote { margin: 0 0 6px; padding: 16px 18px; border-left: 4px solid var(--teal); border-radius: 0 14px 14px 0; background: var(--canvas); line-height: 1.65; white-space: pre-wrap; word-break: break-word; }
+        .quote.ok { border-left-color: var(--ok); background: var(--ok-bg); }
+
+        /* ===== List-page additions ===== */
+        .panel-head { display: flex; align-items: center; gap: 14px; }
+        .head-action { margin-left: auto; }
+        .row-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+        .btn-danger { background: var(--danger); color: #fff; border: 0; box-shadow: 0 10px 22px rgba(200,40,60,.25); }
+        .btn-danger:hover { filter: brightness(1.08); transform: translateY(-1px); }
+        .btn-danger-soft { background: var(--danger-bg); color: var(--danger); border: 0; }
+        .btn-danger-soft:hover { background: var(--danger); color: #fff; }
+        .qty { font-weight: 700; color: var(--heading); font-variant-numeric: tabular-nums; }
+
+        /* search & filters live inside the table container */
+        .panel .filters { margin: 4px 0 0; }
+        .panel .filter-foot { margin-bottom: 18px; }
+
+    </style>
+</head>
+<body>
+
+<header class="navbar" id="navbar">
+    <div class="nav-inner">
+
+        <a class="brand" href="/myapp/staff_home/" aria-label="LabTrack staff home">
+            <span class="brand-mark">
+                <svg width="23" height="23" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M12 2.5l8 3v6c0 5-3.3 8.6-8 10-4.7-1.4-8-5-8-10v-6l8-3z" stroke="#08203a" stroke-width="1.9" stroke-linejoin="round"/>
+                    <path d="M10.5 8.5h3M11 8.5v3l-2 3.6a.9.9 0 0 0 .8 1.3h4.4a.9.9 0 0 0 .8-1.3l-2-3.6v-3" stroke="#08203a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </span>
+            LabTrack
+        </a>
+
+        <button type="button" class="burger" id="burger" aria-label="Open menu" aria-controls="menu" aria-expanded="false">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </button>
+
+        <nav class="menu" id="menu" aria-label="Main">
+
+            <a class="nav-link" href="/myapp/staff_home/" data-match="staff_home">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-8 9 8M5 10v10h14V10M10 20v-6h4v6"/></svg>
+                Home
+            </a>
+
+            <a class="nav-link" href="/myapp/staff_view_students/" data-match="student">Students</a>
+
+            <div class="dd">
+                <button type="button" class="nav-link dd-btn" aria-expanded="false" aria-haspopup="true">
+                    Labs &amp; Exercises
+                    <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+                </button>
+                <div class="dd-panel">
+                    <a href="/myapp/staff_view_assigned_labs/" data-match="assigned_labs">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.8 3h10.4a2 2 0 0 0 1.8-3l-5-9V3"/><path d="M7.5 15h9"/></svg>
+                        View Assigned Labs
+                    </a>
+                    <a href="/myapp/staff_view_exercise/" data-match="staff_view_exercise,instruction,staff_add_exercise,staff_edit_exercise">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
+                        Lab Instructions &amp; Exercises
+                    </a>
+                </div>
+            </div>
+
+            <a class="nav-link" href="/myapp/staff_view_submissions/" data-match="submission">Submissions</a>
+
+            <a class="nav-link" href="/myapp/staff_view_chats_get/" data-match="chats">Communicate</a>
+
+            <div class="dd right user">
+                <button type="button" class="nav-link dd-btn" aria-expanded="false" aria-haspopup="true">
+                    <span class="avatar" aria-hidden="true">S</span>
+                    Staff
+                    <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+                </button>
+                <div class="dd-panel">
+                    <a href="/myapp/staff_view_profile/" data-match="staff_view_profile">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.2-4 4-6 8-6s6.8 2 8 6"/></svg>
+                        View Profile
+                    </a>
+                    <a href="/myapp/change_password_get/" data-match="change_password">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+                        Change Password
+                    </a>
+                    <div class="dd-sep"></div>
+                    <a href="/myapp/logout_get/" class="logout" id="logoutLink">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+                        Logout
+                    </a>
+                </div>
+            </div>
+
+        </nav>
+    </div>
+</header>
+
+{% if messages %}
+<div class="toasts" role="status" aria-live="polite">
+    {% for message in messages %}
+    <div class="toast {{ message.tags }}">
+        <span>{{ message }}</span>
+        <button type="button" aria-label="Dismiss" data-dismiss>&times;</button>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<main class="container">
+
+<nav class="crumbs" aria-label="Breadcrumb">
+    <a href="/myapp/staff_home/">Home</a>
+    <svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+    <b>Assigned Labs</b>
+</nav>
+<header class="hero">
+    <span class="hero-ic" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#08203a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.8 3h10.4a2 2 0 0 0 1.8-3l-5-9V3"/><path d="M7.5 15h9"/></svg>
+    </span>
+    <div class="hero-text">
+        <h1>My Assigned <span>Labs</span></h1>
+        <p>Labs and subjects assigned to you. Add exercises for students or review the ones you already created.</p>
+    </div>
+    <span class="chip"><svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.8 3h10.4a2 2 0 0 0 1.8-3l-5-9V3"/><path d="M7.5 15h9"/></svg> {{ data|length }} assigned</span>
+</header>
+
+<div class="stats">
+    <div class="stat"><small>Assignments shown</small><b id="stTotal">0</b></div>
+    <div class="stat"><small>Different labs</small><b id="stLabs">0</b></div>
+    <div class="stat"><small>Different courses</small><b id="stCourses">0</b></div>
+</div>
+<section class="panel block" aria-labelledby="tbl-title">
+    <div class="panel-head"><span class="ic"><svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 6h13M8 12h13M8 18h13M3.5 6h.01M3.5 12h.01M3.5 18h.01"/></svg></span><div><h2 id="tbl-title">Assigned Labs</h2><p>Add or view exercises for each lab you are assigned to.</p></div></div>
+    <div class="filters">
+    <div class="field" id="f-search">
+        <label for="search"><span>Search</span></label>
+        <div class="control"><svg class="lead" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input type="text" id="search" name="search" value="" placeholder="Lab, room, subject, code or course" maxlength="50" autocomplete="off" aria-describedby="searchHint" aria-invalid="false"><svg class="state good" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/></svg><svg class="state bad" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.01"/></svg></div>
+        <p class="hint" id="searchHint">Up to 50 characters. Letters, numbers and . , ' &amp; @ ( ) / _ - + : # only.</p>
+    </div>
+    <div class="field" id="f-course">
+        <label for="course"><span>Course</span></label>
+        <div class="control"><svg class="lead" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 9L12 4 2 9l10 5 10-5z"/><path d="M6 11.5V16c0 1.5 2.7 3 6 3s6-1.5 6-3v-4.5"/></svg><select id="course" aria-describedby="courseHint" aria-invalid="false"><option value="">All courses</option></select><svg class="state good" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/></svg><svg class="state bad" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.01"/></svg></div>
+        <p class="hint" id="courseHint">Show only one course.</p>
+    </div>
+    <div class="field" id="f-sem">
+        <label for="sem"><span>Semester</span></label>
+        <div class="control"><svg class="lead" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 13l9 5 9-5"/></svg><select id="sem" aria-describedby="semHint" aria-invalid="false"><option value="">All semesters</option></select><svg class="state good" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/></svg><svg class="state bad" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.01"/></svg></div>
+        <p class="hint" id="semHint">Show only one semester.</p>
+    </div>
+        </div>
+        <div class="filter-foot"><span id="resultCount" aria-live="polite">Showing 0 of 0 records</span><button type="button" class="btn btn-ghost btn-sm" id="resetFilters">Clear filters</button></div>
+    <div class="table-wrap">
+        <table class="tbl" style="min-width: 1000px" aria-labelledby="tbl-title">
+            <thead>
+                <tr><th>Sl No</th><th>Lab Name</th><th>Room Number</th><th>Subject Name</th><th>Subject Code</th><th>Course</th><th>Semester</th><th>Action</th></tr>
+            </thead>
+            <tbody>
+            {% for i in data %}
+            <tr data-row data-course="{{ i.SUBJECT.COURSE.course_name }}" data-sem="{{ i.SUBJECT.semester|unlocalize }}" data-lab="{{ i.SUBJECT.LAB.id|unlocalize }}">
+                <td>{{ forloop.counter }}</td>
+                <td class="strong">{{ i.SUBJECT.LAB.lab_name }}</td>
+                <td class="nowrap">{{ i.SUBJECT.LAB.room_number }}</td>
+                <td>{{ i.SUBJECT.subject_name }}</td>
+                <td class="nowrap"><span class="badge info">{{ i.SUBJECT.subject_code }}</span></td>
+                <td>{{ i.SUBJECT.COURSE.course_name }}</td>
+                <td class="nowrap">{{ i.SUBJECT.semester }}</td>
+                <td><div class="row-actions">
+                    <a class="btn btn-primary btn-sm" href="/myapp/staff_add_exercise/{{ i.SUBJECT.LAB.id }}/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:15px;height:15px"><path d="M12 5v14M5 12h14"/></svg>Add Exercise</a>
+                    <a class="btn btn-ghost btn-sm" href="/myapp/staff_view_instructions/{{ i.SUBJECT.LAB.id }}/">View Exercise <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:15px;height:15px"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+                </div></td>
+            </tr>
+            {% empty %}
+            <tr class="empty-row"><td colspan="8">No labs assigned to you.</td></tr>
+            {% endfor %}
+            <tr id="noMatch" hidden><td colspan="8">No assigned labs match your search or filters.</td></tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="actions">
+    </div>
+</section>
+
+<footer class="footer">
+    <span>&copy; LabTrack &middot; College Lab, Subject &amp; Management System</span>
+    <span>Admin Panel</span>
+</footer>
+
+</main>
+
+<!-- Logout confirmation -->
+<dialog id="logoutDialog" aria-labelledby="logoutTitle">
+    <h2 id="logoutTitle">Log out of LabTrack?</h2>
+    <p>You will need to sign in again to use the admin panel.</p>
+    <div class="dialog-actions">
+        <button type="button" class="btn btn-ghost" id="cancelLogout">Stay signed in</button>
+        <button type="button" class="btn btn-primary" id="confirmLogout">Log out</button>
+    </div>
+</dialog>
+
+<!-- Delete confirmation -->
+<dialog id="deleteDialog" aria-labelledby="deleteTitle">
+    <h2 id="deleteTitle">Delete item?</h2>
+    <p id="deleteText">This action cannot be undone.</p>
+    <div class="dialog-actions">
+        <button type="button" class="btn btn-ghost" id="cancelDelete">Keep it</button>
+        <a class="btn btn-danger" id="deleteGo" href="#">Yes, delete</a>
+    </div>
+</dialog>
+
+<script>
+(function () {
+    /* ---------- Navbar ---------- */
+    var navbar = document.getElementById('navbar');
+    var burger = document.getElementById('burger');
+    var dds = Array.prototype.slice.call(document.querySelectorAll('.dd'));
+
+    function closeAll(except) {
+        dds.forEach(function (d) {
+            if (d !== except) {
+                d.classList.remove('open');
+                d.querySelector('.dd-btn').setAttribute('aria-expanded', 'false');
+            }
+        });
+    }
+
+    dds.forEach(function (d) {
+        var btn = d.querySelector('.dd-btn');
+        btn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            var open = !d.classList.contains('open');
+            closeAll(d);
+            d.classList.toggle('open', open);
+            btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+        });
+    });
+
+    document.addEventListener('click', function (e) { if (!e.target.closest('.dd')) closeAll(); });
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+            closeAll();
+            navbar.classList.remove('open');
+            burger.setAttribute('aria-expanded', 'false');
+        }
+    });
+
+    burger.addEventListener('click', function () {
+        var open = !navbar.classList.contains('open');
+        navbar.classList.toggle('open', open);
+        burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+        burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    });
+
+    var path = window.location.pathname;
+    var matched = false;
+    Array.prototype.forEach.call(document.querySelectorAll('.menu a[data-match]'), function (a) {
+        if (matched) return;
+        var hit = a.getAttribute('data-match').split(',').some(function (t) { return path.indexOf(t) !== -1; });
+        if (hit) {
+            matched = true;
+            a.classList.add('active');
+            a.setAttribute('aria-current', 'page');
+            var parent = a.closest('.dd');
+            if (parent) parent.querySelector('.dd-btn').classList.add('active');
+        }
+    });
+
+    Array.prototype.forEach.call(document.querySelectorAll('.toast'), function (t) {
+        var remove = function () { if (t.parentNode) t.parentNode.removeChild(t); };
+        t.querySelector('[data-dismiss]').addEventListener('click', remove);
+        setTimeout(remove, 6000);
+    });
+
+    var link = document.getElementById('logoutLink');
+    var dlg = document.getElementById('logoutDialog');
+    var cancel = document.getElementById('cancelLogout');
+    var confirmBtn = document.getElementById('confirmLogout');
+    link.addEventListener('click', function (e) {
+        if (typeof dlg.showModal !== 'function') return;
+        e.preventDefault();
+        closeAll();
+        navbar.classList.remove('open');
+        dlg.showModal();
+        cancel.focus();
+    });
+    cancel.addEventListener('click', function () { dlg.close(); });
+    confirmBtn.addEventListener('click', function () { window.location.href = link.getAttribute('href'); });
+    dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
+})();
+</script>
+<script>
+(function () {
+    var CFG = {"skipLast": 1, "cols": [1, 2, 3, 4, 5, 6], "selects": [{"id": "course", "attr": "data-course"}, {"id": "sem", "attr": "data-sem", "prefix": "Semester "}]};
+    function onStats(vis) {
+        var labs = {}, courses = {}, nl = 0, nc = 0;
+        vis.forEach(function (r) {
+            var l = r.getAttribute("data-lab"), c = r.getAttribute("data-course");
+            if (!labs[l]) { labs[l] = 1; nl++; }
+            if (!courses[c]) { courses[c] = 1; nc++; }
+        });
+        document.getElementById("stTotal").textContent = vis.length;
+        document.getElementById("stLabs").textContent = nl;
+        document.getElementById("stCourses").textContent = nc;
+    }
+
+    var $ = function (id) { return document.getElementById(id); };
+    var rows = Array.prototype.slice.call(document.querySelectorAll('tr[data-row]'));
+    var noMatch = $('noMatch'), countEl = $('resultCount'), fSearch = $('search');
+    var sels = CFG.selects.map(function (c) { return { el: $(c.id), attr: c.attr, seen: {}, prefix: c.prefix || '' }; });
+    var controls = [fSearch].concat(sels.map(function (s) { return s.el; }));
+
+    rows.forEach(function (r) {
+        var parts = [];
+        CFG.cols.forEach(function (i) { parts.push(r.cells[i].textContent); });
+        r._s = parts.join(' ').replace(/\s+/g, ' ').toLowerCase();
+    });
+
+    sels.forEach(function (s) {
+        var vals = [];
+        rows.forEach(function (r) {
+            var v = r.getAttribute(s.attr);
+            if (v && !s.seen[v]) { s.seen[v] = 1; vals.push(v); }
+        });
+        vals.sort(function (a, b) { return a.localeCompare(b, undefined, { numeric: true }); });
+        vals.forEach(function (v) { var o = document.createElement('option'); o.value = v; o.textContent = s.prefix + v; s.el.appendChild(o); });
+    });
+
+    controls.forEach(function (el) { el._def = $(el.id + 'Hint').textContent; });
+
+    function setState(el, err, okMsg) {
+        var w = $('f-' + el.id), h = $(el.id + 'Hint');
+        w.classList.remove('is-invalid', 'is-valid');
+        el.setAttribute('aria-invalid', err ? 'true' : 'false');
+        if (err) { w.classList.add('is-invalid'); h.textContent = err; }
+        else if (okMsg) { w.classList.add('is-valid'); h.textContent = okMsg; }
+        else { h.textContent = el._def; }
+    }
+
+    function readSearch() {
+        var raw = fSearch.value, v = raw.replace(/^\s+/, '');
+        if (raw === '') { setState(fSearch, ''); return { ok: true, q: '' }; }
+        if (v === '') { setState(fSearch, 'Search cannot be only spaces.'); return { ok: false, q: '' }; }
+        v = v.replace(/\s{2,}/g, ' ');
+        if (v.length > 50) { setState(fSearch, 'Search cannot exceed 50 characters.'); return { ok: false, q: '' }; }
+        if (/[<>]/.test(v)) { setState(fSearch, 'Search cannot contain < or > characters.'); return { ok: false, q: '' }; }
+        if (!/^[A-Za-z0-9 .,'&@()\/_\-+:#]+$/.test(v)) { setState(fSearch, "Use only letters, numbers, spaces and . , ' & @ ( ) / _ - + : # characters."); return { ok: false, q: '' }; }
+        setState(fSearch, '', 'Searching for \u201c' + v.trim() + '\u201d.');
+        return { ok: true, q: v.trim().toLowerCase() };
+    }
+
+    function apply() {
+        var s = readSearch(), shown = 0, vis = [];
+        sels.forEach(function (x) {
+            if (x.el.value && !x.seen[x.el.value]) x.el.value = '';
+            setState(x.el, '', x.el.value ? 'Filter applied.' : '');
+        });
+        rows.forEach(function (r) {
+            var show = true;
+            if (s.ok && s.q && r._s.indexOf(s.q) === -1) show = false;
+            sels.forEach(function (x) { if (x.el.value && r.getAttribute(x.attr) !== x.el.value) show = false; });
+            r.hidden = !show;
+            if (show) { shown++; vis.push(r); r.cells[0].textContent = shown; }
+        });
+        countEl.textContent = 'Showing ' + shown + ' of ' + rows.length + ' record' + (rows.length === 1 ? '' : 's');
+        noMatch.hidden = !(rows.length > 0 && shown === 0);
+        onStats(vis);
+    }
+
+    fSearch.addEventListener('input', apply);
+    sels.forEach(function (x) { x.el.addEventListener('change', apply); });
+    $('resetFilters').addEventListener('click', function () {
+        controls.forEach(function (el) { el.value = ''; });
+        apply();
+        fSearch.focus();
+    });
+    apply();
+
+    /* ---------- Delete confirmation ---------- */
+    var dlg = $('deleteDialog'), dTitle = $('deleteTitle'), dText = $('deleteText'), dGo = $('deleteGo');
+    document.addEventListener('click', function (e) {
+        var a = e.target.closest ? e.target.closest('a[data-delete-kind]') : null;
+        if (!a || !dlg || typeof dlg.showModal !== 'function') return;
+        e.preventDefault();
+        var name = (a.getAttribute('data-delete-name') || '').trim();
+        dTitle.textContent = 'Delete ' + a.getAttribute('data-delete-kind') + '?';
+        dText.textContent = (name ? '\u201c' + name + '\u201d' : 'This ' + a.getAttribute('data-delete-kind')) + ' will be permanently deleted. This action cannot be undone.';
+        dGo.href = a.getAttribute('href');
+        dGo.textContent = 'Yes, delete';
+        dGo.removeAttribute('aria-disabled');
+        dlg.showModal();
+    });
+    $('cancelDelete').addEventListener('click', function () { dlg.close(); });
+    dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
+    dGo.addEventListener('click', function (e) {
+        if (dGo.getAttribute('aria-disabled') === 'true') { e.preventDefault(); return; }
+        dGo.setAttribute('aria-disabled', 'true');
+        dGo.textContent = 'Deleting\u2026';
+    });
+
+})();
+</script>
+</body>
+</html>

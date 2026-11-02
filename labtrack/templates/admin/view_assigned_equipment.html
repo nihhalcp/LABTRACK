@@ -1,0 +1,63 @@
+{##}
+{#<!DOCTYPE html>#}
+{#<html>#}
+{#<head>#}
+{#    <title>Assigned Equipment - LabTrack</title>#}
+{#</head>#}
+{#<body>#}
+{##}
+{#    <h2>Assigned Equipment - {{ lab.lab_name }}</h2>#}
+{##}
+{#    {% for message in messages %}#}
+{#        <p>{{ message }}</p>#}
+{#    {% endfor %}#}
+{##}
+{#    <table border="1">#}
+{#        <tr>#}
+{#            <th>Sl No</th>#}
+{#            <th>Equipment Name</th>#}
+{#            <th>Category</th>#}
+{#            <th>Student Name</th>#}
+{#            <th>Quantity</th>#}
+{#            <th>Assigned Date</th>#}
+{#            <th>Return Date</th>#}
+{#            <th>Damage Description</th>#}
+{#            <th>Fine Amount</th>#}
+{#            <th>Status</th>#}
+{#        </tr>#}
+{##}
+{#        {% for i in data %}#}
+{#        <tr>#}
+{#            <td>{{ forloop.counter }}</td>#}
+{#            <td>{{ i.EQUIPMENT.equipment_name }}</td>#}
+{#            <td>{{ i.EQUIPMENT.category }}</td>#}
+{#            <td>{{ i.STUDENT.name }}</td>#}
+{#            <td>{{ i.quantity }}</td>#}
+{#            <td>{{ i.assigned_date }}</td>#}
+{#            <td>#}
+{#                {% if i.return_date %}#}
+{#                    {{ i.return_date }}#}
+{#                {% else %}#}
+{#                    Not Returned#}
+{#                {% endif %}#}
+{#            </td>#}
+{#            <td>{{ i.damage_description }}</td>#}
+{#            <td>{{ i.fine_amount }}</td>#}
+{#            <td>{{ i.status }}</td>#}
+{#        </tr>#}
+{#        {% empty %}#}
+{#        <tr>#}
+{#            <td colspan="10">No equipment has been assigned from this lab.</td>#}
+{#        </tr>#}
+{#        {% endfor %}#}
+{#    </table>#}
+{##}
+{#    <br>#}
+{#    <a href="/myapp/view_equipment/{{ lab.id }}/">Back to Equipment</a>#}
+{#    <br><br>#}
+{#    <a href="/myapp/view_lab/">Back to Labs</a>#}
+{#    <br><br>#}
+{#    <a href="/myapp/adminhome_get/">Back to Admin Home</a>#}
+{##}
+{#</body>#}
+{#</html>#}

@@ -1,0 +1,617 @@
+{##}
+{#<!DOCTYPE html>#}
+{#<html>#}
+{#<head>#}
+{#    <title>Staff Profile</title>#}
+{#</head>#}
+{#<body>#}
+{##}
+{#<h2>My Profile</h2>#}
+{##}
+{#<table border="1" cellpadding="10">#}
+{#    <tr>#}
+{#        <th>Name</th>#}
+{#        <td>{{ data.name }}</td>#}
+{#    </tr>#}
+{#    <tr>#}
+{#        <th>Department</th>#}
+{#        <td>{{ data.DEPARTMENT.department_name }}</td>#}
+{#    </tr>#}
+{#    <tr>#}
+{#        <th>Date of Birth</th>#}
+{#        <td>{{ data.dob }}</td>#}
+{#    </tr>#}
+{#    <tr>#}
+{#        <th>Gender</th>#}
+{#        <td>{{ data.gender }}</td>#}
+{#    </tr>#}
+{#    <tr>#}
+{#        <th>Phone</th>#}
+{#        <td>{{ data.phone }}</td>#}
+{#    </tr>#}
+{#    <tr>#}
+{#        <th>Email</th>#}
+{#        <td>{{ data.email }}</td>#}
+{#    </tr>#}
+{#    <tr>#}
+{#        <th>Designation</th>#}
+{#        <td>{{ data.designation }}</td>#}
+{#    </tr>#}
+{#    <tr>#}
+{#        <th>Qualification</th>#}
+{#        <td>{{ data.qualification }}</td>#}
+{#    </tr>#}
+{#    <tr>#}
+{#        <th>Address</th>#}
+{#        <td>{{ data.address }}</td>#}
+{#    </tr>#}
+{#    <tr>#}
+{#        <th>Joining Date</th>#}
+{#        <td>{{ data.joining_date }}</td>#}
+{#    </tr>#}
+{#    <tr>#}
+{#        <th>Status</th>#}
+{#        <td>{{ data.status }}</td>#}
+{#    </tr>#}
+{#    <tr>#}
+{#        <th>Photo</th>#}
+{#        <td>#}
+{#            <img src="{{ data.photo.url }}" width="150" height="150">#}
+{#        </td>#}
+{#    </tr>#}
+{#</table>#}
+{##}
+{#<br>#}
+{##}
+{#<a href="/myapp/staff_home/">Back to Home</a>#}
+{##}
+{#</body>#}
+{#</html>#}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>My Profile - LabTrack</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-top: #164a63; --bg-mid: #0d3048; --bg-deep: #08203a;
+            --cyan: #5cd0ee; --teal: #0b84a8; --teal-dark: #086a89;
+            --heading: #0d2b3e; --text: #14283a; --muted: #5d7183;
+            --surface: #ffffff; --canvas: #f1f6fb; --border: #dae6f1;
+            --tile: #e2f4fa;
+            --danger: #c0291f; --danger-bg: #fdeceb;
+            --ok: #1c7c54; --ok-bg: #e3f6ec; --gold: #fbbf24; --nav-h: 68px;
+        }
+        *, *::before, *::after { box-sizing: border-box; }
+        body { margin: 0; min-height: 100vh; font-family: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; color: var(--text); background: var(--canvas); -webkit-font-smoothing: antialiased; }
+        a { color: inherit; text-decoration: none; }
+
+        /* NAVBAR */
+        .navbar { position: sticky; top: 0; z-index: 100; color: #fff;
+            background: radial-gradient(ellipse at 90% -40%, rgba(92,208,238,.28), transparent 55%), linear-gradient(100deg, var(--bg-top) 0%, var(--bg-mid) 45%, var(--bg-deep) 100%);
+            box-shadow: 0 6px 20px rgba(8,32,58,.25); }
+        .nav-inner { max-width: 1280px; height: var(--nav-h); margin: 0 auto; padding: 0 clamp(16px, 3vw, 36px); display: flex; align-items: center; gap: 28px; }
+        .brand { display: flex; align-items: center; gap: 12px; font-size: 1.3rem; font-weight: 800; letter-spacing: -0.02em; color: #fff; flex: none; }
+        .brand-mark { width: 40px; height: 40px; display: grid; place-items: center; border-radius: 11px; background: var(--cyan); transition: transform .25s ease; }
+        .brand:hover .brand-mark { transform: rotate(-8deg) scale(1.06); }
+        .menu { flex: 1; display: flex; align-items: center; gap: 4px; height: 100%; }
+        .nav-link { position: relative; display: inline-flex; align-items: center; gap: 7px; height: 42px; padding: 0 14px; font: inherit; font-size: .92rem; font-weight: 600; color: #cfe3ef; background: transparent; border: 0; border-radius: 10px; cursor: pointer; white-space: nowrap; transition: background .2s, color .2s; }
+        .nav-link:hover, .dd.open > .nav-link { background: rgba(255,255,255,.11); color: #fff; }
+        .nav-link:focus-visible { outline: 2px solid var(--cyan); outline-offset: 1px; }
+        .nav-link.active { color: #fff; background: rgba(92,208,238,.16); }
+        .nav-link.active::after { content: ""; position: absolute; left: 14px; right: 14px; bottom: -13px; height: 3px; border-radius: 3px 3px 0 0; background: var(--cyan); }
+        .caret { width: 14px; height: 14px; transition: transform .2s; }
+        .dd.open .caret { transform: rotate(180deg); }
+        .dd { position: relative; display: flex; align-items: center; }
+        .dd-panel { position: absolute; top: calc(100% + 12px); left: 0; min-width: 240px; padding: 8px; background: #fff; color: var(--text); border: 1px solid var(--border); border-radius: 14px; box-shadow: 0 22px 44px rgba(8,32,58,.22); opacity: 0; visibility: hidden; transform: translateY(8px); transition: opacity .18s, transform .18s, visibility .18s; }
+        .dd-panel::before { content: ""; position: absolute; left: 0; right: 0; top: -14px; height: 14px; }
+        .dd.open > .dd-panel { opacity: 1; visibility: visible; transform: translateY(0); }
+        @media (hover: hover) and (min-width: 961px) {
+            .dd:hover > .dd-panel { opacity: 1; visibility: visible; transform: translateY(0); }
+            .dd:hover > .nav-link { background: rgba(255,255,255,.11); color: #fff; }
+            .dd:hover .caret { transform: rotate(180deg); }
+        }
+        .dd.right .dd-panel { left: auto; right: 0; }
+        .dd-panel a { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 9px; font-size: .92rem; font-weight: 600; color: var(--heading); transition: background .15s, color .15s, padding .15s; }
+        .dd-panel a svg { width: 18px; height: 18px; flex: none; color: var(--teal); }
+        .dd-panel a:hover { background: var(--tile); color: var(--teal-dark); padding-left: 16px; }
+        .dd-panel a:focus-visible { outline: 2px solid var(--teal); outline-offset: -2px; }
+        .dd-panel a.active { background: var(--tile); color: var(--teal-dark); }
+        .dd-panel a.logout, .dd-panel a.logout svg { color: var(--danger); }
+        .dd-panel a.logout:hover { background: var(--danger-bg); color: var(--danger); }
+        .dd-sep { height: 1px; margin: 6px 4px; background: var(--border); }
+        .user { margin-left: auto; }
+        .avatar { width: 30px; height: 30px; display: grid; place-items: center; border-radius: 50%; background: var(--cyan); color: var(--bg-deep); font-size: .82rem; font-weight: 800; }
+        .burger { display: none; margin-left: auto; width: 44px; height: 44px; place-items: center; border: 0; border-radius: 11px; background: rgba(255,255,255,.1); color: #fff; cursor: pointer; }
+        .burger:hover { background: rgba(255,255,255,.18); }
+        .burger:focus-visible { outline: 2px solid var(--cyan); }
+        .burger svg { width: 22px; height: 22px; }
+
+        /* PAGE */
+        .container { max-width: 880px; margin: 0 auto; padding: 36px clamp(16px, 3vw, 36px) 56px; }
+
+        .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 46px; padding: 0 22px; font: inherit; font-size: .95rem; font-weight: 700; border-radius: 11px; border: 1.5px solid transparent; cursor: pointer; transition: background .2s, transform .15s, box-shadow .2s, border-color .2s; }
+        .btn:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+        .btn-primary { background: var(--teal); color: #fff; box-shadow: 0 8px 16px rgba(11,132,168,.25); }
+        .btn-primary:hover { background: var(--teal-dark); transform: translateY(-2px); box-shadow: 0 12px 22px rgba(11,132,168,.32); }
+        .btn-ghost { background: #fff; color: var(--heading); border-color: var(--border); }
+        .btn-ghost:hover { background: var(--canvas); border-color: #b8cde0; }
+
+        /* Toasts */
+        .toasts { position: fixed; top: calc(var(--nav-h) + 16px); right: 16px; z-index: 200; display: grid; gap: 10px; width: min(92vw, 360px); }
+        .toast { display: flex; align-items: flex-start; gap: 12px; padding: 14px 16px; background: #fff; border: 1px solid var(--border); border-left: 4px solid var(--teal); border-radius: 12px; box-shadow: 0 16px 34px rgba(8,32,58,.18); font-size: .92rem; line-height: 1.45; animation: toast-in .3s ease both; }
+        .toast.error, .toast.danger { border-left-color: var(--danger); }
+        .toast.success { border-left-color: var(--ok); }
+        .toast.warning { border-left-color: var(--gold); }
+        .toast .t-icon { width: 20px; height: 20px; flex: none; margin-top: 1px; color: var(--teal); }
+        .toast.error .t-icon, .toast.danger .t-icon { color: var(--danger); }
+        .toast.success .t-icon { color: var(--ok); }
+        .toast.warning .t-icon { color: #b7791f; }
+        .toast button { margin-left: auto; border: 0; background: transparent; color: var(--muted); font-size: 1.2rem; line-height: 1; cursor: pointer; }
+        @keyframes toast-in { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Dialog */
+        dialog { width: min(92vw, 400px); padding: 28px; border: 0; border-radius: 18px; color: var(--text); box-shadow: 0 30px 70px rgba(8,32,58,.35); }
+        dialog::backdrop { background: rgba(6,19,40,.55); backdrop-filter: blur(2px); }
+        dialog h2 { margin: 0 0 8px; font-size: 1.3rem; font-weight: 800; color: var(--heading); }
+        dialog p { margin: 0 0 24px; color: var(--muted); line-height: 1.55; }
+        .dialog-actions { display: flex; gap: 10px; justify-content: flex-end; }
+
+        .back-link { display: inline-block; margin-top: 22px; font-size: .92rem; font-weight: 700; color: var(--teal); background: linear-gradient(currentColor, currentColor) 0 100% / 0 2px no-repeat; padding-bottom: 2px; transition: background-size .25s ease, color .2s; }
+        .back-link:hover { background-size: 100% 2px; color: var(--teal-dark); }
+        .back-link:focus-visible { outline: 2px solid var(--teal); outline-offset: 3px; border-radius: 3px; }
+
+        .badge { display: inline-block; padding: 4px 11px; border-radius: 999px; font-size: .8rem; font-weight: 700; background: #eef2f7; color: var(--muted); white-space: nowrap; }
+        .badge.active { background: var(--ok-bg); color: var(--ok); }
+        .badge.inactive, .badge.blocked { background: var(--danger-bg); color: var(--danger); }
+        .badge.pending { background: #fff4d6; color: #8a6112; }
+        .muted-txt { color: var(--muted); font-weight: 600; }
+
+        /* PROFILE CARD */
+        .profile-card { overflow: hidden; background: var(--surface); border: 1px solid var(--border); border-radius: 24px; box-shadow: 0 20px 50px rgba(8,32,58,.1); }
+        .p-header { position: relative; padding: 40px 30px; text-align: center; color: #fff;
+            background: radial-gradient(ellipse at 90% -30%, rgba(92,208,238,.32), transparent 55%), linear-gradient(135deg, var(--bg-top), var(--bg-deep)); }
+        .p-header::before { content: ""; position: absolute; inset: 0; background-image: radial-gradient(rgba(255,255,255,.09) 1px, transparent 1px); background-size: 24px 24px; pointer-events: none; }
+        .p-header > * { position: relative; }
+        .p-header h1 { margin: 0 0 10px; font-size: 34px; font-weight: 800; letter-spacing: -0.03em; }
+        .p-header p { margin: 0; font-size: 15px; opacity: .9; }
+        .p-body { padding: 35px; }
+        .photo-section { padding-bottom: 30px; text-align: center; border-bottom: 1px solid var(--border); }
+        .patient-photo, .photo-ph { width: 150px; height: 150px; margin: 0 auto; border-radius: 50%; border: 5px solid #fff; outline: 3px solid var(--teal); box-shadow: 0 10px 30px rgba(11,132,168,.22); }
+        .patient-photo { display: block; object-fit: cover; background: var(--tile); }
+        .photo-ph { display: grid; place-items: center; font-size: 3.6rem; font-weight: 800; color: var(--cyan);
+            background: radial-gradient(ellipse at 90% 0%, rgba(92,208,238,.3), transparent 55%), linear-gradient(135deg, var(--bg-top), var(--bg-deep)); }
+        .p-name { margin-top: 18px; font-size: 25px; font-weight: 800; letter-spacing: -0.02em; color: var(--heading); word-break: break-word; }
+        .p-label { margin-top: 5px; font-size: 14px; color: var(--muted); }
+        .details { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 30px; }
+        .detail-box { padding: 18px 20px; background: #f8fbfd; border: 1px solid var(--border); border-radius: 14px; transition: border-color .2s, background .2s, transform .2s; }
+        .detail-box:hover { border-color: #9fcfe0; background: #f1f8fc; transform: translateY(-2px); }
+        .detail-label { margin-bottom: 7px; font-size: 12px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
+        .detail-value { font-size: 15px; font-weight: 600; color: var(--text); word-break: break-word; }
+        .detail-value a { color: var(--teal); }
+        .detail-value a:hover { text-decoration: underline; }
+        .detail-value .flag { display: inline-block; margin-left: 8px; padding: 2px 8px; border-radius: 999px; background: #fff4d6; color: #8a6112; font-size: .72rem; font-weight: 700; }
+        .wide-box { grid-column: 1 / -1; }
+        .wide-box .detail-value { line-height: 1.6; }
+        .p-actions { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; margin-top: 30px; padding-top: 25px; border-top: 1px solid var(--border); }
+
+        .empty-state { padding: 54px 24px; text-align: center; background: var(--surface); border: 1px solid var(--border); border-radius: 22px; }
+        .empty-state .ic { width: 70px; height: 70px; margin: 0 auto 16px; display: grid; place-items: center; border-radius: 50%; background: var(--tile); color: var(--teal); }
+        .empty-state .ic svg { width: 32px; height: 32px; }
+        .empty-state h2 { margin: 0 0 6px; font-size: 1.25rem; font-weight: 800; color: var(--heading); }
+        .empty-state p { margin: 0 auto 22px; max-width: 420px; color: var(--muted); line-height: 1.6; }
+
+        /* MOBILE */
+        @media (max-width: 960px) {
+            .burger { display: grid; }
+            .nav-inner { gap: 12px; }
+            .menu { position: absolute; top: var(--nav-h); left: 0; right: 0; flex-direction: column; align-items: stretch; gap: 2px; height: auto; max-height: calc(100vh - var(--nav-h)); overflow-y: auto; padding: 12px 16px 20px; background: var(--bg-deep); border-top: 1px solid rgba(255,255,255,.1); box-shadow: 0 24px 40px rgba(0,0,0,.3); display: none; }
+            .navbar.open .menu { display: flex; }
+            .nav-link { height: 48px; width: 100%; justify-content: flex-start; }
+            .nav-link.active::after { display: none; }
+            .dd { flex-direction: column; align-items: stretch; }
+            .dd > .nav-link .caret { margin-left: auto; }
+            .dd-panel { position: static; display: none; min-width: 0; margin: 2px 0 6px 12px; padding: 4px; background: rgba(255,255,255,.06); border: 0; border-left: 2px solid rgba(92,208,238,.4); border-radius: 0 10px 10px 0; box-shadow: none; opacity: 1; visibility: visible; transform: none; }
+            .dd-panel::before { display: none; }
+            .dd.open > .dd-panel { display: block; }
+            .dd-panel a { color: #d3e6f2; }
+            .dd-panel a svg { color: var(--cyan); }
+            .dd-panel a:hover, .dd-panel a.active { background: rgba(255,255,255,.1); color: #fff; padding-left: 12px; }
+            .dd-panel a.logout, .dd-panel a.logout svg { color: #ffb4ac; }
+            .dd-panel a.logout:hover { background: rgba(255,120,110,.16); color: #ffd7d2; }
+            .dd-sep { background: rgba(255,255,255,.12); }
+            .user { margin-left: 0; margin-top: 8px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,.12); }
+        }
+        @media (max-width: 768px) {
+            .p-header { padding: 30px 20px; }
+            .p-header h1 { font-size: 28px; }
+            .p-body { padding: 22px; }
+            .details { grid-template-columns: 1fr; }
+            .wide-box { grid-column: auto; }
+            .p-actions { flex-direction: column; }
+            .p-actions .btn { width: 100%; }
+        }
+        @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+    </style>
+</head>
+<body>
+
+<header class="navbar" id="navbar">
+  <div class="nav-inner">
+    <a class="brand" href="/myapp/staff_home/" aria-label="LabTrack staff home">
+      <span class="brand-mark"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2.5l8 3v6c0 5-3.3 8.6-8 10-4.7-1.4-8-5-8-10v-6l8-3z" stroke="#08203a" stroke-width="1.9" stroke-linejoin="round"/><path d="M10.5 8.5h3M11 8.5v3l-2 3.6a.9.9 0 0 0 .8 1.3h4.4a.9.9 0 0 0 .8-1.3l-2-3.6v-3" stroke="#08203a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      LabTrack
+    </a>
+    <button type="button" class="burger" id="burger" aria-label="Open menu" aria-controls="menu" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+    <nav class="menu" id="menu" aria-label="Main">
+      <a class="nav-link" href="/myapp/staff_home/">Home</a>
+      <a class="nav-link" href="/myapp/staff_view_students/">Students</a>
+      <div class="dd">
+        <button type="button" class="nav-link dd-btn" aria-expanded="false" aria-haspopup="true">Labs &amp; Exercises <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+        <div class="dd-panel">
+          <a href="/myapp/staff_view_assigned_labs/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.8 3h10.4a2 2 0 0 0 1.8-3l-5-9V3"/><path d="M7.5 15h9"/></svg> View Assigned Labs</a>
+          <a href="/myapp/staff_view_exercise/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg> Lab Instructions &amp; Exercises</a>
+        </div>
+      </div>
+      <a class="nav-link" href="/myapp/staff_view_submissions/">Submissions</a>
+      <a class="nav-link" href="/myapp/staff_view_students/">Communicate</a>
+      <div class="dd right user">
+        <button type="button" class="nav-link dd-btn" aria-expanded="false" aria-haspopup="true"><span class="avatar" aria-hidden="true">S</span> Staff <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+        <div class="dd-panel">
+          <a href="/myapp/staff_view_profile/" class="active" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.2-4 4-6 8-6s6.8 2 8 6"/></svg> View Profile</a>
+          <a href="/myapp/change_password_get/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg> Change Password</a>
+          <div class="dd-sep"></div>
+          <a href="/myapp/logout_get/" class="logout" id="logoutLink"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg> Logout</a>
+        </div>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<!-- Django messages -->
+<div class="toasts" id="toasts" role="status" aria-live="polite">
+    {% if messages %}
+    {% for i in messages %}
+    <div class="toast {{ i.tags }}">
+        <svg class="t-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.01"/></svg>
+        <span>{{ i }}</span>
+        <button type="button" aria-label="Dismiss" data-dismiss>&times;</button>
+    </div>
+    {% endfor %}
+    {% endif %}
+</div>
+
+<main class="container">
+
+    {% if data %}
+    <article class="profile-card">
+
+        <div class="p-header">
+            <h1>My Profile</h1>
+            <p>LabTrack &middot; Staff</p>
+        </div>
+
+        <div class="p-body">
+
+            <!-- PHOTO -->
+            <div class="photo-section">
+                {% if data.photo %}
+                <img src="{{ data.photo.url }}" class="patient-photo" id="photo" alt="Photo of {{ data.name }}">
+                {% else %}
+                <div class="photo-ph" id="photoPh" aria-hidden="true">{{ data.name|default:"?"|first|upper }}</div>
+                {% endif %}
+                <div class="p-name">{{ data.name|default:"Unnamed staff" }}</div>
+                <div class="p-label">Staff Information</div>
+            </div>
+
+            <!-- DETAILS -->
+            <div class="details" id="details">
+
+                <div class="detail-box">
+                    <div class="detail-label">Name</div>
+                    <div class="detail-value">{% if data.name %}<span data-validate="name">{{ data.name }}</span>{% else %}<span class="muted-txt">Not provided</span>{% endif %}</div>
+                </div>
+
+                <div class="detail-box">
+                    <div class="detail-label">Department</div>
+                    <div class="detail-value">{% if data.DEPARTMENT.department_name %}{{ data.DEPARTMENT.department_name }}{% else %}<span class="muted-txt">Not provided</span>{% endif %}</div>
+                </div>
+
+                <div class="detail-box">
+                    <div class="detail-label">Designation</div>
+                    <div class="detail-value">{% if data.designation %}<span data-validate="text">{{ data.designation }}</span>{% else %}<span class="muted-txt">Not provided</span>{% endif %}</div>
+                </div>
+
+                <div class="detail-box">
+                    <div class="detail-label">Qualification</div>
+                    <div class="detail-value">{% if data.qualification %}<span data-validate="text">{{ data.qualification }}</span>{% else %}<span class="muted-txt">Not provided</span>{% endif %}</div>
+                </div>
+
+                <div class="detail-box">
+                    <div class="detail-label">Date of Birth</div>
+                    <div class="detail-value">{% if data.dob %}<span data-validate="dob" data-iso="{{ data.dob|date:'Y-m-d' }}">{{ data.dob }}</span>{% else %}<span class="muted-txt">Not provided</span>{% endif %}</div>
+                </div>
+
+                <div class="detail-box">
+                    <div class="detail-label">Gender</div>
+                    <div class="detail-value">{% if data.gender %}<span data-validate="gender">{{ data.gender }}</span>{% else %}<span class="muted-txt">Not provided</span>{% endif %}</div>
+                </div>
+
+                <div class="detail-box">
+                    <div class="detail-label">Phone</div>
+                    <div class="detail-value">{% if data.phone %}<span data-validate="phone">{{ data.phone }}</span>{% else %}<span class="muted-txt">Not provided</span>{% endif %}</div>
+                </div>
+
+                <div class="detail-box">
+                    <div class="detail-label">Email</div>
+                    <div class="detail-value">{% if data.email %}<span data-validate="email">{{ data.email }}</span>{% else %}<span class="muted-txt">Not provided</span>{% endif %}</div>
+                </div>
+
+                <div class="detail-box">
+                    <div class="detail-label">Joining Date</div>
+                    <div class="detail-value">{% if data.joining_date %}<span data-validate="joining" data-iso="{{ data.joining_date|date:'Y-m-d' }}">{{ data.joining_date }}</span>{% else %}<span class="muted-txt">Not provided</span>{% endif %}</div>
+                </div>
+
+                <div class="detail-box">
+                    <div class="detail-label">Status</div>
+                    <div class="detail-value">{% if data.status %}<span class="badge {{ data.status|lower|cut:' ' }}">{{ data.status }}</span>{% else %}<span class="muted-txt">Not provided</span>{% endif %}</div>
+                </div>
+
+                <div class="detail-box wide-box">
+                    <div class="detail-label">Address</div>
+                    <div class="detail-value">{% if data.address %}<span data-validate="address">{{ data.address }}</span>{% else %}<span class="muted-txt">Not provided</span>{% endif %}</div>
+                </div>
+
+            </div>
+
+            <!-- ACTIONS -->
+            <div class="p-actions">
+                <a class="btn btn-primary" href="/myapp/change_password_get/">Change Password</a>
+                <a class="btn btn-ghost" href="/myapp/staff_home/">Back to Home</a>
+            </div>
+
+        </div>
+    </article>
+    {% else %}
+    <section class="empty-state">
+        <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.2-4 4-6 8-6s6.8 2 8 6"/></svg></span>
+        <h2>Profile not found</h2>
+        <p>We could not load your profile details. Please log in again or contact the admin.</p>
+        <a class="btn btn-primary" href="/myapp/staff_home/">Back to Home</a>
+    </section>
+    {% endif %}
+
+    <a class="back-link" href="/myapp/staff_home/">Back to Home</a>
+</main>
+
+<!-- Logout confirmation -->
+<dialog id="logoutDialog" aria-labelledby="logoutTitle">
+    <h2 id="logoutTitle">Log out of LabTrack?</h2>
+    <p>You will need to sign in again to use the staff panel.</p>
+    <div class="dialog-actions">
+        <button type="button" class="btn btn-ghost" id="cancelLogout">Stay signed in</button>
+        <button type="button" class="btn btn-primary" id="confirmLogout">Log out</button>
+    </div>
+</dialog>
+
+<script>
+(function () {
+    var navbar = document.getElementById('navbar');
+    var burger = document.getElementById('burger');
+    var dds = Array.prototype.slice.call(document.querySelectorAll('.dd'));
+
+    function closeAll(except) {
+        dds.forEach(function (d) {
+            if (d !== except) {
+                d.classList.remove('open');
+                d.querySelector('.dd-btn').setAttribute('aria-expanded', 'false');
+            }
+        });
+    }
+
+    dds.forEach(function (d) {
+        var btn = d.querySelector('.dd-btn');
+        btn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            var open = !d.classList.contains('open');
+            closeAll(d);
+            d.classList.toggle('open', open);
+            btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+        });
+    });
+
+    document.addEventListener('click', function (e) { if (!e.target.closest('.dd')) closeAll(); });
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+            closeAll();
+            navbar.classList.remove('open');
+            burger.setAttribute('aria-expanded', 'false');
+        }
+    });
+
+    burger.addEventListener('click', function () {
+        var open = !navbar.classList.contains('open');
+        navbar.classList.toggle('open', open);
+        burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+        burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    });
+
+    // Mark current page in navbar
+    var path = window.location.pathname;
+    var matched = false;
+    Array.prototype.forEach.call(document.querySelectorAll('.menu a[data-match]'), function (a) {
+        if (matched) return;
+        if (a.getAttribute('data-match').split(',').some(function (t) { return path.indexOf(t) !== -1; })) {
+            matched = true;
+            a.classList.add('active');
+            a.setAttribute('aria-current', 'page');
+        }
+    });
+
+    // Toasts: dismiss + auto-hide
+    window.bindToast = function (t) {
+        var remove = function () { if (t.parentNode) t.parentNode.removeChild(t); };
+        var x = t.querySelector('[data-dismiss]');
+        if (x) x.addEventListener('click', remove);
+        setTimeout(remove, 6000);
+    };
+    Array.prototype.forEach.call(document.querySelectorAll('.toast'), window.bindToast);
+
+    // Logout confirmation
+    var link = document.getElementById('logoutLink');
+    var dlg = document.getElementById('logoutDialog');
+    var cancel = document.getElementById('cancelLogout');
+    var confirmBtn = document.getElementById('confirmLogout');
+    link.addEventListener('click', function (e) {
+        if (typeof dlg.showModal !== 'function') return;
+        e.preventDefault();
+        closeAll();
+        navbar.classList.remove('open');
+        dlg.showModal();
+        cancel.focus();
+    });
+    cancel.addEventListener('click', function () { dlg.close(); });
+    confirmBtn.addEventListener('click', function () { window.location.href = link.getAttribute('href'); });
+    dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
+})();
+</script>
+
+<script>
+/* ---------- Profile data validation ---------- */
+(function () {
+    var toasts = document.getElementById('toasts');
+
+    function toast(type, text) {
+        var el = document.createElement('div');
+        el.className = 'toast ' + type;
+        el.innerHTML = '<svg class="t-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.01"/></svg><span></span><button type="button" aria-label="Dismiss" data-dismiss>&times;</button>';
+        el.querySelector('span').textContent = text;
+        toasts.appendChild(el);
+        window.bindToast(el);
+    }
+
+    function parseISO(s) {
+        var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s || '');
+        if (!m) return null;
+        var d = new Date(+m[1], +m[2] - 1, +m[3]);
+        return d.getMonth() === +m[2] - 1 ? d : null;
+    }
+
+    var today = new Date(); today.setHours(0, 0, 0, 0);
+    var problems = [];
+
+    function flag(el, text, why, label) {
+        var s = document.createElement('span');
+        s.className = 'flag';
+        s.title = why;
+        s.textContent = text;
+        el.parentNode.insertBefore(s, el.nextSibling);
+        if (problems.indexOf(label) === -1) problems.push(label);
+    }
+
+    function each(sel, fn) {
+        Array.prototype.forEach.call(document.querySelectorAll(sel), fn);
+    }
+
+    // Name: letters, spaces, dots, apostrophes and hyphens; 2 to 60 characters
+    each('[data-validate="name"]', function (el) {
+        var v = el.textContent.trim();
+        if (!/^[A-Za-z][A-Za-z .'\-]{1,59}$/.test(v)) flag(el, 'Check name', 'The name should have 2 to 60 letters and no digits or symbols.', 'name');
+    });
+
+    // Designation and qualification: 2 to 80 characters, no < >
+    each('[data-validate="text"]', function (el) {
+        var v = el.textContent.trim();
+        if (v.length < 2 || v.length > 80 || /[<>]/.test(v)) flag(el, 'Check value', 'This value should be 2 to 80 characters long.', 'designation or qualification');
+    });
+
+    // Gender: Male, Female or Other
+    each('[data-validate="gender"]', function (el) {
+        if (['male', 'female', 'other'].indexOf(el.textContent.trim().toLowerCase()) === -1) flag(el, 'Check gender', 'Gender should be Male, Female or Other.', 'gender');
+    });
+
+    // Address: at least 5 characters
+    each('[data-validate="address"]', function (el) {
+        if (el.textContent.trim().length < 5) flag(el, 'Check address', 'The address looks too short.', 'address');
+    });
+
+    // Phone (valid 10 digit Indian mobile, optional +91) and email: valid values become links
+    each('[data-validate="phone"], [data-validate="email"]', function (el) {
+        var kind = el.getAttribute('data-validate');
+        var raw = el.textContent.trim();
+        var ok, href;
+        if (kind === 'phone') {
+            var digits = raw.replace(/[\s\-()]/g, '');
+            ok = /^(\+91|91|0)?[6-9]\d{9}$/.test(digits);
+            href = 'tel:' + digits;
+        } else {
+            ok = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(raw);
+            href = 'mailto:' + raw;
+        }
+        if (ok) {
+            var a = document.createElement('a');
+            a.href = href;
+            a.textContent = raw;
+            el.textContent = '';
+            el.appendChild(a);
+        } else {
+            flag(el, 'Check ' + kind, 'This ' + kind + ' looks invalid. Ask the admin to correct it.', kind);
+        }
+    });
+
+    // Date checks
+    var dobEl = document.querySelector('[data-validate="dob"]');
+    var joinEl = document.querySelector('[data-validate="joining"]');
+    var dob = dobEl ? parseISO(dobEl.getAttribute('data-iso')) : null;
+    var join = joinEl ? parseISO(joinEl.getAttribute('data-iso')) : null;
+
+    if (dobEl && dob) {
+        var age = (today - dob) / 31557600000;
+        if (dob > today) flag(dobEl, 'Check date', 'The date of birth is in the future.', 'date of birth');
+        else if (age < 18 || age > 70) flag(dobEl, 'Check date', 'The date of birth gives an age of ' + Math.floor(age) + ', which looks unusual for staff.', 'date of birth');
+    } else if (dobEl) {
+        flag(dobEl, 'Check date', 'The date of birth could not be read.', 'date of birth');
+    }
+
+    if (joinEl && join) {
+        if (join > today) flag(joinEl, 'Check date', 'The joining date is in the future.', 'joining date');
+        else if (dob && join < dob) flag(joinEl, 'Check date', 'The joining date is before the date of birth.', 'joining date');
+        else if (dob && (join - dob) / 31557600000 < 18) flag(joinEl, 'Check date', 'The joining date gives an age under 18 at joining.', 'joining date');
+    } else if (joinEl) {
+        flag(joinEl, 'Check date', 'The joining date could not be read.', 'joining date');
+    }
+
+    // Warn about problems and missing details
+    var missing = document.querySelectorAll('#details .muted-txt').length;
+    if (problems.length) {
+        toast('warning', 'Some profile details look incorrect (' + problems.join(', ') + '). Ask the admin to update them.');
+    }
+    if (missing) {
+        toast('warning', missing + ' profile detail' + (missing === 1 ? ' is' : 's are') + ' not provided. Ask the admin to complete your profile.');
+    }
+
+    // Photo: fall back to a letter circle if it fails to load
+    var photo = document.getElementById('photo');
+    if (photo) {
+        photo.addEventListener('error', function () {
+            var n = (photo.getAttribute('alt') || '').replace('Photo of ', '').trim();
+            var ph = document.createElement('div');
+            ph.className = 'photo-ph';
+            ph.setAttribute('aria-hidden', 'true');
+            ph.textContent = (n.charAt(0) || '?').toUpperCase();
+            photo.parentNode.replaceChild(ph, photo);
+            toast('warning', 'Your profile photo could not be loaded.');
+        });
+    }
+})();
+</script>
+</body>
+</html>

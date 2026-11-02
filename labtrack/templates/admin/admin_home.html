@@ -1,0 +1,2153 @@
+{#<!DOCTYPE html>#}
+{#<html>#}
+{#<head>#}
+{#    <title>Admin Home - LabTrack</title>#}
+{#</head>#}
+{#<body>#}
+{##}
+{#    <h1>LabTrack</h1>#}
+{#    <h2>Admin Home</h2>#}
+{##}
+{#    <p>Welcome to LabTrack Admin Panel</p>#}
+{##}
+{#    <h3>Management</h3>#}
+{##}
+{#    <ul>#}
+{#        <li><a href="/myapp/view_dept/">Manage Department</a></li>#}
+{#        <li><a href="/myapp/view_student/">View Students</a></li>#}
+{#        <li><a href="/myapp/view_staff/">Manage Staff</a></li>#}
+{#<a href="/myapp/view_lab_coordinator/">View Lab Coordinators</a>#}
+{#        <li><a href="/myapp/view_lab/">Manage Labs</a></li>#}
+{#    </ul>#}
+{##}
+{#    <h3>Lab Work</h3>#}
+{##}
+{#    <ul>#}
+{#        <li><a href="/myapp/view_lab_submissions_admin/">View Lab Submissions</a></li>#}
+{#    </ul>#}
+{##}
+{#    <h3>Reports</h3>#}
+{##}
+{#    <ul>#}
+{#        <li><a href="/myapp/admin_reports/">View Reports</a></li>#}
+{#        <li><a href="/myapp/viewfines_admin/">Manage Fines</a></li>#}
+{#    </ul>#}
+{##}
+{#    <h3>Complaints & Reviews</h3>#}
+{##}
+{#    <ul>#}
+{#<li><a href="/myapp/view_complaints_admin/">View Complaints</a></li>        <li><a href="/myapp/view_feedback_admin/">View Feedback</a></li>#}
+{#    </ul>#}
+{##}
+{#    <h3>Account</h3>#}
+{##}
+{#    <ul>#}
+{#       <li> <a href="/myapp/change_password_get/">Change Password</a></li>#}
+{#        <li><a href="/myapp/logout_get/">Logout</a></li>#}
+{#    </ul>#}
+{##}
+{#</body>#}
+{#</html>#}
+{##}
+{##}
+{#<!DOCTYPE html>#}
+{#<html lang="en">#}
+{#<head>#}
+{#    <meta charset="UTF-8">#}
+{#    <meta name="viewport" content="width=device-width, initial-scale=1">#}
+{#    <title>Admin Home - LabTrack</title>#}
+{##}
+{#    <link rel="preconnect" href="https://fonts.googleapis.com">#}
+{#    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>#}
+{#    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">#}
+{##}
+{#    <style>#}
+{#        :root {#}
+{#            --bg-top: #164a63;#}
+{#            --bg-mid: #0d3048;#}
+{#            --bg-deep: #08203a;#}
+{#            --cyan: #5cd0ee;#}
+{#            --teal: #0b84a8;#}
+{#            --teal-dark: #086a89;#}
+{#            --heading: #0d2b3e;#}
+{#            --text: #14283a;#}
+{#            --muted: #5d7183;#}
+{#            --surface: #ffffff;#}
+{#            --canvas: #f1f6fb;#}
+{#            --border: #dae6f1;#}
+{#            --tile: #e2f4fa;#}
+{#            --danger: #c0291f;#}
+{#            --gold: #fbbf24;#}
+{#            --sidebar-w: 270px;#}
+{#        }#}
+{##}
+{#        *, *::before, *::after { box-sizing: border-box; }#}
+{#        html { scroll-behavior: smooth; scroll-padding-top: 24px; }#}
+{##}
+{#        body {#}
+{#            margin: 0;#}
+{#            min-height: 100vh;#}
+{#            font-family: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;#}
+{#            color: var(--text);#}
+{#            background: var(--canvas);#}
+{#            -webkit-font-smoothing: antialiased;#}
+{#        }#}
+{##}
+{#        a { color: inherit; text-decoration: none; }#}
+{##}
+{#        .layout { display: grid; grid-template-columns: var(--sidebar-w) minmax(0, 1fr); min-height: 100vh; }#}
+{##}
+{#        /* ================= SIDEBAR ================= */#}
+{#        .sidebar {#}
+{#            position: sticky;#}
+{#            top: 0;#}
+{#            height: 100vh;#}
+{#            display: flex;#}
+{#            flex-direction: column;#}
+{#            padding: 28px 18px 20px;#}
+{#            color: #dcebf5;#}
+{#            background:#}
+{#                radial-gradient(ellipse at 100% 0%, rgba(92,208,238,.20), transparent 55%),#}
+{#                linear-gradient(170deg, var(--bg-top) 0%, var(--bg-mid) 45%, var(--bg-deep) 100%);#}
+{#        }#}
+{##}
+{#        .brand {#}
+{#            display: flex;#}
+{#            align-items: center;#}
+{#            gap: 12px;#}
+{#            padding: 0 10px 26px;#}
+{#            font-size: 1.35rem;#}
+{#            font-weight: 800;#}
+{#            letter-spacing: -0.02em;#}
+{#            color: #fff;#}
+{#        }#}
+{##}
+{#        .brand-mark {#}
+{#            width: 42px; height: 42px;#}
+{#            display: grid;#}
+{#            place-items: center;#}
+{#            border-radius: 11px;#}
+{#            background: var(--cyan);#}
+{#            flex: none;#}
+{#        }#}
+{##}
+{#        .nav-label {#}
+{#            margin: 6px 12px 8px;#}
+{#            font-size: .78rem;#}
+{#            font-weight: 600;#}
+{#            color: #8fb2c6;#}
+{#        }#}
+{##}
+{#        .nav { display: grid; gap: 4px; }#}
+{##}
+{#        .nav a, .side-link {#}
+{#            display: flex;#}
+{#            align-items: center;#}
+{#            gap: 12px;#}
+{#            padding: 11px 12px;#}
+{#            border-radius: 10px;#}
+{#            font-size: .93rem;#}
+{#            font-weight: 600;#}
+{#            color: #c6dcea;#}
+{#            border: 0;#}
+{#            background: transparent;#}
+{#            width: 100%;#}
+{#            font-family: inherit;#}
+{#            text-align: left;#}
+{#            cursor: pointer;#}
+{#            transition: background .2s, color .2s, transform .2s;#}
+{#        }#}
+{##}
+{#        .nav svg, .side-link svg { width: 19px; height: 19px; flex: none; }#}
+{##}
+{#        .nav a:hover, .side-link:hover { background: rgba(255,255,255,.09); color: #fff; transform: translateX(3px); }#}
+{##}
+{#        .nav a.active { background: rgba(92,208,238,.18); color: #fff; box-shadow: inset 3px 0 0 var(--cyan); }#}
+{##}
+{#        .nav a:focus-visible, .side-link:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }#}
+{##}
+{#        .side-bottom { margin-top: auto; padding-top: 16px; border-top: 1px solid rgba(255,255,255,.14); display: grid; gap: 4px; }#}
+{##}
+{#        .side-link.logout:hover { background: rgba(251,113,100,.18); color: #ffd7d2; }#}
+{##}
+{#        /* ================= MAIN ================= */#}
+{#        .main { min-width: 0; }#}
+{##}
+{#        .topbar {#}
+{#            display: none;#}
+{#            align-items: center;#}
+{#            gap: 12px;#}
+{#            padding: 14px 18px;#}
+{#            background: var(--bg-mid);#}
+{#            color: #fff;#}
+{#            position: sticky;#}
+{#            top: 0;#}
+{#            z-index: 30;#}
+{#        }#}
+{##}
+{#        .menu-btn {#}
+{#            width: 42px; height: 42px;#}
+{#            display: grid;#}
+{#            place-items: center;#}
+{#            border: 0;#}
+{#            border-radius: 10px;#}
+{#            background: rgba(255,255,255,.1);#}
+{#            color: #fff;#}
+{#            cursor: pointer;#}
+{#        }#}
+{#        .menu-btn:hover { background: rgba(255,255,255,.18); }#}
+{#        .menu-btn:focus-visible { outline: 2px solid var(--cyan); }#}
+{#        .menu-btn svg { width: 22px; height: 22px; }#}
+{##}
+{#        .topbar .brand { padding: 0; font-size: 1.15rem; }#}
+{#        .topbar .brand-mark { width: 36px; height: 36px; }#}
+{##}
+{#        .content { max-width: 1120px; margin: 0 auto; padding: 36px clamp(20px, 4vw, 48px) 56px; }#}
+{##}
+{#        .hero {#}
+{#            position: relative;#}
+{#            display: flex;#}
+{#            align-items: center;#}
+{#            justify-content: space-between;#}
+{#            gap: 20px;#}
+{#            padding: 30px 34px;#}
+{#            border-radius: 20px;#}
+{#            color: #fff;#}
+{#            overflow: hidden;#}
+{#            background:#}
+{#                radial-gradient(ellipse at 95% 0%, rgba(92,208,238,.30), transparent 55%),#}
+{#                linear-gradient(135deg, var(--bg-top), var(--bg-deep));#}
+{#            box-shadow: 0 16px 34px rgba(8,32,58,.22);#}
+{#        }#}
+{##}
+{#        .hero::after {#}
+{#            content: "";#}
+{#            position: absolute;#}
+{#            right: -60px; bottom: -80px;#}
+{#            width: 260px; height: 260px;#}
+{#            border-radius: 50%;#}
+{#            border: 2px dashed rgba(92,208,238,.35);#}
+{#            pointer-events: none;#}
+{#        }#}
+{##}
+{#        .hero h1 { margin: 0 0 6px; font-size: clamp(1.6rem, 2.4vw, 2.1rem); font-weight: 800; letter-spacing: -0.03em; }#}
+{#        .hero p { margin: 0; color: #b9d3e3; line-height: 1.55; }#}
+{##}
+{#        .role-chip {#}
+{#            position: relative;#}
+{#            z-index: 1;#}
+{#            flex: none;#}
+{#            display: inline-flex;#}
+{#            align-items: center;#}
+{#            gap: 8px;#}
+{#            padding: 9px 16px;#}
+{#            border-radius: 999px;#}
+{#            background: rgba(255,255,255,.12);#}
+{#            border: 1px solid rgba(255,255,255,.2);#}
+{#            font-size: .88rem;#}
+{#            font-weight: 700;#}
+{#        }#}
+{#        .role-chip::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #34d399; }#}
+{##}
+{#        .section { margin-top: 36px; }#}
+{##}
+{#        .section h2 {#}
+{#            margin: 0 0 16px;#}
+{#            font-size: 1.15rem;#}
+{#            font-weight: 800;#}
+{#            letter-spacing: -0.01em;#}
+{#            color: var(--heading);#}
+{#        }#}
+{##}
+{#        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 16px; }#}
+{##}
+{#        .card {#}
+{#            position: relative;#}
+{#            display: flex;#}
+{#            align-items: center;#}
+{#            gap: 16px;#}
+{#            padding: 20px;#}
+{#            background: var(--surface);#}
+{#            border: 1px solid var(--border);#}
+{#            border-radius: 16px;#}
+{#            transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;#}
+{#        }#}
+{##}
+{#        .card .tile {#}
+{#            width: 48px; height: 48px;#}
+{#            flex: none;#}
+{#            display: grid;#}
+{#            place-items: center;#}
+{#            border-radius: 13px;#}
+{#            background: var(--tile);#}
+{#            color: var(--teal);#}
+{#            transition: background .2s, color .2s, transform .2s;#}
+{#        }#}
+{#        .card .tile svg { width: 23px; height: 23px; }#}
+{##}
+{#        .card .text { min-width: 0; flex: 1; }#}
+{#        .card h3 { margin: 0 0 3px; font-size: 1rem; font-weight: 700; color: var(--heading); }#}
+{#        .card p { margin: 0; font-size: .84rem; line-height: 1.45; color: var(--muted); }#}
+{##}
+{#        .card .go { width: 18px; height: 18px; flex: none; color: #9db1c3; transition: transform .2s, color .2s; }#}
+{##}
+{#        .card:hover {#}
+{#            transform: translateY(-4px);#}
+{#            border-color: var(--teal);#}
+{#            box-shadow: 0 14px 28px rgba(11,84,120,.14);#}
+{#        }#}
+{#        .card:hover .tile { background: var(--teal); color: #fff; transform: scale(1.06); }#}
+{#        .card:hover .go { color: var(--teal); transform: translateX(4px); }#}
+{#        .card:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }#}
+{##}
+{#        .footer { margin-top: 44px; font-size: .8rem; color: #8196a8; }#}
+{##}
+{#        /* ================= LOGOUT DIALOG ================= */#}
+{#        dialog {#}
+{#            width: min(92vw, 400px);#}
+{#            padding: 28px;#}
+{#            border: 0;#}
+{#            border-radius: 18px;#}
+{#            color: var(--text);#}
+{#            box-shadow: 0 30px 70px rgba(8,32,58,.35);#}
+{#        }#}
+{#        dialog::backdrop { background: rgba(6,19,40,.55); backdrop-filter: blur(2px); }#}
+{#        dialog h2 { margin: 0 0 8px; font-size: 1.3rem; font-weight: 800; color: var(--heading); }#}
+{#        dialog p { margin: 0 0 24px; color: var(--muted); line-height: 1.55; }#}
+{#        .dialog-actions { display: flex; gap: 10px; justify-content: flex-end; }#}
+{##}
+{#        .btn {#}
+{#            height: 46px;#}
+{#            padding: 0 22px;#}
+{#            font: inherit;#}
+{#            font-weight: 700;#}
+{#            font-size: .95rem;#}
+{#            border-radius: 11px;#}
+{#            border: 1.5px solid transparent;#}
+{#            cursor: pointer;#}
+{#            transition: background .2s, transform .15s, box-shadow .2s, border-color .2s;#}
+{#        }#}
+{#        .btn:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }#}
+{#        .btn-ghost { background: #fff; color: var(--heading); border-color: var(--border); }#}
+{#        .btn-ghost:hover { background: var(--canvas); border-color: #b8cde0; }#}
+{#        .btn-primary { background: var(--teal); color: #fff; box-shadow: 0 8px 16px rgba(11,132,168,.25); }#}
+{#        .btn-primary:hover { background: var(--teal-dark); transform: translateY(-2px); box-shadow: 0 12px 22px rgba(11,132,168,.32); }#}
+{##}
+{#        .overlay { display: none; }#}
+{##}
+{#        /* ================= RESPONSIVE ================= */#}
+{#        @media (max-width: 960px) {#}
+{#            .layout { grid-template-columns: 1fr; }#}
+{#            .topbar { display: flex; }#}
+{##}
+{#            .sidebar {#}
+{#                position: fixed;#}
+{#                inset: 0 auto 0 0;#}
+{#                width: min(82vw, 290px);#}
+{#                z-index: 50;#}
+{#                transform: translateX(-102%);#}
+{#                transition: transform .28s ease;#}
+{#            }#}
+{#            body.menu-open .sidebar { transform: translateX(0); box-shadow: 20px 0 50px rgba(0,0,0,.35); }#}
+{##}
+{#            .overlay {#}
+{#                position: fixed;#}
+{#                inset: 0;#}
+{#                z-index: 40;#}
+{#                background: rgba(6,19,40,.5);#}
+{#                opacity: 0;#}
+{#                pointer-events: none;#}
+{#                transition: opacity .25s;#}
+{#                display: block;#}
+{#            }#}
+{#            body.menu-open .overlay { opacity: 1; pointer-events: auto; }#}
+{##}
+{#            .content { padding-top: 24px; }#}
+{#            .hero { flex-direction: column; align-items: flex-start; padding: 24px; }#}
+{#        }#}
+{##}
+{#        @media (prefers-reduced-motion: reduce) {#}
+{#            html { scroll-behavior: auto; }#}
+{#            * { transition: none !important; }#}
+{#        }#}
+{#    </style>#}
+{#</head>#}
+{#<body>#}
+{##}
+{#<div class="layout">#}
+{##}
+{#    <!-- ============ SIDEBAR ============ -->#}
+{#    <aside class="sidebar" id="sidebar">#}
+{#        <div class="brand">#}
+{#            <span class="brand-mark">#}
+{#                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">#}
+{#                    <path d="M12 2.5l8 3v6c0 5-3.3 8.6-8 10-4.7-1.4-8-5-8-10v-6l8-3z" stroke="#08203a" stroke-width="1.9" stroke-linejoin="round"/>#}
+{#                    <path d="M10.5 8.5h3M11 8.5v3l-2 3.6a.9.9 0 0 0 .8 1.3h4.4a.9.9 0 0 0 .8-1.3l-2-3.6v-3" stroke="#08203a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>#}
+{#                </svg>#}
+{#            </span>#}
+{#            LabTrack#}
+{#        </div>#}
+{##}
+{#        <div class="nav-label">Admin panel</div>#}
+{#        <nav class="nav" aria-label="Sections">#}
+{#            <a href="#management" class="active">#}
+{#                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>#}
+{#                Management#}
+{#            </a>#}
+{#            <a href="#lab-work">#}
+{#                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.8 3h10.4a2 2 0 0 0 1.8-3l-5-9V3"/></svg>#}
+{#                Lab Work#}
+{#            </a>#}
+{#            <a href="#reports">#}
+{#                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></svg>#}
+{#                Reports#}
+{#            </a>#}
+{#            <a href="#complaints">#}
+{#                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg>#}
+{#                Complaints &amp; Reviews#}
+{#            </a>#}
+{#        </nav>#}
+{##}
+{#        <div class="side-bottom">#}
+{#            <a href="/myapp/change_password_get/" class="side-link">#}
+{#                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>#}
+{#                Change Password#}
+{#            </a>#}
+{#            <a href="/myapp/logout_get/" class="side-link logout" id="logoutLink">#}
+{#                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>#}
+{#                Logout#}
+{#            </a>#}
+{#        </div>#}
+{#    </aside>#}
+{##}
+{#    <div class="overlay" id="overlay"></div>#}
+{##}
+{#    <!-- ============ MAIN ============ -->#}
+{#    <div class="main">#}
+{##}
+{#        <div class="topbar">#}
+{#            <button type="button" class="menu-btn" id="menuBtn" aria-label="Open menu" aria-controls="sidebar" aria-expanded="false">#}
+{#                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>#}
+{#            </button>#}
+{#            <div class="brand">#}
+{#                <span class="brand-mark">#}
+{#                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">#}
+{#                        <path d="M12 2.5l8 3v6c0 5-3.3 8.6-8 10-4.7-1.4-8-5-8-10v-6l8-3z" stroke="#08203a" stroke-width="1.9" stroke-linejoin="round"/>#}
+{#                        <path d="M10.5 8.5h3M11 8.5v3l-2 3.6a.9.9 0 0 0 .8 1.3h4.4a.9.9 0 0 0 .8-1.3l-2-3.6v-3" stroke="#08203a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>#}
+{#                    </svg>#}
+{#                </span>#}
+{#                LabTrack#}
+{#            </div>#}
+{#        </div>#}
+{##}
+{#        <main class="content">#}
+{##}
+{#            <header class="hero">#}
+{#                <div>#}
+{#                    <h1>Admin Home</h1>#}
+{#                    <p>Welcome to LabTrack Admin Panel</p>#}
+{#                </div>#}
+{#                <span class="role-chip">Administrator</span>#}
+{#            </header>#}
+{##}
+{#            <!-- Management -->#}
+{#            <section class="section" id="management" aria-labelledby="h-management">#}
+{#                <h2 id="h-management">Management</h2>#}
+{#                <div class="grid">#}
+{#                    <a class="card" href="/myapp/view_dept/">#}
+{#                        <span class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6"/></svg></span>#}
+{#                        <span class="text"><h3>Manage Department</h3><p>Add and update departments.</p></span>#}
+{#                        <svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>#}
+{#                    </a>#}
+{#                    <a class="card" href="/myapp/view_student/">#}
+{#                        <span class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 9L12 4 2 9l10 5 10-5z"/><path d="M6 11.5V16c0 1.5 2.7 3 6 3s6-1.500 6-3v-4.500"/></svg></span>#}
+{#                        <span class="text"><h3>View Students</h3><p>Browse student accounts.</p></span>#}
+{#                        <svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>#}
+{#                    </a>#}
+{#                    <a class="card" href="/myapp/view_staff/">#}
+{#                        <span class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.500 20c.8-3.500 3.300-5.500 6.500-5.500s5.700 2 6.500 5.500"/><circle cx="17.500" cy="9" r="2.500"/><path d="M17 14.500c2.500.2 4.300 1.800 5 4.500"/></svg></span>#}
+{#                        <span class="text"><h3>Manage Staff</h3><p>Add and update staff members.</p></span>#}
+{#                        <svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>#}
+{#                    </a>#}
+{#                    <a class="card" href="/myapp/view_lab_coordinator/">#}
+{#                        <span class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.200-4 4-6 8-6s6.800 2 8 6"/><path d="M16.500 3.500l1.200 1.200 2.300-2.400"/></svg></span>#}
+{#                        <span class="text"><h3>View Lab Coordinators</h3><p>See who runs each lab.</p></span>#}
+{#                        <svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>#}
+{#                    </a>#}
+{#                    <a class="card" href="/myapp/view_lab/">#}
+{#                        <span class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.800 3h10.400a2 2 0 0 0 1.800-3l-5-9V3"/><path d="M7.500 15h9"/></svg></span>#}
+{#                        <span class="text"><h3>Manage Labs</h3><p>Set up labs and schedules.</p></span>#}
+{#                        <svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>#}
+{#                    </a>#}
+{#                </div>#}
+{#            </section>#}
+{##}
+{#            <!-- Lab Work -->#}
+{#            <section class="section" id="lab-work" aria-labelledby="h-labwork">#}
+{#                <h2 id="h-labwork">Lab Work</h2>#}
+{#                <div class="grid">#}
+{#                    <a class="card" href="/myapp/view_lab_submissions_admin/">#}
+{#                        <span class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></span>#}
+{#                        <span class="text"><h3>View Lab Submissions</h3><p>Review student lab work.</p></span>#}
+{#                        <svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>#}
+{#                    </a>#}
+{#                </div>#}
+{#            </section>#}
+{##}
+{#            <!-- Reports -->#}
+{#            <section class="section" id="reports" aria-labelledby="h-reports">#}
+{#                <h2 id="h-reports">Reports</h2>#}
+{#                <div class="grid">#}
+{#                    <a class="card" href="/myapp/admin_reports/">#}
+{#                        <span class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></svg></span>#}
+{#                        <span class="text"><h3>View Reports</h3><p>Submissions, fines and equipment status.</p></span>#}
+{#                        <svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>#}
+{#                    </a>#}
+{#                </div>#}
+{#            </section>#}
+{##}
+{#            <!-- Complaints & Reviews -->#}
+{#            <section class="section" id="complaints" aria-labelledby="h-complaints">#}
+{#                <h2 id="h-complaints">Complaints &amp; Reviews</h2>#}
+{#                <div class="grid">#}
+{#                    <a class="card" href="/myapp/view_complaints_admin/">#}
+{#                        <span class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9.500 17h-19L12 3z"/><path d="M12 10v4M12 17.500v.01"/></svg></span>#}
+{#                        <span class="text"><h3>View Complaints</h3><p>Read and resolve complaints.</p></span>#}
+{#                        <svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>#}
+{#                    </a>#}
+{#                    <a class="card" href="/myapp/view_feedback_admin/">#}
+{#                        <span class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.600 7.100L4 20l1-4.600A8 8 0 1 1 21 12z"/><path d="M8.500 12h7"/></svg></span>#}
+{#                        <span class="text"><h3>View Feedback</h3><p>See what students are saying.</p></span>#}
+{#                        <svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>#}
+{#                    </a>#}
+{#                </div>#}
+{#            </section>#}
+{##}
+{#            <p class="footer">&copy; LabTrack</p>#}
+{#        </main>#}
+{#    </div>#}
+{#</div>#}
+{##}
+{#<!-- Logout confirmation -->#}
+{#<dialog id="logoutDialog" aria-labelledby="logoutTitle">#}
+{#    <h2 id="logoutTitle">Log out of LabTrack?</h2>#}
+{#    <p>You will need to sign in again to use the admin panel.</p>#}
+{#    <div class="dialog-actions">#}
+{#        <button type="button" class="btn btn-ghost" id="cancelLogout">Stay signed in</button>#}
+{#        <button type="button" class="btn btn-primary" id="confirmLogout">Log out</button>#}
+{#    </div>#}
+{#</dialog>#}
+{##}
+{#<script>#}
+{#(function () {#}
+{#    var body = document.body;#}
+{#    var menuBtn = document.getElementById('menuBtn');#}
+{#    var overlay = document.getElementById('overlay');#}
+{#    var sidebar = document.getElementById('sidebar');#}
+{##}
+{#    function setMenu(open) {#}
+{#        body.classList.toggle('menu-open', open);#}
+{#        menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');#}
+{#    }#}
+{##}
+{#    menuBtn.addEventListener('click', function () { setMenu(!body.classList.contains('menu-open')); });#}
+{#    overlay.addEventListener('click', function () { setMenu(false); });#}
+{#    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setMenu(false); });#}
+{##}
+{#    // Close the mobile menu after choosing a section#}
+{#    var navLinks = Array.prototype.slice.call(sidebar.querySelectorAll('.nav a'));#}
+{#    navLinks.forEach(function (a) {#}
+{#        a.addEventListener('click', function () { setMenu(false); });#}
+{#    });#}
+{##}
+{#    // Highlight the section currently in view#}
+{#    var sections = navLinks.map(function (a) {#}
+{#        return document.getElementById(a.getAttribute('href').slice(1));#}
+{#    });#}
+{##}
+{#    function setActive(id) {#}
+{#        navLinks.forEach(function (a) {#}
+{#            a.classList.toggle('active', a.getAttribute('href') === '#' + id);#}
+{#        });#}
+{#    }#}
+{##}
+{#    if ('IntersectionObserver' in window) {#}
+{#        var obs = new IntersectionObserver(function (entries) {#}
+{#            entries.forEach(function (en) {#}
+{#                if (en.isIntersecting) setActive(en.target.id);#}
+{#            });#}
+{#        }, { rootMargin: '-20% 0px -65% 0px' });#}
+{#        sections.forEach(function (s) { if (s) obs.observe(s); });#}
+{#    }#}
+{##}
+{#    // Logout confirmation#}
+{#    var link = document.getElementById('logoutLink');#}
+{#    var dlg = document.getElementById('logoutDialog');#}
+{#    var cancel = document.getElementById('cancelLogout');#}
+{#    var confirmBtn = document.getElementById('confirmLogout');#}
+{##}
+{#    link.addEventListener('click', function (e) {#}
+{#        if (typeof dlg.showModal !== 'function') return;  // old browsers: log out directly#}
+{#        e.preventDefault();#}
+{#        setMenu(false);#}
+{#        dlg.showModal();#}
+{#        cancel.focus();#}
+{#    });#}
+{##}
+{#    cancel.addEventListener('click', function () { dlg.close(); });#}
+{#    confirmBtn.addEventListener('click', function () { window.location.href = link.getAttribute('href'); });#}
+{#    dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });#}
+{#{)();#}
+{#</script>#}
+{##}
+{#</body>#}
+{#</html>#}
+{##}
+{##}
+{##}
+{##}
+{#<!DOCTYPE html>#}
+{#<html lang="en">#}
+{#<head>#}
+{#    <meta charset="UTF-8">#}
+{#    <meta name="viewport" content="width=device-width, initial-scale=1">#}
+{#    <title>Admin Home - LabTrack</title>#}
+{##}
+{#    <link rel="preconnect" href="https://fonts.googleapis.com">#}
+{#    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>#}
+{#    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">#}
+{##}
+{#    <style>#}
+{#        :root {#}
+{#            --bg-top: #164a63;#}
+{#            --bg-mid: #0d3048;#}
+{#            --bg-deep: #08203a;#}
+{#            --cyan: #5cd0ee;#}
+{#            --teal: #0b84a8;#}
+{#            --teal-dark: #086a89;#}
+{#            --heading: #0d2b3e;#}
+{#            --text: #14283a;#}
+{#            --muted: #5d7183;#}
+{#            --surface: #ffffff;#}
+{#            --canvas: #f1f6fb;#}
+{#            --border: #dae6f1;#}
+{#            --field: #e9f1fc;#}
+{#            --field-line: #c8d9ee;#}
+{#            --tile: #e2f4fa;#}
+{#            --danger: #c0291f;#}
+{#            --danger-bg: #fdeceb;#}
+{#            --ok: #1c7c54;#}
+{#            --ok-bg: #e3f6ec;#}
+{#            --gold: #fbbf24;#}
+{#            --nav-h: 68px;#}
+{#        }#}
+{##}
+{#        *, *::before, *::after { box-sizing: border-box; }#}
+{##}
+{#        body {#}
+{#            margin: 0;#}
+{#            min-height: 100vh;#}
+{#            font-family: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;#}
+{#            color: var(--text);#}
+{#            background: var(--canvas);#}
+{#            -webkit-font-smoothing: antialiased;#}
+{#        }#}
+{##}
+{#        a { color: inherit; text-decoration: none; }#}
+{##}
+{#        /* ================= NAVBAR ================= */#}
+{#        .navbar {#}
+{#            position: sticky;#}
+{#            top: 0;#}
+{#            z-index: 100;#}
+{#            color: #fff;#}
+{#            background:#}
+{#                radial-gradient(ellipse at 90% -40%, rgba(92,208,238,.28), transparent 55%),#}
+{#                linear-gradient(100deg, var(--bg-top) 0%, var(--bg-mid) 45%, var(--bg-deep) 100%);#}
+{#            box-shadow: 0 6px 20px rgba(8,32,58,.25);#}
+{#        }#}
+{##}
+{#        .nav-inner {#}
+{#            max-width: 1280px;#}
+{#            height: var(--nav-h);#}
+{#            margin: 0 auto;#}
+{#            padding: 0 clamp(16px, 3vw, 36px);#}
+{#            display: flex;#}
+{#            align-items: center;#}
+{#            gap: 28px;#}
+{#        }#}
+{##}
+{#        .brand {#}
+{#            display: flex;#}
+{#            align-items: center;#}
+{#            gap: 12px;#}
+{#            font-size: 1.3rem;#}
+{#            font-weight: 800;#}
+{#            letter-spacing: -0.02em;#}
+{#            color: #fff;#}
+{#            flex: none;#}
+{#        }#}
+{##}
+{#        .brand-mark {#}
+{#            width: 40px; height: 40px;#}
+{#            display: grid;#}
+{#            place-items: center;#}
+{#            border-radius: 11px;#}
+{#            background: var(--cyan);#}
+{#            transition: transform .25s ease;#}
+{#        }#}
+{#        .brand:hover .brand-mark { transform: rotate(-8deg) scale(1.06); }#}
+{##}
+{#        .menu {#}
+{#            flex: 1;#}
+{#            display: flex;#}
+{#            align-items: center;#}
+{#            gap: 4px;#}
+{#            height: 100%;#}
+{#        }#}
+{##}
+{#        .nav-link {#}
+{#            position: relative;#}
+{#            display: inline-flex;#}
+{#            align-items: center;#}
+{#            gap: 7px;#}
+{#            height: 42px;#}
+{#            padding: 0 14px;#}
+{#            font: inherit;#}
+{#            font-size: .92rem;#}
+{#            font-weight: 600;#}
+{#            color: #cfe3ef;#}
+{#            background: transparent;#}
+{#            border: 0;#}
+{#            border-radius: 10px;#}
+{#            cursor: pointer;#}
+{#            white-space: nowrap;#}
+{#            transition: background .2s, color .2s;#}
+{#        }#}
+{##}
+{#        .nav-link:hover, .dd.open > .nav-link { background: rgba(255,255,255,.11); color: #fff; }#}
+{#        .nav-link:focus-visible { outline: 2px solid var(--cyan); outline-offset: 1px; }#}
+{##}
+{#        .nav-link.active { color: #fff; background: rgba(92,208,238,.16); }#}
+{#        .nav-link.active::after {#}
+{#            content: "";#}
+{#            position: absolute;#}
+{#            left: 14px; right: 14px; bottom: -13px;#}
+{#            height: 3px;#}
+{#            border-radius: 3px 3px 0 0;#}
+{#            background: var(--cyan);#}
+{#        }#}
+{##}
+{#        .caret { width: 14px; height: 14px; transition: transform .2s; }#}
+{#        .dd.open .caret { transform: rotate(180deg); }#}
+{##}
+{#        .dd { position: relative; display: flex; align-items: center; }#}
+{##}
+{#        .dd-panel {#}
+{#            position: absolute;#}
+{#            top: calc(100% + 12px);#}
+{#            left: 0;#}
+{#            min-width: 240px;#}
+{#            padding: 8px;#}
+{#            background: #fff;#}
+{#            color: var(--text);#}
+{#            border: 1px solid var(--border);#}
+{#            border-radius: 14px;#}
+{#            box-shadow: 0 22px 44px rgba(8,32,58,.22);#}
+{#            opacity: 0;#}
+{#            visibility: hidden;#}
+{#            transform: translateY(8px);#}
+{#            transition: opacity .18s, transform .18s, visibility .18s;#}
+{#        }#}
+{##}
+{#        .dd-panel::before { /* hover bridge */#}
+{#            content: "";#}
+{#            position: absolute;#}
+{#            left: 0; right: 0; top: -14px;#}
+{#            height: 14px;#}
+{#        }#}
+{##}
+{#        .dd.open > .dd-panel { opacity: 1; visibility: visible; transform: translateY(0); }#}
+{##}
+{#        @media (hover: hover) and (min-width: 961px) {#}
+{#            .dd:hover > .dd-panel { opacity: 1; visibility: visible; transform: translateY(0); }#}
+{#            .dd:hover > .nav-link { background: rgba(255,255,255,.11); color: #fff; }#}
+{#            .dd:hover .caret { transform: rotate(180deg); }#}
+{#        }#}
+{##}
+{#        .dd.right .dd-panel { left: auto; right: 0; }#}
+{##}
+{#        .dd-panel a {#}
+{#            display: flex;#}
+{#            align-items: center;#}
+{#            gap: 12px;#}
+{#            padding: 10px 12px;#}
+{#            border-radius: 9px;#}
+{#            font-size: .92rem;#}
+{#            font-weight: 600;#}
+{#            color: var(--heading);#}
+{#            transition: background .15s, color .15s, padding .15s;#}
+{#        }#}
+{##}
+{#        .dd-panel a svg { width: 18px; height: 18px; flex: none; color: var(--teal); transition: color .15s; }#}
+{##}
+{#        .dd-panel a:hover { background: var(--tile); color: var(--teal-dark); padding-left: 16px; }#}
+{#        .dd-panel a:focus-visible { outline: 2px solid var(--teal); outline-offset: -2px; }#}
+{#        .dd-panel a.active { background: var(--tile); color: var(--teal-dark); }#}
+{##}
+{#        .dd-panel a.logout { color: var(--danger); }#}
+{#        .dd-panel a.logout svg { color: var(--danger); }#}
+{#        .dd-panel a.logout:hover { background: var(--danger-bg); color: var(--danger); }#}
+{##}
+{#        .dd-sep { height: 1px; margin: 6px 4px; background: var(--border); }#}
+{##}
+{#        .user { margin-left: auto; }#}
+{##}
+{#        .avatar {#}
+{#            width: 30px; height: 30px;#}
+{#            display: grid;#}
+{#            place-items: center;#}
+{#            border-radius: 50%;#}
+{#            background: var(--cyan);#}
+{#            color: var(--bg-deep);#}
+{#            font-size: .82rem;#}
+{#            font-weight: 800;#}
+{#        }#}
+{##}
+{#        .burger {#}
+{#            display: none;#}
+{#            margin-left: auto;#}
+{#            width: 44px; height: 44px;#}
+{#            place-items: center;#}
+{#            border: 0;#}
+{#            border-radius: 11px;#}
+{#            background: rgba(255,255,255,.1);#}
+{#            color: #fff;#}
+{#            cursor: pointer;#}
+{#        }#}
+{#        .burger:hover { background: rgba(255,255,255,.18); }#}
+{#        .burger:focus-visible { outline: 2px solid var(--cyan); }#}
+{#        .burger svg { width: 22px; height: 22px; }#}
+{##}
+{#        /* ================= PAGE ================= */#}
+{#        .container { max-width: 1280px; margin: 0 auto; padding: 36px clamp(16px, 3vw, 36px) 56px; }#}
+{##}
+{#        .page-head {#}
+{#            display: flex;#}
+{#            align-items: flex-end;#}
+{#            justify-content: space-between;#}
+{#            gap: 16px;#}
+{#            flex-wrap: wrap;#}
+{#            margin-bottom: 24px;#}
+{#        }#}
+{#        .page-head h1 { margin: 0 0 4px; font-size: 1.8rem; font-weight: 800; letter-spacing: -0.03em; color: var(--heading); }#}
+{#        .page-head p { margin: 0; color: var(--muted); }#}
+{##}
+{#        /* Reusable components for the other admin pages */#}
+{#        .btn {#}
+{#            display: inline-flex;#}
+{#            align-items: center;#}
+{#            justify-content: center;#}
+{#            gap: 8px;#}
+{#            height: 46px;#}
+{#            padding: 0 22px;#}
+{#            font: inherit;#}
+{#            font-size: .95rem;#}
+{#            font-weight: 700;#}
+{#            border-radius: 11px;#}
+{#            border: 1.5px solid transparent;#}
+{#            cursor: pointer;#}
+{#            transition: background .2s, transform .15s, box-shadow .2s, border-color .2s;#}
+{#        }#}
+{#        .btn:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }#}
+{#        .btn-primary { background: var(--teal); color: #fff; box-shadow: 0 8px 16px rgba(11,132,168,.25); }#}
+{#        .btn-primary:hover { background: var(--teal-dark); transform: translateY(-2px); box-shadow: 0 12px 22px rgba(11,132,168,.32); }#}
+{#        .btn-ghost { background: #fff; color: var(--heading); border-color: var(--border); }#}
+{#        .btn-ghost:hover { background: var(--canvas); border-color: #b8cde0; }#}
+{#        .btn-danger { background: var(--danger); color: #fff; }#}
+{#        .btn-danger:hover { background: #a11f17; transform: translateY(-2px); }#}
+{##}
+{#        .panel { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 24px; }#}
+{##}
+{#        .table-wrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; }#}
+{#        table.data { width: 100%; border-collapse: collapse; font-size: .92rem; }#}
+{#        table.data th { text-align: left; padding: 14px 18px; font-weight: 700; color: var(--heading); background: #f6f9fd; border-bottom: 1px solid var(--border); white-space: nowrap; }#}
+{#        table.data td { padding: 14px 18px; border-bottom: 1px solid #edf2f8; color: var(--text); }#}
+{#        table.data tbody tr { transition: background .15s; }#}
+{#        table.data tbody tr:hover { background: #f4f9fd; }#}
+{#        table.data tbody tr:last-child td { border-bottom: 0; }#}
+{##}
+{#        .field { margin-bottom: 18px; }#}
+{#        .field label { display: block; margin-bottom: 8px; font-size: .88rem; font-weight: 700; color: var(--heading); }#}
+{#        .field input, .field select, .field textarea {#}
+{#            width: 100%;#}
+{#            padding: 0 16px;#}
+{#            height: 52px;#}
+{#            font: inherit;#}
+{#            color: var(--text);#}
+{#            background: var(--field);#}
+{#            border: 1.5px solid var(--field-line);#}
+{#            border-radius: 12px;#}
+{#            transition: border-color .2s, box-shadow .2s, background .2s;#}
+{#        }#}
+{#        .field textarea { height: auto; min-height: 110px; padding: 14px 16px; }#}
+{#        .field input:hover, .field select:hover, .field textarea:hover { border-color: #8fb4d2; }#}
+{#        .field input:focus, .field select:focus, .field textarea:focus {#}
+{#            outline: none; background: #fff; border-color: var(--teal); box-shadow: 0 0 0 4px rgba(11,132,168,.16);#}
+{#        }#}
+{#        .field .invalid { border-color: var(--danger); background: #fffafa; }#}
+{#        .field .hint { min-height: 1.2em; margin: 6px 0 0; font-size: .83rem; color: var(--danger); }#}
+{##}
+{#        /* Django messages */#}
+{#        .toasts { position: fixed; top: calc(var(--nav-h) + 16px); right: 16px; z-index: 200; display: grid; gap: 10px; width: min(92vw, 360px); }#}
+{#        .toast {#}
+{#            display: flex;#}
+{#            align-items: flex-start;#}
+{#            gap: 12px;#}
+{#            padding: 14px 16px;#}
+{#            background: #fff;#}
+{#            border: 1px solid var(--border);#}
+{#            border-left: 4px solid var(--teal);#}
+{#            border-radius: 12px;#}
+{#            box-shadow: 0 16px 34px rgba(8,32,58,.18);#}
+{#            font-size: .92rem;#}
+{#            line-height: 1.45;#}
+{#            animation: toast-in .3s ease both;#}
+{#        }#}
+{#        .toast.error { border-left-color: var(--danger); }#}
+{#        .toast.success { border-left-color: var(--ok); }#}
+{#        .toast button { margin-left: auto; border: 0; background: transparent; color: var(--muted); font-size: 1.2rem; line-height: 1; cursor: pointer; }#}
+{#        @keyframes toast-in { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }#}
+{##}
+{#        /* Logout dialog */#}
+{#        dialog { width: min(92vw, 400px); padding: 28px; border: 0; border-radius: 18px; color: var(--text); box-shadow: 0 30px 70px rgba(8,32,58,.35); }#}
+{#        dialog::backdrop { background: rgba(6,19,40,.55); backdrop-filter: blur(2px); }#}
+{#        dialog h2 { margin: 0 0 8px; font-size: 1.3rem; font-weight: 800; color: var(--heading); }#}
+{#        dialog p { margin: 0 0 24px; color: var(--muted); line-height: 1.55; }#}
+{#        .dialog-actions { display: flex; gap: 10px; justify-content: flex-end; }#}
+{##}
+{#        /* ================= MOBILE ================= */#}
+{#        @media (max-width: 960px) {#}
+{#            .burger { display: grid; }#}
+{##}
+{#            .nav-inner { gap: 12px; }#}
+{##}
+{#            .menu {#}
+{#                position: absolute;#}
+{#                top: var(--nav-h);#}
+{#                left: 0; right: 0;#}
+{#                flex-direction: column;#}
+{#                align-items: stretch;#}
+{#                gap: 2px;#}
+{#                height: auto;#}
+{#                max-height: calc(100vh - var(--nav-h));#}
+{#                overflow-y: auto;#}
+{#                padding: 12px 16px 20px;#}
+{#                background: var(--bg-deep);#}
+{#                border-top: 1px solid rgba(255,255,255,.1);#}
+{#                box-shadow: 0 24px 40px rgba(0,0,0,.3);#}
+{#                display: none;#}
+{#            }#}
+{#            .navbar.open .menu { display: flex; }#}
+{##}
+{#            .nav-link { height: 48px; width: 100%; justify-content: flex-start; }#}
+{#            .nav-link.active::after { display: none; }#}
+{#            .dd { flex-direction: column; align-items: stretch; }#}
+{#            .dd > .nav-link .caret { margin-left: auto; }#}
+{##}
+{#            .dd-panel {#}
+{#                position: static;#}
+{#                display: none;#}
+{#                min-width: 0;#}
+{#                margin: 2px 0 6px 12px;#}
+{#                padding: 4px;#}
+{#                background: rgba(255,255,255,.06);#}
+{#                border: 0;#}
+{#                border-left: 2px solid rgba(92,208,238,.4);#}
+{#                border-radius: 0 10px 10px 0;#}
+{#                box-shadow: none;#}
+{#                opacity: 1;#}
+{#                visibility: visible;#}
+{#                transform: none;#}
+{#            }#}
+{#            .dd-panel::before { display: none; }#}
+{#            .dd.open > .dd-panel { display: block; }#}
+{#            .dd-panel a { color: #d3e6f2; }#}
+{#            .dd-panel a svg { color: var(--cyan); }#}
+{#            .dd-panel a:hover, .dd-panel a.active { background: rgba(255,255,255,.1); color: #fff; padding-left: 12px; }#}
+{#            .dd-panel a.logout { color: #ffb4ac; }#}
+{#            .dd-panel a.logout svg { color: #ffb4ac; }#}
+{#            .dd-panel a.logout:hover { background: rgba(255,120,110,.16); color: #ffd7d2; }#}
+{#            .dd-sep { background: rgba(255,255,255,.12); }#}
+{#            .user { margin-left: 0; margin-top: 8px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,.12); }#}
+{#        }#}
+{##}
+{#        @media (prefers-reduced-motion: reduce) {#}
+{#            * { transition: none !important; animation: none !important; }#}
+{#        }#}
+{#    </style>#}
+{##}
+{#    <style>#}
+{#    .hero {#}
+{#        position: relative;#}
+{#        display: flex;#}
+{#        align-items: center;#}
+{#        justify-content: space-between;#}
+{#        gap: 24px;#}
+{#        padding: 34px 40px;#}
+{#        border-radius: 22px;#}
+{#        color: #fff;#}
+{#        overflow: hidden;#}
+{#        background:#}
+{#            radial-gradient(ellipse at 95% 0%, rgba(92,208,238,.30), transparent 55%),#}
+{#            linear-gradient(135deg, var(--bg-top), var(--bg-deep));#}
+{#        box-shadow: 0 18px 38px rgba(8,32,58,.22);#}
+{#    }#}
+{#    .hero::before {#}
+{#        content: "";#}
+{#        position: absolute;#}
+{#        inset: 0;#}
+{#        background-image: radial-gradient(rgba(255,255,255,.09) 1px, transparent 1px);#}
+{#        background-size: 24px 24px;#}
+{#        pointer-events: none;#}
+{#    }#}
+{#    .hero::after {#}
+{#        content: "";#}
+{#        position: absolute;#}
+{#        right: -70px; bottom: -90px;#}
+{#        width: 280px; height: 280px;#}
+{#        border-radius: 50%;#}
+{#        border: 2px dashed rgba(92,208,238,.35);#}
+{#        pointer-events: none;#}
+{#    }#}
+{#    .hero > * { position: relative; z-index: 1; }#}
+{#    .hero h1 { margin: 0 0 8px; font-size: clamp(1.7rem, 2.6vw, 2.3rem); font-weight: 800; letter-spacing: -0.03em; }#}
+{#    .hero p { margin: 0; color: #b9d3e3; line-height: 1.55; }#}
+{##}
+{#    .role-chip {#}
+{#        flex: none;#}
+{#        display: inline-flex;#}
+{#        align-items: center;#}
+{#        gap: 8px;#}
+{#        padding: 10px 18px;#}
+{#        border-radius: 999px;#}
+{#        background: rgba(255,255,255,.12);#}
+{#        border: 1px solid rgba(255,255,255,.22);#}
+{#        font-size: .9rem;#}
+{#        font-weight: 700;#}
+{#    }#}
+{#    .role-chip::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #34d399; }#}
+{##}
+{#    .section { margin-top: 38px; }#}
+{#    .section h2 { margin: 0 0 16px; font-size: 1.15rem; font-weight: 800; letter-spacing: -0.01em; color: var(--heading); }#}
+{##}
+{#    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }#}
+{##}
+{#    .card {#}
+{#        display: flex;#}
+{#        align-items: center;#}
+{#        gap: 16px;#}
+{#        padding: 20px;#}
+{#        background: var(--surface);#}
+{#        border: 1px solid var(--border);#}
+{#        border-radius: 16px;#}
+{#        transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;#}
+{#    }#}
+{#    .card .tile {#}
+{#        width: 48px; height: 48px;#}
+{#        flex: none;#}
+{#        display: grid;#}
+{#        place-items: center;#}
+{#        border-radius: 13px;#}
+{#        background: var(--tile);#}
+{#        color: var(--teal);#}
+{#        transition: background .2s, color .2s, transform .2s;#}
+{#    }#}
+{#    .card .tile svg { width: 23px; height: 23px; }#}
+{#    .card .text { min-width: 0; flex: 1; }#}
+{#    .card h3 { margin: 0 0 3px; font-size: 1rem; font-weight: 700; color: var(--heading); }#}
+{#    .card p { margin: 0; font-size: .84rem; line-height: 1.45; color: var(--muted); }#}
+{#    .card .go { width: 18px; height: 18px; flex: none; color: #9db1c3; transition: transform .2s, color .2s; }#}
+{##}
+{#    .card:hover { transform: translateY(-4px); border-color: var(--teal); box-shadow: 0 14px 28px rgba(11,84,120,.14); }#}
+{#    .card:hover .tile { background: var(--teal); color: #fff; transform: scale(1.06); }#}
+{#    .card:hover .go { color: var(--teal); transform: translateX(4px); }#}
+{#    .card:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }#}
+{##}
+{#    .footer { margin-top: 44px; font-size: .8rem; color: #8196a8; }#}
+{##}
+{#    @media (max-width: 700px) {#}
+{#        .hero { flex-direction: column; align-items: flex-start; padding: 26px 24px; }#}
+{#    }#}
+{#</style>#}
+{#</head>#}
+{#<body>#}
+{##}
+{#<header class="navbar" id="navbar">#}
+{#    <div class="nav-inner">#}
+{##}
+{#        <a class="brand" href="/myapp/adminhome_get/" aria-label="LabTrack admin home">#}
+{#            <span class="brand-mark">#}
+{#                <svg width="23" height="23" viewBox="0 0 24 24" fill="none" aria-hidden="true">#}
+{#                    <path d="M12 2.5l8 3v6c0 5-3.3 8.6-8 10-4.7-1.4-8-5-8-10v-6l8-3z" stroke="#08203a" stroke-width="1.9" stroke-linejoin="round"/>#}
+{#                    <path d="M10.5 8.5h3M11 8.5v3l-2 3.6a.9.9 0 0 0 .8 1.3h4.4a.9.9 0 0 0 .8-1.3l-2-3.6v-3" stroke="#08203a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>#}
+{#                </svg>#}
+{#            </span>#}
+{#            LabTrack#}
+{#        </a>#}
+{##}
+{#        <button type="button" class="burger" id="burger" aria-label="Open menu" aria-controls="menu" aria-expanded="false">#}
+{#            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>#}
+{#        </button>#}
+{##}
+{#        <nav class="menu" id="menu" aria-label="Main">#}
+{##}
+{#            <a class="nav-link" href="/myapp/adminhome_get/" data-match="adminhome">Home</a>#}
+{##}
+{#            <div class="dd">#}
+{#                <button type="button" class="nav-link dd-btn" aria-expanded="false" aria-haspopup="true">#}
+{#                    Management#}
+{#                    <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>#}
+{#                </button>#}
+{#                <div class="dd-panel">#}
+{#                    <a href="/myapp/view_dept/" data-match="dept,course,subject">#}
+{#                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6"/></svg>#}
+{#                        Manage Department#}
+{#                    </a>#}
+{#                    <a href="/myapp/view_student/" data-match="student">#}
+{#                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 9L12 4 2 9l10 5 10-5z"/><path d="M6 11.5V16c0 1.5 2.7 3 6 3s6-1.5 6-3v-4.5"/></svg>#}
+{#                        View Students#}
+{#                    </a>#}
+{#                    <a href="/myapp/view_staff/" data-match="staff">#}
+{#                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.5 3.3-5.5 6.5-5.5s5.7 2 6.5 5.5"/><circle cx="17.5" cy="9" r="2.5"/><path d="M17 14.5c2.5.2 4.3 1.8 5 4.5"/></svg>#}
+{#                        Manage Staff#}
+{#                    </a>#}
+{#                    <a href="/myapp/view_lab_coordinator/" data-match="lab_coordinator">#}
+{#                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.2-4 4-6 8-6s6.8 2 8 6"/></svg>#}
+{#                        View Lab Coordinators#}
+{#                    </a>#}
+{#                    <a href="/myapp/view_lab/" data-match="view_lab/,add_lab_get,add_lab_post,edit_lab_get,edit_lab_post,delete_lab/,schedule,equipment">#}
+{#                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.8 3h10.4a2 2 0 0 0 1.8-3l-5-9V3"/><path d="M7.5 15h9"/></svg>#}
+{#                        Manage Labs#}
+{#                    </a>#}
+{#                </div>#}
+{#            </div>#}
+{##}
+{#            <a class="nav-link" href="/myapp/view_lab_submissions_admin/" data-match="lab_submissions">Lab Submissions</a>#}
+{##}
+{#            <a class="nav-link" href="/myapp/admin_reports/" data-match="admin_reports">Reports</a>#}
+{##}
+{#            <div class="dd">#}
+{#                <button type="button" class="nav-link dd-btn" aria-expanded="false" aria-haspopup="true">#}
+{#                    Complaints &amp; Reviews#}
+{#                    <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>#}
+{#                </button>#}
+{#                <div class="dd-panel">#}
+{#                    <a href="/myapp/view_complaints_admin/" data-match="complaint">#}
+{#                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9.5 17h-19L12 3z"/><path d="M12 10v4M12 17.5v.01"/></svg>#}
+{#                        View Complaints#}
+{#                    </a>#}
+{#                    <a href="/myapp/view_feedback_admin/" data-match="feedback">#}
+{#                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/><path d="M8.5 12h7"/></svg>#}
+{#                        View Feedback#}
+{#                    </a>#}
+{#                </div>#}
+{#            </div>#}
+{##}
+{#            <div class="dd right user">#}
+{#                <button type="button" class="nav-link dd-btn" aria-expanded="false" aria-haspopup="true">#}
+{#                    <span class="avatar" aria-hidden="true">A</span>#}
+{#                    Admin#}
+{#                    <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>#}
+{#                </button>#}
+{#                <div class="dd-panel">#}
+{#                    <a href="/myapp/change_password_get/" data-match="change_password">#}
+{#                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>#}
+{#                        Change Password#}
+{#                    </a>#}
+{#                    <div class="dd-sep"></div>#}
+{#                    <a href="/myapp/logout_get/" class="logout" id="logoutLink">#}
+{#                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>#}
+{#                        Logout#}
+{#                    </a>#}
+{#                </div>#}
+{#            </div>#}
+{##}
+{#        </nav>#}
+{#    </div>#}
+{#</header>#}
+{##}
+{#{% if messages %}#}
+{#<div class="toasts" role="status" aria-live="polite">#}
+{#    {% for message in messages %}#}
+{#    <div class="toast {{ message.tags }}">#}
+{#        <span>{{ message }}</span>#}
+{#        <button type="button" aria-label="Dismiss" data-dismiss>&times;</button>#}
+{#    </div>#}
+{#    {% endfor %}#}
+{#</div>#}
+{#{% endif %}#}
+{##}
+{#<main class="container">#}
+{#    <header class="hero">#}
+{#    <div>#}
+{#        <h1>Admin Home</h1>#}
+{#        <p>Welcome to LabTrack Admin Panel</p>#}
+{#    </div>#}
+{#    <span class="role-chip">Administrator</span>#}
+{#</header>#}
+{##}
+{#<section class="section" aria-labelledby="h-management">#}
+{#    <h2 id="h-management">Management</h2>#}
+{#    <div class="grid">#}
+{#        <a class="card" href="/myapp/view_dept/">#}
+{#            <span class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6"/></svg></span>#}
+{#            <span class="text"><h3>Manage Department</h3><p>Departments, courses and subjects.</p></span>#}
+{#            <svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>#}
+{#        </a>#}
+{#        <a class="card" href="/myapp/view_student/">#}
+{#            <span class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 9L12 4 2 9l10 5 10-5z"/><path d="M6 11.5V16c0 1.5 2.7 3 6 3s6-1.5 6-3v-4.5"/></svg></span>#}
+{#            <span class="text"><h3>View Students</h3><p>Browse student accounts.</p></span>#}
+{#            <svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>#}
+{#        </a>#}
+{#        <a class="card" href="/myapp/view_staff/">#}
+{#            <span class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.5 3.3-5.5 6.5-5.5s5.7 2 6.5 5.5"/><circle cx="17.5" cy="9" r="2.5"/><path d="M17 14.5c2.5.2 4.3 1.8 5 4.5"/></svg></span>#}
+{#            <span class="text"><h3>Manage Staff</h3><p>Add and update staff members.</p></span>#}
+{#            <svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>#}
+{#        </a>#}
+{#        <a class="card" href="/myapp/view_lab_coordinator/">#}
+{#            <span class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.2-4 4-6 8-6s6.8 2 8 6"/></svg></span>#}
+{#            <span class="text"><h3>View Lab Coordinators</h3><p>See who runs each lab.</p></span>#}
+{#            <svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>#}
+{#        </a>#}
+{#        <a class="card" href="/myapp/view_lab/">#}
+{#            <span class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.8 3h10.4a2 2 0 0 0 1.8-3l-5-9V3"/><path d="M7.5 15h9"/></svg></span>#}
+{#            <span class="text"><h3>Manage Labs</h3><p>Labs, schedules and equipment.</p></span>#}
+{#            <svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>#}
+{#        </a>#}
+{#    </div>#}
+{#</section>#}
+{##}
+{#<section class="section" aria-labelledby="h-labwork">#}
+{#    <h2 id="h-labwork">Lab Work</h2>#}
+{#    <div class="grid">#}
+{#        <a class="card" href="/myapp/view_lab_submissions_admin/">#}
+{#            <span class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></span>#}
+{#            <span class="text"><h3>View Lab Submissions</h3><p>Review student lab work.</p></span>#}
+{#            <svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>#}
+{#        </a>#}
+{#    </div>#}
+{#</section>#}
+{##}
+{#<section class="section" aria-labelledby="h-reports">#}
+{#    <h2 id="h-reports">Reports</h2>#}
+{#    <div class="grid">#}
+{#        <a class="card" href="/myapp/admin_reports/">#}
+{#            <span class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></svg></span>#}
+{#            <span class="text"><h3>View Reports</h3><p>Submissions, fines and equipment status.</p></span>#}
+{#            <svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>#}
+{#        </a>#}
+{#    </div>#}
+{#</section>#}
+{##}
+{#<section class="section" aria-labelledby="h-complaints">#}
+{#    <h2 id="h-complaints">Complaints &amp; Reviews</h2>#}
+{#    <div class="grid">#}
+{#        <a class="card" href="/myapp/view_complaints_admin/">#}
+{#            <span class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9.5 17h-19L12 3z"/><path d="M12 10v4M12 17.5v.01"/></svg></span>#}
+{#            <span class="text"><h3>View Complaints</h3><p>Read and reply to complaints.</p></span>#}
+{#            <svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>#}
+{#        </a>#}
+{#        <a class="card" href="/myapp/view_feedback_admin/">#}
+{#            <span class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/><path d="M8.5 12h7"/></svg></span>#}
+{#            <span class="text"><h3>View Feedback</h3><p>See what students are saying.</p></span>#}
+{#            <svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>#}
+{#        </a>#}
+{#    </div>#}
+{#</section>#}
+{##}
+{#<p class="footer">&copy; LabTrack</p>#}
+{#</main>#}
+{##}
+{#<!-- Logout confirmation -->#}
+{#<dialog id="logoutDialog" aria-labelledby="logoutTitle">#}
+{#    <h2 id="logoutTitle">Log out of LabTrack?</h2>#}
+{#    <p>You will need to sign in again to use the admin panel.</p>#}
+{#    <div class="dialog-actions">#}
+{#        <button type="button" class="btn btn-ghost" id="cancelLogout">Stay signed in</button>#}
+{#        <button type="button" class="btn btn-primary" id="confirmLogout">Log out</button>#}
+{#    </div>#}
+{#</dialog>#}
+{##}
+{#<script>#}
+{#(function () {#}
+{#    var navbar = document.getElementById('navbar');#}
+{#    var burger = document.getElementById('burger');#}
+{#    var dds = Array.prototype.slice.call(document.querySelectorAll('.dd'));#}
+{##}
+{#    function closeAll(except) {#}
+{#        dds.forEach(function (d) {#}
+{#            if (d !== except) {#}
+{#                d.classList.remove('open');#}
+{#                d.querySelector('.dd-btn').setAttribute('aria-expanded', 'false');#}
+{#            }#}
+{#        });#}
+{#    }#}
+{##}
+{#    // Dropdowns: click / keyboard toggle#}
+{#    dds.forEach(function (d) {#}
+{#        var btn = d.querySelector('.dd-btn');#}
+{#        btn.addEventListener('click', function (e) {#}
+{#            e.stopPropagation();#}
+{#            var open = !d.classList.contains('open');#}
+{#            closeAll(d);#}
+{#            d.classList.toggle('open', open);#}
+{#            btn.setAttribute('aria-expanded', open ? 'true' : 'false');#}
+{#        });#}
+{#    });#}
+{##}
+{#    document.addEventListener('click', function (e) {#}
+{#        if (!e.target.closest('.dd')) closeAll();#}
+{#    });#}
+{##}
+{#    document.addEventListener('keydown', function (e) {#}
+{#        if (e.key === 'Escape') {#}
+{#            closeAll();#}
+{#            navbar.classList.remove('open');#}
+{#            burger.setAttribute('aria-expanded', 'false');#}
+{#        }#}
+{#    });#}
+{##}
+{#    // Mobile menu#}
+{#    burger.addEventListener('click', function () {#}
+{#        var open = !navbar.classList.contains('open');#}
+{#        navbar.classList.toggle('open', open);#}
+{#        burger.setAttribute('aria-expanded', open ? 'true' : 'false');#}
+{#        burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');#}
+{#    });#}
+{##}
+{#    // Mark the current page in the navbar#}
+{#    var path = window.location.pathname;#}
+{#    var links = document.querySelectorAll('.menu a[data-match]');#}
+{#    var matched = false;#}
+{#    Array.prototype.forEach.call(links, function (a) {#}
+{#        if (matched) return;#}
+{#        var tokens = a.getAttribute('data-match').split(',');#}
+{#        var hit = tokens.some(function (t) { return path.indexOf(t) !== -1; });#}
+{#        if (hit) {#}
+{#            matched = true;#}
+{#            a.classList.add('active');#}
+{#            a.setAttribute('aria-current', 'page');#}
+{#            var parent = a.closest('.dd');#}
+{#            if (parent) parent.querySelector('.dd-btn').classList.add('active');#}
+{#        }#}
+{#    });#}
+{##}
+{#    // Dismissible messages (auto-hide after 6s)#}
+{#    var toasts = document.querySelectorAll('.toast');#}
+{#    Array.prototype.forEach.call(toasts, function (t) {#}
+{#        var remove = function () { if (t.parentNode) t.parentNode.removeChild(t); };#}
+{#        t.querySelector('[data-dismiss]').addEventListener('click', remove);#}
+{#        setTimeout(remove, 6000);#}
+{#    });#}
+{##}
+{#    // Logout confirmation#}
+{#    var link = document.getElementById('logoutLink');#}
+{#    var dlg = document.getElementById('logoutDialog');#}
+{#    var cancel = document.getElementById('cancelLogout');#}
+{#    var confirmBtn = document.getElementById('confirmLogout');#}
+{##}
+{#    link.addEventListener('click', function (e) {#}
+{#        if (typeof dlg.showModal !== 'function') return;#}
+{#        e.preventDefault();#}
+{#        closeAll();#}
+{#        navbar.classList.remove('open');#}
+{#        dlg.showModal();#}
+{#        cancel.focus();#}
+{#    });#}
+{#    cancel.addEventListener('click', function () { dlg.close(); });#}
+{#    confirmBtn.addEventListener('click', function () { window.location.href = link.getAttribute('href'); });#}
+{#    dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });#}
+{#{)();#}
+{#</script>#}
+{##}
+{##}
+{#</body>#}
+{#</html>#}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Admin Home - LabTrack</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-top: #164a63;
+            --bg-mid: #0d3048;
+            --bg-deep: #08203a;
+            --cyan: #5cd0ee;
+            --teal: #0b84a8;
+            --teal-dark: #086a89;
+            --heading: #0d2b3e;
+            --text: #14283a;
+            --muted: #5d7183;
+            --surface: #ffffff;
+            --canvas: #f1f6fb;
+            --border: #dae6f1;
+            --tile: #e2f4fa;
+            --danger: #c0291f;
+            --danger-bg: #fdeceb;
+            --ok: #1c7c54;
+            --gold: #fbbf24;
+            --nav-h: 68px;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+            color: var(--text);
+            background:
+                radial-gradient(900px 420px at 100% 0%, rgba(92,208,238,.14), transparent 60%),
+                radial-gradient(700px 380px at 0% 40%, rgba(11,132,168,.07), transparent 60%),
+                var(--canvas);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a { color: inherit; text-decoration: none; }
+
+        /* ================= NAVBAR ================= */
+        .navbar {
+            position: sticky; top: 0; z-index: 100; color: #fff;
+            background:
+                radial-gradient(ellipse at 90% -40%, rgba(92,208,238,.28), transparent 55%),
+                linear-gradient(100deg, var(--bg-top) 0%, var(--bg-mid) 45%, var(--bg-deep) 100%);
+            box-shadow: 0 6px 20px rgba(8,32,58,.25);
+        }
+        .nav-inner {
+            max-width: 1280px; height: var(--nav-h); margin: 0 auto;
+            padding: 0 clamp(16px, 3vw, 36px);
+            display: flex; align-items: center; gap: 28px;
+        }
+        .brand { display: flex; align-items: center; gap: 12px; font-size: 1.3rem; font-weight: 800; letter-spacing: -0.02em; color: #fff; flex: none; }
+        .brand-mark { width: 40px; height: 40px; display: grid; place-items: center; border-radius: 11px; background: var(--cyan); transition: transform .25s ease; }
+        .brand:hover .brand-mark { transform: rotate(-8deg) scale(1.06); }
+
+        .menu { flex: 1; display: flex; align-items: center; gap: 4px; height: 100%; }
+        .nav-link {
+            position: relative; display: inline-flex; align-items: center; gap: 7px;
+            height: 42px; padding: 0 14px; font: inherit; font-size: .92rem; font-weight: 600;
+            color: #cfe3ef; background: transparent; border: 0; border-radius: 10px;
+            cursor: pointer; white-space: nowrap; transition: background .2s, color .2s;
+        }
+        .nav-link:hover, .dd.open > .nav-link { background: rgba(255,255,255,.11); color: #fff; }
+        .nav-link:focus-visible { outline: 2px solid var(--cyan); outline-offset: 1px; }
+        .nav-link.active { color: #fff; background: rgba(92,208,238,.16); }
+        .nav-link.active::after { content: ""; position: absolute; left: 14px; right: 14px; bottom: -13px; height: 3px; border-radius: 3px 3px 0 0; background: var(--cyan); }
+
+        .caret { width: 14px; height: 14px; transition: transform .2s; }
+        .dd.open .caret { transform: rotate(180deg); }
+        .dd { position: relative; display: flex; align-items: center; }
+
+        .dd-panel {
+            position: absolute; top: calc(100% + 12px); left: 0; min-width: 240px; padding: 8px;
+            background: #fff; color: var(--text); border: 1px solid var(--border); border-radius: 14px;
+            box-shadow: 0 22px 44px rgba(8,32,58,.22);
+            opacity: 0; visibility: hidden; transform: translateY(8px);
+            transition: opacity .18s, transform .18s, visibility .18s;
+        }
+        .dd-panel::before { content: ""; position: absolute; left: 0; right: 0; top: -14px; height: 14px; }
+        .dd.open > .dd-panel { opacity: 1; visibility: visible; transform: translateY(0); }
+
+        @media (hover: hover) and (min-width: 961px) {
+            .dd:hover > .dd-panel { opacity: 1; visibility: visible; transform: translateY(0); }
+            .dd:hover > .nav-link { background: rgba(255,255,255,.11); color: #fff; }
+            .dd:hover .caret { transform: rotate(180deg); }
+        }
+
+        .dd.right .dd-panel { left: auto; right: 0; }
+        .dd-panel a { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 9px; font-size: .92rem; font-weight: 600; color: var(--heading); transition: background .15s, color .15s, padding .15s; }
+        .dd-panel a svg { width: 18px; height: 18px; flex: none; color: var(--teal); }
+        .dd-panel a:hover { background: var(--tile); color: var(--teal-dark); padding-left: 16px; }
+        .dd-panel a:focus-visible { outline: 2px solid var(--teal); outline-offset: -2px; }
+        .dd-panel a.active { background: var(--tile); color: var(--teal-dark); }
+        .dd-panel a.logout { color: var(--danger); }
+        .dd-panel a.logout svg { color: var(--danger); }
+        .dd-panel a.logout:hover { background: var(--danger-bg); color: var(--danger); }
+        .dd-sep { height: 1px; margin: 6px 4px; background: var(--border); }
+
+        .user { margin-left: auto; }
+        .avatar { width: 30px; height: 30px; display: grid; place-items: center; border-radius: 50%; background: var(--cyan); color: var(--bg-deep); font-size: .82rem; font-weight: 800; }
+
+        .burger { display: none; margin-left: auto; width: 44px; height: 44px; place-items: center; border: 0; border-radius: 11px; background: rgba(255,255,255,.1); color: #fff; cursor: pointer; }
+        .burger:hover { background: rgba(255,255,255,.18); }
+        .burger:focus-visible { outline: 2px solid var(--cyan); }
+        .burger svg { width: 22px; height: 22px; }
+
+        /* ================= PAGE ================= */
+        .container { max-width: 1280px; margin: 0 auto; padding: 32px clamp(16px, 3vw, 36px) 56px; }
+
+        .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 46px; padding: 0 22px; font: inherit; font-size: .95rem; font-weight: 700; border-radius: 11px; border: 1.5px solid transparent; cursor: pointer; transition: background .2s, transform .15s, box-shadow .2s, border-color .2s; }
+        .btn:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+        .btn-primary { background: var(--teal); color: #fff; box-shadow: 0 8px 16px rgba(11,132,168,.25); }
+        .btn-primary:hover { background: var(--teal-dark); transform: translateY(-2px); box-shadow: 0 12px 22px rgba(11,132,168,.32); }
+        .btn-ghost { background: #fff; color: var(--heading); border-color: var(--border); }
+        .btn-ghost:hover { background: var(--canvas); border-color: #b8cde0; }
+
+        .toasts { position: fixed; top: calc(var(--nav-h) + 16px); right: 16px; z-index: 200; display: grid; gap: 10px; width: min(92vw, 360px); }
+        .toast { display: flex; align-items: flex-start; gap: 12px; padding: 14px 16px; background: #fff; border: 1px solid var(--border); border-left: 4px solid var(--teal); border-radius: 12px; box-shadow: 0 16px 34px rgba(8,32,58,.18); font-size: .92rem; line-height: 1.45; animation: toast-in .3s ease both; }
+        .toast.error { border-left-color: var(--danger); }
+        .toast.success { border-left-color: var(--ok); }
+        .toast button { margin-left: auto; border: 0; background: transparent; color: var(--muted); font-size: 1.2rem; line-height: 1; cursor: pointer; }
+        @keyframes toast-in { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+
+        dialog { width: min(92vw, 400px); padding: 28px; border: 0; border-radius: 18px; color: var(--text); box-shadow: 0 30px 70px rgba(8,32,58,.35); }
+        dialog::backdrop { background: rgba(6,19,40,.55); backdrop-filter: blur(2px); }
+        dialog h2 { margin: 0 0 8px; font-size: 1.3rem; font-weight: 800; color: var(--heading); }
+        dialog p { margin: 0 0 24px; color: var(--muted); line-height: 1.55; }
+        .dialog-actions { display: flex; gap: 10px; justify-content: flex-end; }
+
+        /* ================= HERO ================= */
+        .hero {
+            position: relative; display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, .8fr);
+            align-items: center; gap: 24px; padding: 40px 44px; border-radius: 26px; color: #fff; overflow: hidden;
+            background:
+                radial-gradient(ellipse at 90% 0%, rgba(92,208,238,.34), transparent 55%),
+                linear-gradient(135deg, var(--bg-top), var(--bg-deep));
+            box-shadow: 0 22px 44px rgba(8,32,58,.24);
+        }
+        .hero::before { content: ""; position: absolute; inset: 0; background-image: radial-gradient(rgba(255,255,255,.09) 1px, transparent 1px); background-size: 24px 24px; pointer-events: none; }
+        .hero > * { position: relative; z-index: 1; }
+
+        .hero-badges { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 18px; }
+        .chip { display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 999px; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.22); font-size: .82rem; font-weight: 700; }
+        .chip.live::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #34d399; box-shadow: 0 0 0 0 rgba(52,211,153,.6); animation: pulse 2s infinite; }
+        @keyframes pulse { 70% { box-shadow: 0 0 0 9px rgba(52,211,153,0); } 100% { box-shadow: 0 0 0 0 rgba(52,211,153,0); } }
+
+        .hero h1 { margin: 0 0 10px; font-size: clamp(1.8rem, 3vw, 2.6rem); font-weight: 800; letter-spacing: -0.03em; line-height: 1.12; }
+        .hero h1 span { color: var(--cyan); }
+        .hero p { margin: 0 0 24px; max-width: 520px; color: #b9d3e3; line-height: 1.65; }
+        .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+        .hero .btn-light { background: #fff; color: var(--bg-deep); }
+        .hero .btn-light:hover { transform: translateY(-2px); box-shadow: 0 12px 24px rgba(0,0,0,.25); }
+        .hero .btn-line { background: rgba(255,255,255,.08); color: #fff; border-color: rgba(255,255,255,.3); }
+        .hero .btn-line:hover { background: rgba(255,255,255,.18); transform: translateY(-2px); }
+
+        .hero-art { position: relative; min-height: 250px; display: grid; place-items: center; }
+        .orbit { position: absolute; width: 270px; height: 270px; border-radius: 50%; border: 2px dashed rgba(92,208,238,.4); animation: spin 40s linear infinite; }
+        .orbit.o2 { width: 190px; height: 190px; animation-direction: reverse; animation-duration: 28s; border-color: rgba(255,255,255,.25); }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .core { position: relative; width: 120px; height: 120px; display: grid; place-items: center; border-radius: 30px; background: linear-gradient(145deg, var(--cyan), var(--teal)); box-shadow: 0 20px 40px rgba(0,0,0,.3); transform: rotate(-6deg); transition: transform .4s; }
+        .hero-art:hover .core { transform: rotate(0) scale(1.06); }
+        .core svg { width: 62px; height: 62px; }
+        .float { position: absolute; width: 56px; height: 56px; display: grid; place-items: center; border-radius: 16px; background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.28); backdrop-filter: blur(4px); animation: bob 5s ease-in-out infinite; }
+        .float svg { width: 26px; height: 26px; color: #fff; }
+        .f1 { top: 6px; left: 12%; }
+        .f2 { top: 22px; right: 10%; animation-delay: -1.5s; }
+        .f3 { bottom: 8px; left: 18%; animation-delay: -3s; }
+        .f4 { bottom: 26px; right: 14%; animation-delay: -2.2s; }
+        @keyframes bob { 50% { transform: translateY(-10px); } }
+
+        /* ================= STATS ================= */
+        .stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin-top: -34px; padding: 0 clamp(12px, 2.5vw, 32px); position: relative; z-index: 2; }
+        .stat { display: flex; align-items: center; gap: 14px; padding: 18px 20px; background: var(--surface); border: 1px solid var(--border); border-radius: 18px; box-shadow: 0 14px 30px rgba(8,32,58,.1); transition: transform .25s, box-shadow .25s, border-color .25s; }
+        .stat:hover { transform: translateY(-5px); border-color: var(--teal); box-shadow: 0 20px 36px rgba(11,84,120,.18); }
+        .stat .ic { width: 48px; height: 48px; flex: none; display: grid; place-items: center; border-radius: 14px; color: #fff; transition: transform .3s; }
+        .stat:hover .ic { transform: rotate(-8deg) scale(1.08); }
+        .stat .ic svg { width: 24px; height: 24px; }
+        .stat b { display: block; font-size: 1.55rem; font-weight: 800; letter-spacing: -0.03em; color: var(--heading); line-height: 1.1; }
+        .stat span { font-size: .82rem; font-weight: 600; color: var(--muted); }
+        .g-blue { background: linear-gradient(135deg, #38bdf8, #0b84a8); }
+        .g-violet { background: linear-gradient(135deg, #a78bfa, #6d4fd6); }
+        .g-green { background: linear-gradient(135deg, #34d399, #1c7c54); }
+        .g-amber { background: linear-gradient(135deg, #fbbf24, #e08a0b); }
+        .g-rose { background: linear-gradient(135deg, #fb7185, #c0291f); }
+        .g-teal { background: linear-gradient(135deg, #2dd4bf, #0b7f86); }
+
+        /* ================= SECTIONS ================= */
+        .section { margin-top: 44px; }
+        .sec-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; margin-bottom: 18px; }
+        .sec-head h2 { margin: 0; font-size: 1.25rem; font-weight: 800; letter-spacing: -0.02em; color: var(--heading); }
+        .sec-head p { margin: 4px 0 0; font-size: .9rem; color: var(--muted); }
+        .sec-head .tag { padding: 6px 12px; border-radius: 999px; background: var(--tile); color: var(--teal-dark); font-size: .78rem; font-weight: 700; white-space: nowrap; }
+
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 18px; }
+
+        .card {
+            position: relative; display: flex; flex-direction: column; gap: 14px; padding: 22px;
+            background: var(--surface); border: 1px solid var(--border); border-radius: 20px; overflow: hidden;
+            transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+        }
+        .card::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 4px; background: linear-gradient(90deg, var(--cyan), var(--teal)); transform: scaleX(0); transform-origin: left; transition: transform .35s ease; }
+        .card::after { content: ""; position: absolute; top: 0; left: -60%; width: 40%; height: 100%; background: linear-gradient(100deg, transparent, rgba(92,208,238,.18), transparent); transform: skewX(-18deg); transition: left .6s ease; pointer-events: none; }
+        .card:hover { transform: translateY(-6px); border-color: var(--teal); box-shadow: 0 20px 38px rgba(11,84,120,.16); }
+        .card:hover::before { transform: scaleX(1); }
+        .card:hover::after { left: 130%; }
+        .card:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+
+        .card-top { display: flex; align-items: center; justify-content: space-between; }
+        .card .tile { width: 54px; height: 54px; display: grid; place-items: center; border-radius: 16px; color: #fff; box-shadow: 0 10px 18px rgba(8,32,58,.16); transition: transform .3s; }
+        .card:hover .tile { transform: rotate(-8deg) scale(1.1); }
+        .card .tile svg { width: 26px; height: 26px; }
+        .card .go { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 50%; background: var(--canvas); color: var(--muted); transition: background .2s, color .2s, transform .25s; }
+        .card .go svg { width: 16px; height: 16px; }
+        .card:hover .go { background: var(--teal); color: #fff; transform: translateX(4px); }
+        .card h3 { margin: 0; font-size: 1.08rem; font-weight: 800; letter-spacing: -0.01em; color: var(--heading); }
+        .card p { margin: 0; font-size: .88rem; line-height: 1.55; color: var(--muted); }
+        .card .meta { display: flex; flex-wrap: wrap; gap: 6px; margin-top: auto; }
+        .card .meta em { font-style: normal; padding: 4px 10px; border-radius: 999px; background: var(--canvas); border: 1px solid var(--border); font-size: .74rem; font-weight: 700; color: var(--teal-dark); }
+
+        /* ================= WORKFLOW ================= */
+        .flow { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 14px; counter-reset: step; }
+        .step { position: relative; padding: 22px 18px 20px; background: var(--surface); border: 1px solid var(--border); border-radius: 18px; text-align: center; transition: transform .25s, box-shadow .25s, border-color .25s; }
+        .step::after { content: ""; position: absolute; top: 44px; right: -15px; width: 16px; height: 2px; background: repeating-linear-gradient(90deg, var(--teal) 0 4px, transparent 4px 8px); }
+        .step:last-child::after { display: none; }
+        .step:hover { transform: translateY(-5px); border-color: var(--teal); box-shadow: 0 16px 30px rgba(11,84,120,.14); }
+        .step .num { position: absolute; top: 10px; left: 12px; font-size: .72rem; font-weight: 800; color: #9db1c3; }
+        .step .ic { width: 52px; height: 52px; margin: 0 auto 12px; display: grid; place-items: center; border-radius: 50%; background: var(--tile); color: var(--teal); transition: background .25s, color .25s, transform .3s; }
+        .step:hover .ic { background: var(--teal); color: #fff; transform: scale(1.1); }
+        .step .ic svg { width: 24px; height: 24px; }
+        .step h4 { margin: 0 0 4px; font-size: .95rem; font-weight: 800; color: var(--heading); }
+        .step p { margin: 0; font-size: .8rem; line-height: 1.45; color: var(--muted); }
+
+        /* ================= LOWER PANELS ================= */
+        .duo { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 18px; }
+        .panel { padding: 24px; background: var(--surface); border: 1px solid var(--border); border-radius: 20px; }
+        .panel h3 { margin: 0 0 4px; font-size: 1.1rem; font-weight: 800; color: var(--heading); }
+        .panel > p { margin: 0 0 18px; font-size: .88rem; color: var(--muted); }
+
+        .quick { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+        .quick a { display: flex; align-items: center; gap: 12px; padding: 14px; border-radius: 14px; background: var(--canvas); border: 1px solid transparent; font-size: .9rem; font-weight: 700; color: var(--heading); transition: background .2s, border-color .2s, transform .2s; }
+        .quick a svg { width: 38px; height: 38px; padding: 9px; flex: none; border-radius: 11px; background: #fff; color: var(--teal); transition: background .2s, color .2s; }
+        .quick a:hover { background: #fff; border-color: var(--teal); transform: translateX(4px); }
+        .quick a:hover svg { background: var(--teal); color: #fff; }
+        .quick a:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+
+        .tips { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+        .tips li { display: flex; gap: 12px; padding: 12px 14px; border-radius: 14px; background: var(--canvas); font-size: .88rem; line-height: 1.5; color: var(--text); transition: transform .2s, background .2s; }
+        .tips li:hover { transform: translateX(4px); background: var(--tile); }
+        .tips .dot { width: 30px; height: 30px; flex: none; display: grid; place-items: center; border-radius: 50%; color: #fff; font-size: .8rem; font-weight: 800; }
+        .tips b { display: block; color: var(--heading); }
+
+        .footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; margin-top: 48px; padding-top: 20px; border-top: 1px solid var(--border); font-size: .82rem; color: #8196a8; }
+
+        /* ================= RESPONSIVE ================= */
+        @media (max-width: 1100px) {
+            .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .flow { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+            .step:nth-child(3)::after { display: none; }
+            .duo { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 960px) {
+            .burger { display: grid; }
+            .nav-inner { gap: 12px; }
+            .menu {
+                position: absolute; top: var(--nav-h); left: 0; right: 0; flex-direction: column; align-items: stretch; gap: 2px;
+                height: auto; max-height: calc(100vh - var(--nav-h)); overflow-y: auto; padding: 12px 16px 20px;
+                background: var(--bg-deep); border-top: 1px solid rgba(255,255,255,.1); box-shadow: 0 24px 40px rgba(0,0,0,.3); display: none;
+            }
+            .navbar.open .menu { display: flex; }
+            .nav-link { height: 48px; width: 100%; justify-content: flex-start; }
+            .nav-link.active::after { display: none; }
+            .dd { flex-direction: column; align-items: stretch; }
+            .dd > .nav-link .caret { margin-left: auto; }
+            .dd-panel { position: static; display: none; min-width: 0; margin: 2px 0 6px 12px; padding: 4px; background: rgba(255,255,255,.06); border: 0; border-left: 2px solid rgba(92,208,238,.4); border-radius: 0 10px 10px 0; box-shadow: none; opacity: 1; visibility: visible; transform: none; }
+            .dd-panel::before { display: none; }
+            .dd.open > .dd-panel { display: block; }
+            .dd-panel a { color: #d3e6f2; }
+            .dd-panel a svg { color: var(--cyan); }
+            .dd-panel a:hover, .dd-panel a.active { background: rgba(255,255,255,.1); color: #fff; padding-left: 12px; }
+            .dd-panel a.logout { color: #ffb4ac; }
+            .dd-panel a.logout svg { color: #ffb4ac; }
+            .dd-panel a.logout:hover { background: rgba(255,120,110,.16); color: #ffd7d2; }
+            .dd-sep { background: rgba(255,255,255,.12); }
+            .user { margin-left: 0; margin-top: 8px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,.12); }
+
+            .hero { grid-template-columns: 1fr; padding: 30px 26px 26px; }
+            .hero-art { display: none; }
+        }
+
+        @media (max-width: 640px) {
+            .stats { grid-template-columns: 1fr; margin-top: 16px; padding: 0; }
+            .flow { grid-template-columns: 1fr; }
+            .step::after { display: none; }
+            .quick { grid-template-columns: 1fr; }
+            .grid { grid-template-columns: 1fr; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            * { transition: none !important; animation: none !important; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="navbar" id="navbar">
+    <div class="nav-inner">
+
+        <a class="brand" href="/myapp/adminhome_get/" aria-label="LabTrack admin home">
+            <span class="brand-mark">
+                <svg width="23" height="23" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M12 2.5l8 3v6c0 5-3.3 8.6-8 10-4.7-1.4-8-5-8-10v-6l8-3z" stroke="#08203a" stroke-width="1.9" stroke-linejoin="round"/>
+                    <path d="M10.5 8.5h3M11 8.5v3l-2 3.6a.9.9 0 0 0 .8 1.3h4.4a.9.9 0 0 0 .8-1.3l-2-3.6v-3" stroke="#08203a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </span>
+            LabTrack
+        </a>
+
+        <button type="button" class="burger" id="burger" aria-label="Open menu" aria-controls="menu" aria-expanded="false">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </button>
+
+        <nav class="menu" id="menu" aria-label="Main">
+
+            <a class="nav-link" href="/myapp/adminhome_get/" data-match="adminhome">Home</a>
+
+            <div class="dd">
+                <button type="button" class="nav-link dd-btn" aria-expanded="false" aria-haspopup="true">
+                    Management
+                    <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+                </button>
+                <div class="dd-panel">
+                    <a href="/myapp/view_dept/" data-match="dept,course,subject">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6"/></svg>
+                        Manage Department
+                    </a>
+                    <a href="/myapp/view_student/" data-match="student">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 9L12 4 2 9l10 5 10-5z"/><path d="M6 11.5V16c0 1.5 2.7 3 6 3s6-1.5 6-3v-4.5"/></svg>
+                        View Students
+                    </a>
+                    <a href="/myapp/view_staff/" data-match="staff">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.5 3.3-5.5 6.5-5.5s5.7 2 6.5 5.5"/><circle cx="17.5" cy="9" r="2.5"/><path d="M17 14.5c2.5.2 4.3 1.8 5 4.5"/></svg>
+                        Manage Staff
+                    </a>
+                    <a href="/myapp/view_lab_coordinator/" data-match="lab_coordinator">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.2-4 4-6 8-6s6.8 2 8 6"/></svg>
+                        View Lab Coordinators
+                    </a>
+                    <a href="/myapp/view_lab/" data-match="view_lab/,add_lab_get,add_lab_post,edit_lab_get,edit_lab_post,delete_lab/,schedule,equipment">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.8 3h10.4a2 2 0 0 0 1.8-3l-5-9V3"/><path d="M7.5 15h9"/></svg>
+                        Manage Labs
+                    </a>
+                </div>
+            </div>
+
+            <a class="nav-link" href="/myapp/view_lab_submissions_admin/" data-match="lab_submissions">Lab Submissions</a>
+
+            <a class="nav-link" href="/myapp/admin_reports/" data-match="admin_reports">Reports</a>
+
+            <div class="dd">
+                <button type="button" class="nav-link dd-btn" aria-expanded="false" aria-haspopup="true">
+                    Complaints &amp; Reviews
+                    <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+                </button>
+                <div class="dd-panel">
+                    <a href="/myapp/view_complaints_admin/" data-match="complaint">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9.5 17h-19L12 3z"/><path d="M12 10v4M12 17.5v.01"/></svg>
+                        View Complaints
+                    </a>
+                    <a href="/myapp/view_feedback_admin/" data-match="feedback">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/><path d="M8.5 12h7"/></svg>
+                        View Feedback
+                    </a>
+                </div>
+            </div>
+
+            <div class="dd right user">
+                <button type="button" class="nav-link dd-btn" aria-expanded="false" aria-haspopup="true">
+                    <span class="avatar" aria-hidden="true">A</span>
+                    Admin
+                    <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+                </button>
+                <div class="dd-panel">
+                    <a href="/myapp/change_password_get/" data-match="change_password">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+                        Change Password
+                    </a>
+                    <div class="dd-sep"></div>
+                    <a href="/myapp/logout_get/" class="logout" id="logoutLink">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+                        Logout
+                    </a>
+                </div>
+            </div>
+
+        </nav>
+    </div>
+</header>
+
+{% if messages %}
+<div class="toasts" role="status" aria-live="polite">
+    {% for message in messages %}
+    <div class="toast {{ message.tags }}">
+        <span>{{ message }}</span>
+        <button type="button" aria-label="Dismiss" data-dismiss>&times;</button>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<main class="container">
+
+    <!-- ============ HERO ============ -->
+    <header class="hero">
+        <div>
+            <div class="hero-badges">
+                <span class="chip live">Administrator</span>
+                <span class="chip" id="todayChip">Academic Year</span>
+            </div>
+            <h1><span id="greet">Welcome</span>, Admin 👋<br>to the LabTrack Control Room</h1>
+            <p>Manage departments, courses, subjects, labs and staff in one place. Track student lab submissions, equipment, fines and feedback across the whole college.</p>
+            <div class="hero-actions">
+                <a class="btn btn-light" href="/myapp/view_lab_submissions_admin/">Review Submissions</a>
+                <a class="btn btn-line" href="/myapp/admin_reports/">Open Reports</a>
+            </div>
+        </div>
+
+        <div class="hero-art" aria-hidden="true">
+            <span class="orbit"></span>
+            <span class="orbit o2"></span>
+            <div class="core">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#08203a" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.8 3h10.4a2 2 0 0 0 1.8-3l-5-9V3"/><path d="M7.5 15h9"/></svg>
+            </div>
+            <span class="float f1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 9L12 4 2 9l10 5 10-5z"/><path d="M6 11.5V16c0 1.5 2.7 3 6 3s6-1.5 6-3v-4.5"/></svg></span>
+            <span class="float f2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2V5z"/><path d="M8 7h7M8 11h5"/></svg></span>
+            <span class="float f3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg></span>
+            <span class="float f4"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></svg></span>
+        </div>
+    </header>
+
+    <!-- ============ STATS ============ -->
+    <!-- Optional: pass student_count, staff_count, lab_count, dept_count from your view. Shows "—" if not passed. -->
+{#    <section class="stats" aria-label="Overview">#}
+{#        <div class="stat">#}
+{#            <span class="ic g-blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M22 9L12 4 2 9l10 5 10-5z"/><path d="M6 11.5V16c0 1.5 2.7 3 6 3s6-1.5 6-3v-4.5"/></svg></span>#}
+{#            <div><b>{{ student_count|default:"—" }}</b><span>Students</span></div>#}
+{#        </div>#}
+{#        <div class="stat">#}
+{#            <span class="ic g-violet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.5 3.3-5.5 6.5-5.5s5.7 2 6.5 5.5"/><circle cx="17.5" cy="9" r="2.5"/><path d="M17 14.5c2.5.2 4.3 1.8 5 4.5"/></svg></span>#}
+{#            <div><b>{{ staff_count|default:"—" }}</b><span>Staff Members</span></div>#}
+{#        </div>#}
+{#        <div class="stat">#}
+{#            <span class="ic g-green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.8 3h10.4a2 2 0 0 0 1.8-3l-5-9V3"/></svg></span>#}
+{#            <div><b>{{ lab_count|default:"—" }}</b><span>Active Labs</span></div>#}
+{#        </div>#}
+{#        <div class="stat">#}
+{#            <span class="ic g-amber"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6"/></svg></span>#}
+{#            <div><b>{{ dept_count|default:"—" }}</b><span>Departments</span></div>#}
+{#        </div>#}
+{#    </section>#}
+
+    <!-- ============ MANAGEMENT ============ -->
+    <section class="section" aria-labelledby="h-management">
+        <div class="sec-head">
+            <div>
+                <h2 id="h-management">Academic Management</h2>
+                <p>Set up the college structure that every lab depends on.</p>
+            </div>
+{#            <span class="tag">5 modules</span>#}
+        </div>
+        <div class="grid">
+            <a class="card" href="/myapp/view_dept/">
+                <div class="card-top">
+                    <span class="tile g-amber"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6"/></svg></span>
+                    <span class="go"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></span>
+                </div>
+                <h3>Manage Department</h3>
+                <p>Create departments and organise the courses and subjects taught under each one.</p>
+                <div class="meta"><em>Departments</em><em>Courses</em><em>Subjects</em></div>
+            </a>
+            <a class="card" href="/myapp/view_student/">
+                <div class="card-top">
+                    <span class="tile g-blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 9L12 4 2 9l10 5 10-5z"/><path d="M6 11.5V16c0 1.5 2.7 3 6 3s6-1.5 6-3v-4.5"/></svg></span>
+                    <span class="go"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></span>
+                </div>
+                <h3>View Students</h3>
+                <p>Browse enrolled students with their department, course and semester details.</p>
+                <div class="meta"><em>Enrolment</em><em>Profiles</em></div>
+            </a>
+            <a class="card" href="/myapp/view_staff/">
+                <div class="card-top">
+                    <span class="tile g-violet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.5 3.3-5.5 6.5-5.5s5.7 2 6.5 5.5"/><circle cx="17.5" cy="9" r="2.5"/><path d="M17 14.5c2.5.2 4.3 1.8 5 4.5"/></svg></span>
+                    <span class="go"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></span>
+                </div>
+                <h3>Manage Staff</h3>
+                <p>Add faculty and staff, update their details and keep teaching assignments current.</p>
+                <div class="meta"><em>Faculty</em><em>Assignments</em></div>
+            </a>
+            <a class="card" href="/myapp/view_lab_coordinator/">
+                <div class="card-top">
+                    <span class="tile g-rose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.2-4 4-6 8-6s6.8 2 8 6"/></svg></span>
+                    <span class="go"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></span>
+                </div>
+                <h3>View Lab Coordinators</h3>
+                <p>See which coordinator is responsible for each lab and how to reach them.</p>
+                <div class="meta"><em>Coordinators</em><em>Lab in-charge</em></div>
+            </a>
+            <a class="card" href="/myapp/view_lab/">
+                <div class="card-top">
+                    <span class="tile g-green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.8 3h10.4a2 2 0 0 0 1.8-3l-5-9V3"/><path d="M7.5 15h9"/></svg></span>
+                    <span class="go"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></span>
+                </div>
+                <h3>Manage Labs</h3>
+                <p>Set up labs, weekly timetables and the equipment available in each one.</p>
+                <div class="meta"><em>Labs</em><em>Schedules</em><em>Equipment</em></div>
+            </a>
+        </div>
+    </section>
+
+    <!-- ============ LAB WORK + REPORTS + FEEDBACK ============ -->
+    <section class="section" aria-labelledby="h-labwork">
+        <div class="sec-head">
+            <div>
+                <h2 id="h-labwork">Lab Activity &amp; Insights</h2>
+                <p>Follow student work, monitor fines and listen to feedback.</p>
+            </div>
+            <span class="tile-spacer"></span>
+        </div>
+        <div class="grid">
+            <a class="card" href="/myapp/view_lab_submissions_admin/">
+                <div class="card-top">
+                    <span class="tile g-teal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></span>
+                    <span class="go"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></span>
+                </div>
+                <h3>View Lab Submissions</h3>
+                <p>Review record books, experiments and assignments submitted by students.</p>
+                <div class="meta"><em>Records</em><em>Experiments</em></div>
+            </a>
+            <a class="card" href="/myapp/admin_reports/">
+                <div class="card-top">
+                    <span class="tile g-blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></svg></span>
+                    <span class="go"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></span>
+                </div>
+                <h3>View Reports</h3>
+                <p>Submissions, fines and equipment status summarised for quick decisions.</p>
+                <div class="meta"><em>Submissions</em><em>Fines</em><em>Equipment</em></div>
+            </a>
+            <a class="card" href="/myapp/view_complaints_admin/">
+                <div class="card-top">
+                    <span class="tile g-amber"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9.5 17h-19L12 3z"/><path d="M12 10v4M12 17.5v.01"/></svg></span>
+                    <span class="go"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></span>
+                </div>
+                <h3>View Complaints</h3>
+                <p>Read issues raised by students and staff, and reply to resolve them.</p>
+                <div class="meta"><em>Issues</em><em>Replies</em></div>
+            </a>
+            <a class="card" href="/myapp/view_feedback_admin/">
+                <div class="card-top">
+                    <span class="tile g-violet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/><path d="M8.5 12h7"/></svg></span>
+                    <span class="go"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></span>
+                </div>
+                <h3>View Feedback</h3>
+                <p>See what students are saying about labs, faculty and facilities.</p>
+                <div class="meta"><em>Ratings</em><em>Comments</em></div>
+            </a>
+        </div>
+    </section>
+
+    <!-- ============ WORKFLOW ============ -->
+    <section class="section" aria-labelledby="h-flow">
+        <div class="sec-head">
+            <div>
+                <h2 id="h-flow">How LabTrack Works</h2>
+                <p>The lab lifecycle from setup to reporting.</p>
+            </div>
+        </div>
+        <div class="flow">
+            <div class="step">
+                <span class="num">01</span>
+                <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6"/></svg></span>
+                <h4>Set Up</h4><p>Departments, courses and subjects.</p>
+            </div>
+            <div class="step">
+                <span class="num">02</span>
+                <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.2-4 4-6 8-6s6.8 2 8 6"/></svg></span>
+                <h4>Assign</h4><p>Staff and lab coordinators.</p>
+            </div>
+            <div class="step">
+                <span class="num">03</span>
+                <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.8 3h10.4a2 2 0 0 0 1.8-3l-5-9V3"/></svg></span>
+                <h4>Run Labs</h4><p>Schedules and equipment.</p>
+            </div>
+            <div class="step">
+                <span class="num">04</span>
+                <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></span>
+                <h4>Submit</h4><p>Students upload lab work.</p>
+            </div>
+            <div class="step">
+                <span class="num">05</span>
+                <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></svg></span>
+                <h4>Review</h4><p>Reports, fines and feedback.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ QUICK ACTIONS + TIPS ============ -->
+    <section class="section duo">
+        <div class="panel">
+            <h3>Quick Actions</h3>
+            <p>Jump straight to the pages you use most.</p>
+            <div class="quick">
+                <a href="/myapp/view_lab/">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+                    Add or edit a lab
+                </a>
+                <a href="/myapp/view_dept/">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2V5z"/><path d="M8 7h7M8 11h5"/></svg>
+                    Add subjects &amp; courses
+                </a>
+                <a href="/myapp/view_staff/">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="8" r="4"/><path d="M3 21c1-4 3.5-6 7-6M18 14v6M15 17h6"/></svg>
+                    Add a staff member
+                </a>
+                <a href="/myapp/view_lab_submissions_admin/">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l4 4 10-10"/></svg>
+                    Check submissions
+                </a>
+                <a href="/myapp/admin_reports/">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></svg>
+                    Fines &amp; equipment report
+                </a>
+                <a href="/myapp/change_password_get/">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+                    Change password
+                </a>
+            </div>
+        </div>
+
+        <div class="panel">
+            <h3>Admin Checklist</h3>
+            <p>A few habits that keep the semester running smoothly.</p>
+            <ul class="tips">
+                <li><span class="dot g-blue">1</span><div><b>Update lab schedules</b>Review timetables before each new semester begins.</div></li>
+                <li><span class="dot g-amber">2</span><div><b>Resolve complaints</b>Reply to open complaints so students know they were heard.</div></li>
+                <li><span class="dot g-green">3</span><div><b>Check equipment status</b>Spot damaged or missing items from the reports page.</div></li>
+            </ul>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <span>&copy; LabTrack &middot; College Lab, Subject &amp; Management System</span>
+        <span>Admin Panel</span>
+    </footer>
+</main>
+
+<!-- Logout confirmation -->
+<dialog id="logoutDialog" aria-labelledby="logoutTitle">
+    <h2 id="logoutTitle">Log out of LabTrack?</h2>
+    <p>You will need to sign in again to use the admin panel.</p>
+    <div class="dialog-actions">
+        <button type="button" class="btn btn-ghost" id="cancelLogout">Stay signed in</button>
+        <button type="button" class="btn btn-primary" id="confirmLogout">Log out</button>
+    </div>
+</dialog>
+
+<script>
+(function () {
+    var navbar = document.getElementById('navbar');
+    var burger = document.getElementById('burger');
+    var dds = Array.prototype.slice.call(document.querySelectorAll('.dd'));
+
+    function closeAll(except) {
+        dds.forEach(function (d) {
+            if (d !== except) {
+                d.classList.remove('open');
+                d.querySelector('.dd-btn').setAttribute('aria-expanded', 'false');
+            }
+        });
+    }
+
+    dds.forEach(function (d) {
+        var btn = d.querySelector('.dd-btn');
+        btn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            var open = !d.classList.contains('open');
+            closeAll(d);
+            d.classList.toggle('open', open);
+            btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+        });
+    });
+
+    document.addEventListener('click', function (e) {
+        if (!e.target.closest('.dd')) closeAll();
+    });
+
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+            closeAll();
+            navbar.classList.remove('open');
+            burger.setAttribute('aria-expanded', 'false');
+        }
+    });
+
+    burger.addEventListener('click', function () {
+        var open = !navbar.classList.contains('open');
+        navbar.classList.toggle('open', open);
+        burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+        burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    });
+
+    // Mark the current page in the navbar
+    var path = window.location.pathname;
+    var links = document.querySelectorAll('.menu a[data-match]');
+    var matched = false;
+    Array.prototype.forEach.call(links, function (a) {
+        if (matched) return;
+        var tokens = a.getAttribute('data-match').split(',');
+        var hit = tokens.some(function (t) { return path.indexOf(t) !== -1; });
+        if (hit) {
+            matched = true;
+            a.classList.add('active');
+            a.setAttribute('aria-current', 'page');
+            var parent = a.closest('.dd');
+            if (parent) parent.querySelector('.dd-btn').classList.add('active');
+        }
+    });
+
+    // Greeting + date
+    var now = new Date();
+    var h = now.getHours();
+    document.getElementById('greet').textContent = h < 12 ? 'Good morning' : (h < 17 ? 'Good afternoon' : 'Good evening');
+    document.getElementById('todayChip').textContent = now.toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'short', year: 'numeric' });
+
+    // Dismissible messages
+    Array.prototype.forEach.call(document.querySelectorAll('.toast'), function (t) {
+        var remove = function () { if (t.parentNode) t.parentNode.removeChild(t); };
+        t.querySelector('[data-dismiss]').addEventListener('click', remove);
+        setTimeout(remove, 6000);
+    });
+
+    // Logout confirmation
+    var link = document.getElementById('logoutLink');
+    var dlg = document.getElementById('logoutDialog');
+    var cancel = document.getElementById('cancelLogout');
+    var confirmBtn = document.getElementById('confirmLogout');
+
+    link.addEventListener('click', function (e) {
+        if (typeof dlg.showModal !== 'function') return;
+        e.preventDefault();
+        closeAll();
+        navbar.classList.remove('open');
+        dlg.showModal();
+        cancel.focus();
+    });
+    cancel.addEventListener('click', function () { dlg.close(); });
+    confirmBtn.addEventListener('click', function () { window.location.href = link.getAttribute('href'); });
+    dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
+})();
+</script>
+
+</body>
+</html>

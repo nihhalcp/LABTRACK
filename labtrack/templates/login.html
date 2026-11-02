@@ -1,0 +1,1535 @@
+{#<!DOCTYPE html>#}
+{#<html>#}
+{#<head>#}
+{#    <title>Login - LabTrack</title>#}
+{#</head>#}
+{#<body>#}
+{##}
+{#    <h2>LabTrack</h2>#}
+{#    <h3>Login</h3>#}
+{##}
+{#    {% for message in messages %}#}
+{#        <p>{{ message }}</p>#}
+{#    {% endfor %}#}
+{##}
+{#    <form method="post" action="/myapp/login_post/">#}
+{#        {% csrf_token %}#}
+{##}
+{#        <label>Username:</label>#}
+{#        <input type="text" name="username" required>#}
+{#        <br><br>#}
+{##}
+{#        <label>Password:</label>#}
+{#        <input type="password" name="password" required>#}
+{#        <br><br>#}
+{##}
+{#        <input type="submit" value="Login">#}
+{#    </form>#}
+{##}
+{#    <p>#}
+{#        <a href="/myapp/forgot_password/">Forgot Password?</a>#}
+{#    </p>#}
+{##}
+{#</body>#}
+{#</html>#}
+
+
+{##}
+{#<!DOCTYPE html>#}
+{#<html lang="en">#}
+{#<head>#}
+{#    <meta charset="UTF-8">#}
+{#    <meta name="viewport" content="width=device-width, initial-scale=1">#}
+{#    <title>Sign in - LabTrack</title>#}
+{##}
+{#    <link rel="preconnect" href="https://fonts.googleapis.com">#}
+{#    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>#}
+{#    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">#}
+{##}
+{#    <style>#}
+{#        :root {#}
+{#            --bg-top: #164a63;#}
+{#            --bg-mid: #0d3048;#}
+{#            --bg-deep: #08203a;#}
+{#            --cyan: #5cd0ee;#}
+{#            --cyan-soft: #9fe3f5;#}
+{#            --teal: #0b84a8;#}
+{#            --teal-dark: #086a89;#}
+{#            --heading: #0d2b3e;#}
+{#            --text: #14283a;#}
+{#            --muted: #5d7183;#}
+{#            --field: #e9f1fc;#}
+{#            --field-line: #c8d9ee;#}
+{#            --danger: #c0291f;#}
+{#            --danger-bg: #fdeceb;#}
+{#            --gold: #fbbf24;#}
+{#        }#}
+{##}
+{#        *, *::before, *::after { box-sizing: border-box; }#}
+{#        html, body { margin: 0; min-height: 100%; }#}
+{##}
+{#        body {#}
+{#            font-family: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;#}
+{#            color: var(--text);#}
+{#            background: #fff;#}
+{#            -webkit-font-smoothing: antialiased;#}
+{#        }#}
+{##}
+{#        .page {#}
+{#            min-height: 100vh;#}
+{#            display: grid;#}
+{#            grid-template-columns: 1.15fr 1fr;#}
+{#        }#}
+{##}
+{#        /* ================= LEFT ================= */#}
+{#        .showcase {#}
+{#            position: relative;#}
+{#            display: flex;#}
+{#            flex-direction: column;#}
+{#            padding: 44px clamp(40px, 5vw, 80px);#}
+{#            color: #e4f0f8;#}
+{#            overflow: hidden;#}
+{#            background:#}
+{#                radial-gradient(ellipse at 90% 0%, rgba(92,208,238,.20), transparent 55%),#}
+{#                linear-gradient(165deg, var(--bg-top) 0%, var(--bg-mid) 45%, var(--bg-deep) 100%);#}
+{#        }#}
+{##}
+{#        .showcase-inner {#}
+{#            width: 100%;#}
+{#            max-width: 680px;#}
+{#            margin: 0 auto;#}
+{#            flex: 1;#}
+{#            display: flex;#}
+{#            flex-direction: column;#}
+{#            justify-content: space-between;#}
+{#            gap: 28px;#}
+{#        }#}
+{##}
+{#        .brand {#}
+{#            display: flex;#}
+{#            align-items: center;#}
+{#            gap: 14px;#}
+{#            font-size: 1.5rem;#}
+{#            font-weight: 800;#}
+{#            letter-spacing: -0.02em;#}
+{#            color: #fff;#}
+{#        }#}
+{##}
+{#        .brand-mark {#}
+{#            width: 46px; height: 46px;#}
+{#            display: grid;#}
+{#            place-items: center;#}
+{#            border-radius: 12px;#}
+{#            background: var(--cyan);#}
+{#        }#}
+{##}
+{#        .hero { display: flex; flex-direction: column; gap: 14px; }#}
+{##}
+{#        .hero h2 {#}
+{#            margin: 0;#}
+{#            font-size: clamp(2rem, 2.9vw, 2.8rem);#}
+{#            line-height: 1.12;#}
+{#            font-weight: 800;#}
+{#            letter-spacing: -0.03em;#}
+{#            color: #fff;#}
+{#            max-width: 17ch;#}
+{#        }#}
+{##}
+{#        .hero p {#}
+{#            margin: 0;#}
+{#            max-width: 52ch;#}
+{#            line-height: 1.65;#}
+{#            color: #b9d3e3;#}
+{#            font-size: 1.02rem;#}
+{#        }#}
+{##}
+{#        .stage {#}
+{#            margin-top: 18px;#}
+{#            display: flex;#}
+{#            justify-content: center;#}
+{#        }#}
+{##}
+{#        .art { width: 100%; max-width: 520px; height: auto; overflow: visible; }#}
+{##}
+{#        .bob { animation: bob 6s ease-in-out infinite; }#}
+{#        .bob.b2 { animation-duration: 7s; animation-delay: -2s; }#}
+{#        .bob.b3 { animation-duration: 8s; animation-delay: -4s; }#}
+{#        @keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }#}
+{##}
+{#        .fc {#}
+{#            cursor: default;#}
+{#            transition: transform .25s ease, filter .25s ease;#}
+{#            transform-box: fill-box;#}
+{#            transform-origin: center;#}
+{#        }#}
+{#        .fc:hover { transform: translateY(-5px) scale(1.05); filter: drop-shadow(0 12px 18px rgba(0,0,0,.35)); }#}
+{##}
+{#        .laptop { transition: transform .35s ease; transform-box: fill-box; transform-origin: center; }#}
+{#        .art:hover .laptop { transform: scale(1.02); }#}
+{##}
+{#        .tube { transition: transform .25s ease; transform-box: fill-box; transform-origin: bottom center; }#}
+{#        .tube:hover { transform: translateY(-8px); }#}
+{##}
+{#        .features {#}
+{#            display: grid;#}
+{#            grid-template-columns: repeat(3, 1fr);#}
+{#            gap: 24px;#}
+{#        }#}
+{##}
+{#        .feature {#}
+{#            padding-top: 16px;#}
+{#            border-top: 2px solid rgba(255,255,255,.16);#}
+{#            transition: border-color .25s ease, transform .25s ease;#}
+{#            cursor: default;#}
+{#        }#}
+{##}
+{#        .feature svg { width: 22px; height: 22px; color: var(--cyan); margin-bottom: 14px; display: block; transition: transform .25s ease; }#}
+{#        .feature h3 { margin: 0 0 6px; font-size: .98rem; font-weight: 700; color: #fff; }#}
+{#        .feature p { margin: 0; font-size: .86rem; line-height: 1.55; color: #a9c4d6; }#}
+{##}
+{#        .feature:hover { border-top-color: var(--cyan); transform: translateY(-3px); }#}
+{#        .feature:hover svg { transform: scale(1.12); }#}
+{##}
+{#        /* ================= RIGHT ================= */#}
+{#        .panel {#}
+{#            display: flex;#}
+{#            align-items: center;#}
+{#            justify-content: center;#}
+{#            padding: 48px clamp(24px, 4vw, 64px);#}
+{#            background: #fff;#}
+{#        }#}
+{##}
+{#        .card { width: 100%; max-width: 420px; }#}
+{##}
+{#        .mobile-brand { display: none; }#}
+{##}
+{#        .card h1 {#}
+{#            margin: 0 0 10px;#}
+{#            font-size: 2.15rem;#}
+{#            font-weight: 800;#}
+{#            letter-spacing: -0.03em;#}
+{#            line-height: 1.15;#}
+{#            color: var(--heading);#}
+{#        }#}
+{##}
+{#        .card .sub { margin: 0 0 30px; color: var(--muted); line-height: 1.6; }#}
+{##}
+{#        .alert {#}
+{#            background: var(--danger-bg);#}
+{#            color: var(--danger);#}
+{#            border: 1px solid #f1c3bf;#}
+{#            border-left: 4px solid var(--danger);#}
+{#            border-radius: 10px;#}
+{#            padding: 12px 14px;#}
+{#            margin-bottom: 20px;#}
+{#            font-size: .92rem;#}
+{#            line-height: 1.45;#}
+{#        }#}
+{#        .alert p { margin: 0; }#}
+{#        .alert p + p { margin-top: 4px; }#}
+{##}
+{#        .field { margin-bottom: 16px; }#}
+{##}
+{#        .field label {#}
+{#            display: block;#}
+{#            margin-bottom: 8px;#}
+{#            font-size: .88rem;#}
+{#            font-weight: 700;#}
+{#            color: var(--heading);#}
+{#        }#}
+{##}
+{#        .control { position: relative; display: flex; align-items: center; }#}
+{##}
+{#        .control .icon {#}
+{#            position: absolute;#}
+{#            left: 16px;#}
+{#            width: 18px; height: 18px;#}
+{#            color: #6f8398;#}
+{#            pointer-events: none;#}
+{#            transition: color .2s;#}
+{#        }#}
+{#        .control:hover .icon { color: var(--teal-dark); }#}
+{#        .control:focus-within .icon { color: var(--teal); }#}
+{##}
+{#        .control input {#}
+{#            width: 100%;#}
+{#            height: 56px;#}
+{#            padding: 0 16px 0 48px;#}
+{#            font: inherit;#}
+{#            font-size: 1rem;#}
+{#            color: var(--text);#}
+{#            background: var(--field);#}
+{#            border: 1.5px solid var(--field-line);#}
+{#            border-radius: 12px;#}
+{#            transition: border-color .2s, box-shadow .2s, background .2s;#}
+{#        }#}
+{#        .control input::placeholder { color: #8ea0b3; }#}
+{#        .control input:hover { border-color: #8fb4d2; }#}
+{#        .control input:focus {#}
+{#            outline: none;#}
+{#            background: #fff;#}
+{#            border-color: var(--teal);#}
+{#            box-shadow: 0 0 0 4px rgba(11,132,168,.16);#}
+{#        }#}
+{#        .control input.invalid { border-color: var(--danger); background: #fffafa; }#}
+{#        .control input.invalid:focus { box-shadow: 0 0 0 4px rgba(192,41,31,.14); }#}
+{##}
+{#        .control.has-toggle input { padding-right: 78px; }#}
+{##}
+{#        .toggle {#}
+{#            position: absolute;#}
+{#            right: 8px;#}
+{#            height: 38px;#}
+{#            padding: 0 12px;#}
+{#            font: inherit;#}
+{#            font-size: .84rem;#}
+{#            font-weight: 700;#}
+{#            color: var(--teal);#}
+{#            background: transparent;#}
+{#            border: 0;#}
+{#            border-radius: 8px;#}
+{#            cursor: pointer;#}
+{#            transition: background .2s, color .2s;#}
+{#        }#}
+{#        .toggle:hover { background: #d9e8f5; color: var(--teal-dark); }#}
+{#        .toggle:focus-visible { outline: 2px solid var(--teal); outline-offset: 1px; }#}
+{##}
+{#        .hint { min-height: 1.2em; margin: 6px 0 0; font-size: .83rem; color: var(--danger); }#}
+{#        .hint.info { color: #92600a; }#}
+{##}
+{#        .row { display: flex; justify-content: flex-end; margin: 0 0 22px; }#}
+{##}
+{#        .row a {#}
+{#            color: var(--teal);#}
+{#            font-size: .9rem;#}
+{#            font-weight: 700;#}
+{#            text-decoration: none;#}
+{#            padding-bottom: 2px;#}
+{#            background: linear-gradient(currentColor, currentColor) 0 100% / 0 2px no-repeat;#}
+{#            transition: background-size .25s ease, color .2s;#}
+{#        }#}
+{#        .row a:hover { background-size: 100% 2px; color: var(--teal-dark); }#}
+{#        .row a:focus-visible { outline: 2px solid var(--teal); outline-offset: 3px; border-radius: 3px; }#}
+{##}
+{#        .submit {#}
+{#            width: 100%;#}
+{#            height: 58px;#}
+{#            font: inherit;#}
+{#            font-size: 1.02rem;#}
+{#            font-weight: 700;#}
+{#            color: #fff;#}
+{#            background: var(--teal);#}
+{#            border: 0;#}
+{#            border-radius: 12px;#}
+{#            cursor: pointer;#}
+{#            box-shadow: 0 8px 18px rgba(11,132,168,.28);#}
+{#            transition: transform .15s ease, box-shadow .2s ease, background .2s ease;#}
+{#        }#}
+{#        .submit:hover {#}
+{#            background: var(--teal-dark);#}
+{#            transform: translateY(-2px);#}
+{#            box-shadow: 0 14px 26px rgba(11,132,168,.35);#}
+{#        }#}
+{#        .submit:active { transform: translateY(0); box-shadow: 0 6px 12px rgba(11,132,168,.28); }#}
+{#        .submit:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }#}
+{#        .submit[disabled] { opacity: .75; cursor: progress; transform: none; }#}
+{##}
+{#        .help {#}
+{#            margin-top: 28px;#}
+{#            padding-top: 20px;#}
+{#            border-top: 1px solid #e1e9f2;#}
+{#            font-size: .88rem;#}
+{#            color: var(--muted);#}
+{#            line-height: 1.55;#}
+{#        }#}
+{#        .help strong { display: block; color: var(--heading); font-size: .95rem; margin-bottom: 2px; }#}
+{#        .copy { margin: 14px 0 0; font-size: .78rem; color: #8b9cac; }#}
+{##}
+{#        /* ================= RESPONSIVE ================= */#}
+{#        @media (max-height: 860px) and (min-width: 901px) {#}
+{#            .showcase { padding-top: 32px; padding-bottom: 32px; }#}
+{#            .art { max-width: 400px; }#}
+{#            .stage { margin-top: 6px; }#}
+{#        }#}
+{##}
+{#        @media (max-width: 1100px) {#}
+{#            .features { gap: 16px; }#}
+{#            .feature p { font-size: .82rem; }#}
+{#        }#}
+{##}
+{#        @media (max-width: 900px) {#}
+{#            .page { grid-template-columns: 1fr; }#}
+{#            .showcase { display: none; }#}
+{#            .panel { padding: 36px 22px; align-items: flex-start; }#}
+{#            .mobile-brand {#}
+{#                display: flex;#}
+{#                align-items: center;#}
+{#                gap: 12px;#}
+{#                margin-bottom: 30px;#}
+{#                font-size: 1.35rem;#}
+{#                font-weight: 800;#}
+{#                color: var(--heading);#}
+{#            }#}
+{#            .mobile-brand .brand-mark { width: 40px; height: 40px; }#}
+{#        }#}
+{##}
+{#        @media (prefers-reduced-motion: reduce) {#}
+{#            .bob { animation: none; }#}
+{#            * { transition: none !important; }#}
+{#        }#}
+{#    </style>#}
+{#</head>#}
+{#<body>#}
+{##}
+{#<div class="page">#}
+{##}
+{#    <!-- ============ LEFT ============ -->#}
+{#    <aside class="showcase">#}
+{#        <div class="showcase-inner">#}
+{##}
+{#            <div class="brand">#}
+{#                <span class="brand-mark">#}
+{#                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">#}
+{#                        <path d="M12 2.5l8 3v6c0 5-3.3 8.6-8 10-4.7-1.4-8-5-8-10v-6l8-3z" stroke="#08203a" stroke-width="1.9" stroke-linejoin="round"/>#}
+{#                        <path d="M10.5 8.5h3M11 8.5v3l-2 3.6a.9.9 0 0 0 .8 1.3h4.4a.9.9 0 0 0 .8-1.3l-2-3.6v-3" stroke="#08203a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>#}
+{#                    </svg>#}
+{#                </span>#}
+{#                LabTrack#}
+{#            </div>#}
+{##}
+{#            <div class="hero">#}
+{#                <h2>Every lab record and every instrument, in one place.</h2>#}
+{#                <p>Submit lab work online, keep notebooks safe, and track equipment without paper registers.</p>#}
+{##}
+{#                <div class="stage">#}
+{#                    <svg class="art" viewBox="0 0 520 380" fill="none" aria-hidden="true">#}
+{#                        <circle cx="260" cy="190" r="165" fill="#5cd0ee" opacity=".10"/>#}
+{#                        <circle cx="260" cy="190" r="165" stroke="#5cd0ee" stroke-opacity=".35" stroke-dasharray="4 8"/>#}
+{##}
+{#                        <!-- laptop -->#}
+{#                        <g class="laptop">#}
+{#                            <rect x="130" y="84" width="260" height="170" rx="14" fill="#0a2740" stroke="#5cd0ee" stroke-width="2"/>#}
+{#                            <rect x="144" y="98" width="232" height="142" rx="8" fill="#e9f1fc"/>#}
+{#                            <rect x="144" y="98" width="232" height="26" rx="8" fill="#0b84a8"/>#}
+{#                            <rect x="144" y="112" width="232" height="12" fill="#0b84a8"/>#}
+{#                            <circle cx="158" cy="111" r="3.5" fill="#fbbf24"/>#}
+{#                            <circle cx="171" cy="111" r="3.5" fill="#9fe3f5"/>#}
+{#                            <circle cx="184" cy="111" r="3.5" fill="#9fe3f5"/>#}
+{#                            <rect x="260" y="106" width="100" height="10" rx="5" fill="#fff" opacity=".25"/>#}
+{#                            <rect x="160" y="140" width="110" height="8" rx="4" fill="#0d3048"/>#}
+{#                            <rect x="160" y="158" width="190" height="6" rx="3" fill="#c3d6ea"/>#}
+{#                            <rect x="160" y="172" width="170" height="6" rx="3" fill="#c3d6ea"/>#}
+{#                            <rect x="160" y="186" width="150" height="6" rx="3" fill="#c3d6ea"/>#}
+{#                            <rect x="160" y="202" width="14" height="24" rx="2" fill="#9fe3f5"/>#}
+{#                            <rect x="180" y="210" width="14" height="16" rx="2" fill="#5cd0ee"/>#}
+{#                            <rect x="200" y="198" width="14" height="28" rx="2" fill="#0b84a8"/>#}
+{#                            <rect x="220" y="206" width="14" height="20" rx="2" fill="#086a89"/>#}
+{#                            <rect x="290" y="204" width="68" height="24" rx="12" fill="#22c55e"/>#}
+{#                            <path d="M304 216l4 4 8-9" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>#}
+{#                            <rect x="322" y="213" width="26" height="5" rx="2.5" fill="#fff" opacity=".85"/>#}
+{#                            <path d="M100 262h320l-18 20a14 14 0 0 1-10 4H128a14 14 0 0 1-10-4l-18-20z" fill="#113a56"/>#}
+{#                            <rect x="222" y="262" width="76" height="6" rx="3" fill="#0a2740"/>#}
+{#                        </g>#}
+{##}
+{#                        <!-- test tubes -->#}
+{#                        <g>#}
+{#                            <g class="tube">#}
+{#                                <rect x="52" y="236" width="20" height="82" rx="10" fill="#fff" fill-opacity=".14" stroke="#9fe3f5" stroke-width="2"/>#}
+{#                                <rect x="55" y="274" width="14" height="41" rx="7" fill="#5cd0ee"/>#}
+{#                            </g>#}
+{#                            <g class="tube">#}
+{#                                <rect x="80" y="226" width="20" height="92" rx="10" fill="#fff" fill-opacity=".14" stroke="#9fe3f5" stroke-width="2"/>#}
+{#                                <rect x="83" y="262" width="14" height="53" rx="7" fill="#fbbf24"/>#}
+{#                            </g>#}
+{#                            <g class="tube">#}
+{#                                <rect x="108" y="240" width="20" height="78" rx="10" fill="#fff" fill-opacity=".14" stroke="#9fe3f5" stroke-width="2"/>#}
+{#                                <rect x="111" y="282" width="14" height="33" rx="7" fill="#34d399"/>#}
+{#                            </g>#}
+{#                            <rect x="42" y="304" width="96" height="14" rx="7" fill="#0b84a8"/>#}
+{#                        </g>#}
+{##}
+{#                        <!-- flask -->#}
+{#                        <g class="tube">#}
+{#                            <path d="M428 196h24v44l33 58q8 16-9 16h-72q-17 0-9-16l33-58z" fill="#fff" fill-opacity=".12" stroke="#9fe3f5" stroke-width="2.5" stroke-linejoin="round"/>#}
+{#                            <path d="M410 276h60l15 22q8 16-9 16h-72q-17 0-9-16z" fill="#38bdf8" opacity=".9"/>#}
+{#                            <rect x="424" y="190" width="32" height="8" rx="4" fill="#9fe3f5"/>#}
+{#                            <circle cx="430" cy="294" r="4" fill="#fff" opacity=".7"/>#}
+{#                            <circle cx="448" cy="284" r="3" fill="#fff" opacity=".7"/>#}
+{#                            <circle cx="456" cy="298" r="2.5" fill="#fff" opacity=".7"/>#}
+{#                        </g>#}
+{##}
+{#                        <!-- status cards -->#}
+{#                        <g class="bob">#}
+{#                            <g class="fc">#}
+{#                                <rect x="326" y="26" width="170" height="52" rx="14" fill="#fff"/>#}
+{#                                <circle cx="352" cy="52" r="12" fill="#dcfce7"/>#}
+{#                                <path d="M346 52l4 4 8-9" stroke="#16a34a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>#}
+{#                                <text x="374" y="48" font-size="12.5" font-weight="700" fill="#0d2b3e" font-family="inherit">Notebook saved</text>#}
+{#                                <text x="374" y="64" font-size="11" fill="#5d7183" font-family="inherit">Editable until deadline</text>#}
+{#                            </g>#}
+{#                        </g>#}
+{#                        <g class="bob b2">#}
+{#                            <g class="fc">#}
+{#                                <rect x="14" y="108" width="164" height="52" rx="14" fill="#fff"/>#}
+{#                                <circle cx="40" cy="134" r="12" fill="#d5f1f9"/>#}
+{#                                <path d="M34 134h12M40 128v12" stroke="#0b84a8" stroke-width="2.2" stroke-linecap="round"/>#}
+{#                                <text x="62" y="130" font-size="12.5" font-weight="700" fill="#0d2b3e" font-family="inherit">Equipment issued</text>#}
+{#                                <text x="62" y="146" font-size="11" fill="#5d7183" font-family="inherit">Tracked in real time</text>#}
+{#                            </g>#}
+{#                        </g>#}
+{#                        <g class="bob b3">#}
+{#                            <g class="fc">#}
+{#                                <rect x="336" y="330" width="170" height="44" rx="14" fill="#fff"/>#}
+{#                                <circle cx="360" cy="352" r="11" fill="#fef3c7"/>#}
+{#                                <text x="354.5" y="357" font-size="14" font-weight="800" fill="#b45309" font-family="inherit">!</text>#}
+{#                                <text x="380" y="357" font-size="12.5" font-weight="700" fill="#0d2b3e" font-family="inherit">Fines logged for you</text>#}
+{#                            </g>#}
+{#                        </g>#}
+{#                    </svg>#}
+{#                </div>#}
+{#            </div>#}
+{##}
+{#            <div class="features">#}
+{#                <div class="feature">#}
+{#                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>#}
+{#                    <h3>Online lab notebooks</h3>#}
+{#                    <p>Write, save and edit until the deadline.</p>#}
+{#                </div>#}
+{#                <div class="feature">#}
+{#                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.8 3h10.4a2 2 0 0 0 1.8-3l-5-9V3"/><path d="M7.5 15h9"/></svg>#}
+{#                    <h3>Equipment tracking</h3>#}
+{#                    <p>Live status and condition of every item.</p>#}
+{#                </div>#}
+{#                <div class="feature">#}
+{#                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2V3z"/><path d="M9.5 8.5h5M9.5 12h5"/></svg>#}
+{#                    <h3>Automatic fines</h3>#}
+{#                    <p>Damage or loss logged to the right student.</p>#}
+{#                </div>#}
+{#            </div>#}
+{##}
+{#        </div>#}
+{#    </aside>#}
+{##}
+{#    <!-- ============ RIGHT ============ -->#}
+{#    <main class="panel">#}
+{#        <div class="card">#}
+{##}
+{#            <div class="mobile-brand">#}
+{#                <span class="brand-mark">#}
+{#                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">#}
+{#                        <path d="M12 2.5l8 3v6c0 5-3.3 8.6-8 10-4.7-1.4-8-5-8-10v-6l8-3z" stroke="#08203a" stroke-width="1.9" stroke-linejoin="round"/>#}
+{#                        <path d="M10.5 8.5h3M11 8.5v3l-2 3.6a.9.9 0 0 0 .8 1.3h4.4a.9.9 0 0 0 .8-1.3l-2-3.6v-3" stroke="#08203a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>#}
+{#                    </svg>#}
+{#                </span>#}
+{#                LabTrack#}
+{#            </div>#}
+{##}
+{#            <h1>Sign in to LabTrack</h1>#}
+{#            <p class="sub">Use the username and password from your institution.</p>#}
+{##}
+{#            {% if messages %}#}
+{#            <div class="alert" role="alert">#}
+{#                {% for message in messages %}#}
+{#                    <p>{{ message }}</p>#}
+{#                {% endfor %}#}
+{#            </div>#}
+{#            {% endif %}#}
+{##}
+{#            <form method="post" action="/myapp/login_post/" id="loginForm" novalidate>#}
+{#                {% csrf_token %}#}
+{##}
+{#                <div class="field">#}
+{#                    <label for="username">Username</label>#}
+{#                    <div class="control">#}
+{#                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 20c1.2-3.6 4.2-5.5 8-5.5s6.8 1.9 8 5.5"/></svg>#}
+{#                        <input type="text" id="username" name="username" placeholder="Enter your username"#}
+{#                               autocomplete="username" autocapitalize="none" spellcheck="false"#}
+{#                               aria-describedby="usernameHint" required autofocus>#}
+{#                    </div>#}
+{#                    <p class="hint" id="usernameHint" aria-live="polite"></p>#}
+{#                </div>#}
+{##}
+{#                <div class="field">#}
+{#                    <label for="password">Password</label>#}
+{#                    <div class="control has-toggle">#}
+{#                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>#}
+{#                        <input type="password" id="password" name="password" placeholder="Enter your password"#}
+{#                               autocomplete="current-password" aria-describedby="passwordHint" required>#}
+{#                        <button type="button" class="toggle" id="togglePw" aria-label="Show password" aria-pressed="false">Show</button>#}
+{#                    </div>#}
+{#                    <p class="hint" id="passwordHint" aria-live="polite"></p>#}
+{#                </div>#}
+{##}
+{#                <div class="row">#}
+{#                    <a href="/myapp/forgot_password/">Forgot password?</a>#}
+{#                </div>#}
+{##}
+{#                <button type="submit" class="submit" id="submitBtn">Sign in</button>#}
+{#            </form>#}
+{##}
+{#            <div class="help">#}
+{#                <strong>Trouble signing in?</strong>#}
+{#                Contact your lab coordinator or administrator.#}
+{#            </div>#}
+{#            <p class="copy">&copy; LabTrack</p>#}
+{#        </div>#}
+{#    </main>#}
+{##}
+{#</div>#}
+{##}
+{#<script>#}
+{#(function () {#}
+{#    var form = document.getElementById('loginForm');#}
+{#    var user = document.getElementById('username');#}
+{#    var pass = document.getElementById('password');#}
+{#    var userHint = document.getElementById('usernameHint');#}
+{#    var passHint = document.getElementById('passwordHint');#}
+{#    var toggle = document.getElementById('togglePw');#}
+{#    var btn = document.getElementById('submitBtn');#}
+{##}
+{#    function setError(input, hint, msg) {#}
+{#        input.classList.add('invalid');#}
+{#        input.setAttribute('aria-invalid', 'true');#}
+{#        hint.classList.remove('info');#}
+{#        hint.textContent = msg;#}
+{#    }#}
+{##}
+{#    function clearError(input, hint) {#}
+{#        input.classList.remove('invalid');#}
+{#        input.removeAttribute('aria-invalid');#}
+{#        hint.textContent = '';#}
+{#    }#}
+{##}
+{#    function checkUser() {#}
+{#        var v = user.value.trim();#}
+{#        if (!v) { setError(user, userHint, 'Enter your username.'); return false; }#}
+{#        if (v.length < 3) { setError(user, userHint, 'Username must be at least 3 characters.'); return false; }#}
+{#        clearError(user, userHint);#}
+{#        return true;#}
+{#    }#}
+{##}
+{#    function checkPass() {#}
+{#        var v = pass.value;#}
+{#        if (!v) { setError(pass, passHint, 'Enter your password.'); return false; }#}
+{#        if (v.length < 4) { setError(pass, passHint, 'Password must be at least 4 characters.'); return false; }#}
+{#        clearError(pass, passHint);#}
+{#        return true;#}
+{#    }#}
+{##}
+{#    user.addEventListener('blur', function () { if (user.value) checkUser(); });#}
+{#    pass.addEventListener('blur', function () { if (pass.value) checkPass(); });#}
+{#    user.addEventListener('input', function () { if (user.classList.contains('invalid')) checkUser(); });#}
+{#    pass.addEventListener('input', function () { if (pass.classList.contains('invalid')) checkPass(); });#}
+{##}
+{#    toggle.addEventListener('click', function () {#}
+{#        var show = pass.type === 'password';#}
+{#        pass.type = show ? 'text' : 'password';#}
+{#        toggle.textContent = show ? 'Hide' : 'Show';#}
+{#        toggle.setAttribute('aria-label', show ? 'Hide password' : 'Show password');#}
+{#        toggle.setAttribute('aria-pressed', show ? 'true' : 'false');#}
+{#        pass.focus();#}
+{#    });#}
+{##}
+{#    function capsCheck(e) {#}
+{#        if (!e.getModifierState) return;#}
+{#        if (e.getModifierState('CapsLock')) {#}
+{#            if (!pass.classList.contains('invalid')) {#}
+{#                passHint.classList.add('info');#}
+{#                passHint.textContent = 'Caps Lock is on.';#}
+{#            }#}
+{#        } else if (passHint.classList.contains('info')) {#}
+{#            passHint.classList.remove('info');#}
+{#            passHint.textContent = '';#}
+{#        }#}
+{#    }#}
+{#    pass.addEventListener('keyup', capsCheck);#}
+{#    pass.addEventListener('keydown', capsCheck);#}
+{#    pass.addEventListener('blur', function () {#}
+{#        if (passHint.classList.contains('info')) {#}
+{#            passHint.classList.remove('info');#}
+{#            passHint.textContent = '';#}
+{#        }#}
+{#    });#}
+{##}
+{#    form.addEventListener('submit', function (e) {#}
+{#        var okUser = checkUser();#}
+{#        var okPass = checkPass();#}
+{#        if (!okUser || !okPass) {#}
+{#            e.preventDefault();#}
+{#            (okUser ? pass : user).focus();#}
+{#            return;#}
+{#        }#}
+{#        btn.disabled = true;#}
+{#        btn.textContent = 'Signing in...';#}
+{#    });#}
+{#{)();#}
+{#</script>#}
+{##}
+{#</body>#}
+{#</html>#}
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sign in - LabTrack</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-top: #164a63;
+            --bg-mid: #0d3048;
+            --bg-deep: #08203a;
+            --cyan: #5cd0ee;
+            --cyan-soft: #9fe3f5;
+            --teal: #0b84a8;
+            --teal-dark: #086a89;
+            --heading: #0d2b3e;
+            --text: #14283a;
+            --muted: #5d7183;
+            --field: #e9f1fc;
+            --field-line: #c8d9ee;
+            --danger: #c0291f;
+            --danger-bg: #fdeceb;
+            --gold: #fbbf24;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; }
+        html, body { margin: 0; min-height: 100%; }
+
+        body {
+            font-family: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+            color: var(--text);
+            background: #fff;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .page {
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 1.15fr 1fr;
+        }
+
+        /* ================= LEFT ================= */
+        .showcase {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            padding: 44px clamp(40px, 5vw, 80px);
+            color: #e4f0f8;
+            overflow: hidden;
+            background:
+                radial-gradient(ellipse at 90% 0%, rgba(92,208,238,.20), transparent 55%),
+                linear-gradient(165deg, var(--bg-top) 0%, var(--bg-mid) 45%, var(--bg-deep) 100%);
+        }
+
+        .showcase-inner {
+            width: 100%;
+            max-width: 680px;
+            margin: 0 auto;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 28px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            color: #fff;
+        }
+
+        .brand-mark {
+            width: 46px; height: 46px;
+            display: grid;
+            place-items: center;
+            border-radius: 12px;
+            background: var(--cyan);
+        }
+
+        .hero { display: flex; flex-direction: column; gap: 14px; }
+
+        .hero h2 {
+            margin: 0;
+            font-size: clamp(2rem, 2.9vw, 2.8rem);
+            line-height: 1.12;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            color: #fff;
+            max-width: 17ch;
+        }
+
+        .hero p {
+            margin: 0;
+            max-width: 52ch;
+            line-height: 1.65;
+            color: #b9d3e3;
+            font-size: 1.02rem;
+        }
+
+        .stage {
+            margin-top: 18px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .art { width: 100%; max-width: 520px; height: auto; overflow: visible; }
+
+        .bob { animation: bob 6s ease-in-out infinite; }
+        .bob.b2 { animation-duration: 7s; animation-delay: -2s; }
+        .bob.b3 { animation-duration: 8s; animation-delay: -4s; }
+        @keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+
+        .fc {
+            cursor: default;
+            transition: transform .25s ease, filter .25s ease;
+            transform-box: fill-box;
+            transform-origin: center;
+        }
+        .fc:hover { transform: translateY(-5px) scale(1.05); filter: drop-shadow(0 12px 18px rgba(0,0,0,.35)); }
+
+        .laptop { transition: transform .35s ease; transform-box: fill-box; transform-origin: center; }
+        .art:hover .laptop { transform: scale(1.02); }
+
+        .tube { transition: transform .25s ease; transform-box: fill-box; transform-origin: bottom center; }
+        .tube:hover { transform: translateY(-8px); }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .feature {
+            padding-top: 16px;
+            border-top: 2px solid rgba(255,255,255,.16);
+            transition: border-color .25s ease, transform .25s ease;
+            cursor: default;
+        }
+
+        .feature svg { width: 22px; height: 22px; color: var(--cyan); margin-bottom: 14px; display: block; transition: transform .25s ease; }
+        .feature h3 { margin: 0 0 6px; font-size: .98rem; font-weight: 700; color: #fff; }
+        .feature p { margin: 0; font-size: .86rem; line-height: 1.55; color: #a9c4d6; }
+
+        .feature:hover { border-top-color: var(--cyan); transform: translateY(-3px); }
+        .feature:hover svg { transform: scale(1.12); }
+
+        /* ================= RIGHT ================= */
+        .panel {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 48px clamp(24px, 4vw, 64px);
+            background: #fff;
+        }
+
+        .card { width: 100%; max-width: 420px; }
+
+        .mobile-brand { display: none; }
+
+        .card h1 {
+            margin: 0 0 10px;
+            font-size: 2.15rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 1.15;
+            color: var(--heading);
+        }
+
+        .card .sub { margin: 0 0 30px; color: var(--muted); line-height: 1.6; }
+
+        .alert {
+            background: var(--danger-bg);
+            color: var(--danger);
+            border: 1px solid #f1c3bf;
+            border-left: 4px solid var(--danger);
+            border-radius: 10px;
+            padding: 12px 14px;
+            margin-bottom: 20px;
+            font-size: .92rem;
+            line-height: 1.45;
+        }
+        .alert p { margin: 0; }
+        .alert p + p { margin-top: 4px; }
+
+        .field { margin-bottom: 16px; }
+
+        .field label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: .88rem;
+            font-weight: 700;
+            color: var(--heading);
+        }
+
+        .control { position: relative; display: flex; align-items: center; }
+
+        .control .icon {
+            position: absolute;
+            left: 16px;
+            width: 18px; height: 18px;
+            color: #6f8398;
+            pointer-events: none;
+            transition: color .2s;
+        }
+        .control:hover .icon { color: var(--teal-dark); }
+        .control:focus-within .icon { color: var(--teal); }
+
+        .control input {
+            width: 100%;
+            height: 56px;
+            padding: 0 16px 0 48px;
+            font: inherit;
+            font-size: 1rem;
+            color: var(--text);
+            background: var(--field);
+            border: 1.5px solid var(--field-line);
+            border-radius: 12px;
+            transition: border-color .2s, box-shadow .2s, background .2s;
+        }
+        .control input::placeholder { color: #8ea0b3; }
+        .control input:hover { border-color: #8fb4d2; }
+        .control input:focus {
+            outline: none;
+            background: #fff;
+            border-color: var(--teal);
+            box-shadow: 0 0 0 4px rgba(11,132,168,.16);
+        }
+        .control input.invalid { border-color: var(--danger); background: #fffafa; }
+        .control input.invalid:focus { box-shadow: 0 0 0 4px rgba(192,41,31,.14); }
+
+        .control.has-toggle input { padding-right: 78px; }
+
+        .toggle {
+            position: absolute;
+            right: 8px;
+            height: 38px;
+            padding: 0 12px;
+            font: inherit;
+            font-size: .84rem;
+            font-weight: 700;
+            color: var(--teal);
+            background: transparent;
+            border: 0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background .2s, color .2s;
+        }
+        .toggle:hover { background: #d9e8f5; color: var(--teal-dark); }
+        .toggle:focus-visible { outline: 2px solid var(--teal); outline-offset: 1px; }
+
+        .hint { min-height: 1.2em; margin: 6px 0 0; font-size: .83rem; color: var(--danger); }
+        .hint.info { color: #92600a; }
+
+        .row { display: flex; justify-content: flex-end; margin: 0 0 22px; }
+
+        .row a {
+            color: var(--teal);
+            font-size: .9rem;
+            font-weight: 700;
+            text-decoration: none;
+            padding-bottom: 2px;
+            background: linear-gradient(currentColor, currentColor) 0 100% / 0 2px no-repeat;
+            transition: background-size .25s ease, color .2s;
+        }
+        .row a:hover { background-size: 100% 2px; color: var(--teal-dark); }
+        .row a:focus-visible { outline: 2px solid var(--teal); outline-offset: 3px; border-radius: 3px; }
+
+        .submit {
+            width: 100%;
+            height: 58px;
+            font: inherit;
+            font-size: 1.02rem;
+            font-weight: 700;
+            color: #fff;
+            background: var(--teal);
+            border: 0;
+            border-radius: 12px;
+            cursor: pointer;
+            box-shadow: 0 8px 18px rgba(11,132,168,.28);
+            transition: transform .15s ease, box-shadow .2s ease, background .2s ease;
+        }
+        .submit:hover {
+            background: var(--teal-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 14px 26px rgba(11,132,168,.35);
+        }
+        .submit:active { transform: translateY(0); box-shadow: 0 6px 12px rgba(11,132,168,.28); }
+        .submit:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+        .submit[disabled] { opacity: .75; cursor: progress; transform: none; }
+
+        .help {
+            margin-top: 28px;
+            padding-top: 20px;
+            border-top: 1px solid #e1e9f2;
+            font-size: .88rem;
+            color: var(--muted);
+            line-height: 1.55;
+        }
+        .help strong { display: block; color: var(--heading); font-size: .95rem; margin-bottom: 2px; }
+        .copy { margin: 14px 0 0; font-size: .78rem; color: #8b9cac; }
+
+        /* ================= RESPONSIVE ================= */
+        @media (max-height: 860px) and (min-width: 901px) {
+            .showcase { padding-top: 32px; padding-bottom: 32px; }
+            .art { max-width: 400px; }
+            .stage { margin-top: 6px; }
+        }
+
+        @media (max-width: 1100px) {
+            .features { gap: 16px; }
+            .feature p { font-size: .82rem; }
+        }
+
+        @media (max-width: 900px) {
+            .page { grid-template-columns: 1fr; }
+            .showcase { display: none; }
+            .panel { padding: 36px 22px; align-items: flex-start; }
+            .mobile-brand {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                margin-bottom: 30px;
+                font-size: 1.35rem;
+                font-weight: 800;
+                color: var(--heading);
+            }
+            .mobile-brand .brand-mark { width: 40px; height: 40px; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .bob { animation: none; }
+            * { transition: none !important; }
+        }
+
+        /* ================= LOGIN VALIDATION + HOVER ADDITIONS ================= */
+        [hidden] { display: none !important; }
+
+        .card { animation: rise .5s ease both; }
+        @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+
+        .field label { transition: color .2s; }
+        .field:hover label { color: var(--teal-dark); }
+
+        /* Messages */
+        .alert { display: flex; align-items: flex-start; gap: 10px; animation: alert-in .3s ease both; transition: box-shadow .2s, transform .2s; }
+        .alert:hover { box-shadow: 0 8px 18px rgba(192,41,31,.12); transform: translateY(-1px); }
+        .alert p { flex: 1; min-width: 0; }
+        .alert .ai { width: 20px; height: 20px; flex: none; margin-top: 1px; }
+        .alert-x { flex: none; width: 26px; height: 26px; margin: -2px -4px 0 0; display: grid; place-items: center; font: inherit; font-size: 1.25rem; line-height: 1; color: inherit; background: transparent; border: 0; border-radius: 7px; cursor: pointer; opacity: .7; transition: background .2s, opacity .2s; }
+        .alert-x:hover { background: rgba(0,0,0,.08); opacity: 1; }
+        .alert-x:focus-visible { outline: 2px solid currentColor; outline-offset: 1px; }
+        .alert.success { background: #e3f6ec; color: #1c7c54; border-color: #b9e4cd; border-left-color: #1c7c54; }
+        .alert.success:hover { box-shadow: 0 8px 18px rgba(28,124,84,.12); }
+        .alert.info, .alert.warning, .alert.debug { background: #fff7e0; color: #8a6112; border-color: #f1deaa; border-left-color: var(--gold); }
+        .alert.info:hover, .alert.warning:hover, .alert.debug:hover { box-shadow: 0 8px 18px rgba(138,97,18,.12); }
+        @keyframes alert-in { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+
+        /* Field states */
+        .control input.valid { border-color: #35a574; background: #fbfffd; }
+        .control input.valid:focus { box-shadow: 0 0 0 4px rgba(53,165,116,.16); }
+        .control input.shake { animation: shake .35s; }
+        @keyframes shake { 20%, 60% { transform: translateX(-5px); } 40%, 80% { transform: translateX(5px); } }
+        .control.is-invalid .icon { color: var(--danger); }
+        .control.is-valid .icon { color: #1c7c54; }
+        .hint { transition: color .2s; }
+        .hint:empty { min-height: 1.2em; }
+
+        .row a svg { width: 14px; height: 14px; margin-left: 4px; vertical-align: -2px; transition: transform .2s; }
+        .row a:hover svg { transform: translateX(4px); }
+
+        /* Sign in button */
+        .submit { position: relative; overflow: hidden; display: inline-flex; align-items: center; justify-content: center; gap: 10px; }
+        .submit::after { content: ""; position: absolute; top: 0; left: -70%; width: 50%; height: 100%; background: linear-gradient(100deg, transparent, rgba(255,255,255,.28), transparent); transform: skewX(-20deg); transition: left .6s ease; pointer-events: none; }
+        .submit:hover:not([disabled])::after { left: 130%; }
+        .btn-spin { display: none; width: 18px; height: 18px; border-radius: 50%; border: 2.5px solid rgba(255,255,255,.4); border-top-color: #fff; animation: spin .75s linear infinite; }
+        .submit.loading .btn-spin { display: inline-block; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Help after failed attempts */
+        .assist { display: flex; gap: 12px; align-items: flex-start; margin: 0 0 18px; padding: 13px 15px; background: #fff7e0; border: 1px solid #f1deaa; border-radius: 12px; font-size: .88rem; line-height: 1.5; color: #8a6112; animation: alert-in .3s ease both; transition: box-shadow .2s, transform .2s; }
+        .assist:hover { box-shadow: 0 8px 18px rgba(138,97,18,.14); transform: translateY(-1px); }
+        .assist svg { width: 20px; height: 20px; flex: none; margin-top: 1px; }
+        .assist strong { display: block; color: #6b4a08; }
+        .assist a { display: inline-block; margin-top: 4px; font-weight: 700; color: var(--teal-dark); background: linear-gradient(currentColor, currentColor) 0 100% / 0 2px no-repeat; padding-bottom: 1px; transition: background-size .25s ease, color .2s; }
+        .assist a:hover { background-size: 100% 2px; color: var(--teal); }
+        .assist a:focus-visible { outline: 2px solid var(--teal); outline-offset: 3px; border-radius: 3px; }
+
+        .help { transition: border-color .25s; }
+        .help:hover { border-top-color: var(--cyan); }
+        .help strong { transition: color .2s; }
+        .help:hover strong { color: var(--teal-dark); }
+
+        @media (prefers-reduced-motion: reduce) {
+            .card, .alert, .assist, .control input.shake, .btn-spin { animation: none !important; }
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="page">
+
+    <!-- ============ LEFT ============ -->
+    <aside class="showcase">
+        <div class="showcase-inner">
+
+            <div class="brand">
+                <span class="brand-mark">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <path d="M12 2.5l8 3v6c0 5-3.3 8.6-8 10-4.7-1.4-8-5-8-10v-6l8-3z" stroke="#08203a" stroke-width="1.9" stroke-linejoin="round"/>
+                        <path d="M10.5 8.5h3M11 8.5v3l-2 3.6a.9.9 0 0 0 .8 1.3h4.4a.9.9 0 0 0 .8-1.3l-2-3.6v-3" stroke="#08203a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </span>
+                LabTrack
+            </div>
+
+            <div class="hero">
+                <h2>Every lab record and every instrument, in one place.</h2>
+                <p>Submit lab work online, keep notebooks safe, and track equipment without paper registers.</p>
+
+                <div class="stage">
+                    <svg class="art" viewBox="0 0 520 380" fill="none" aria-hidden="true">
+                        <circle cx="260" cy="190" r="165" fill="#5cd0ee" opacity=".10"/>
+                        <circle cx="260" cy="190" r="165" stroke="#5cd0ee" stroke-opacity=".35" stroke-dasharray="4 8"/>
+
+                        <!-- laptop -->
+                        <g class="laptop">
+                            <rect x="130" y="84" width="260" height="170" rx="14" fill="#0a2740" stroke="#5cd0ee" stroke-width="2"/>
+                            <rect x="144" y="98" width="232" height="142" rx="8" fill="#e9f1fc"/>
+                            <rect x="144" y="98" width="232" height="26" rx="8" fill="#0b84a8"/>
+                            <rect x="144" y="112" width="232" height="12" fill="#0b84a8"/>
+                            <circle cx="158" cy="111" r="3.5" fill="#fbbf24"/>
+                            <circle cx="171" cy="111" r="3.5" fill="#9fe3f5"/>
+                            <circle cx="184" cy="111" r="3.5" fill="#9fe3f5"/>
+                            <rect x="260" y="106" width="100" height="10" rx="5" fill="#fff" opacity=".25"/>
+                            <rect x="160" y="140" width="110" height="8" rx="4" fill="#0d3048"/>
+                            <rect x="160" y="158" width="190" height="6" rx="3" fill="#c3d6ea"/>
+                            <rect x="160" y="172" width="170" height="6" rx="3" fill="#c3d6ea"/>
+                            <rect x="160" y="186" width="150" height="6" rx="3" fill="#c3d6ea"/>
+                            <rect x="160" y="202" width="14" height="24" rx="2" fill="#9fe3f5"/>
+                            <rect x="180" y="210" width="14" height="16" rx="2" fill="#5cd0ee"/>
+                            <rect x="200" y="198" width="14" height="28" rx="2" fill="#0b84a8"/>
+                            <rect x="220" y="206" width="14" height="20" rx="2" fill="#086a89"/>
+                            <rect x="290" y="204" width="68" height="24" rx="12" fill="#22c55e"/>
+                            <path d="M304 216l4 4 8-9" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+                            <rect x="322" y="213" width="26" height="5" rx="2.5" fill="#fff" opacity=".85"/>
+                            <path d="M100 262h320l-18 20a14 14 0 0 1-10 4H128a14 14 0 0 1-10-4l-18-20z" fill="#113a56"/>
+                            <rect x="222" y="262" width="76" height="6" rx="3" fill="#0a2740"/>
+                        </g>
+
+                        <!-- test tubes -->
+                        <g>
+                            <g class="tube">
+                                <rect x="52" y="236" width="20" height="82" rx="10" fill="#fff" fill-opacity=".14" stroke="#9fe3f5" stroke-width="2"/>
+                                <rect x="55" y="274" width="14" height="41" rx="7" fill="#5cd0ee"/>
+                            </g>
+                            <g class="tube">
+                                <rect x="80" y="226" width="20" height="92" rx="10" fill="#fff" fill-opacity=".14" stroke="#9fe3f5" stroke-width="2"/>
+                                <rect x="83" y="262" width="14" height="53" rx="7" fill="#fbbf24"/>
+                            </g>
+                            <g class="tube">
+                                <rect x="108" y="240" width="20" height="78" rx="10" fill="#fff" fill-opacity=".14" stroke="#9fe3f5" stroke-width="2"/>
+                                <rect x="111" y="282" width="14" height="33" rx="7" fill="#34d399"/>
+                            </g>
+                            <rect x="42" y="304" width="96" height="14" rx="7" fill="#0b84a8"/>
+                        </g>
+
+                        <!-- flask -->
+                        <g class="tube">
+                            <path d="M428 196h24v44l33 58q8 16-9 16h-72q-17 0-9-16l33-58z" fill="#fff" fill-opacity=".12" stroke="#9fe3f5" stroke-width="2.5" stroke-linejoin="round"/>
+                            <path d="M410 276h60l15 22q8 16-9 16h-72q-17 0-9-16z" fill="#38bdf8" opacity=".9"/>
+                            <rect x="424" y="190" width="32" height="8" rx="4" fill="#9fe3f5"/>
+                            <circle cx="430" cy="294" r="4" fill="#fff" opacity=".7"/>
+                            <circle cx="448" cy="284" r="3" fill="#fff" opacity=".7"/>
+                            <circle cx="456" cy="298" r="2.5" fill="#fff" opacity=".7"/>
+                        </g>
+
+                        <!-- status cards -->
+                        <g class="bob">
+                            <g class="fc">
+                                <rect x="326" y="26" width="170" height="52" rx="14" fill="#fff"/>
+                                <circle cx="352" cy="52" r="12" fill="#dcfce7"/>
+                                <path d="M346 52l4 4 8-9" stroke="#16a34a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+                                <text x="374" y="48" font-size="12.5" font-weight="700" fill="#0d2b3e" font-family="inherit">Notebook saved</text>
+                                <text x="374" y="64" font-size="11" fill="#5d7183" font-family="inherit">Editable until deadline</text>
+                            </g>
+                        </g>
+                        <g class="bob b2">
+                            <g class="fc">
+                                <rect x="14" y="108" width="164" height="52" rx="14" fill="#fff"/>
+                                <circle cx="40" cy="134" r="12" fill="#d5f1f9"/>
+                                <path d="M34 134h12M40 128v12" stroke="#0b84a8" stroke-width="2.2" stroke-linecap="round"/>
+                                <text x="62" y="130" font-size="12.5" font-weight="700" fill="#0d2b3e" font-family="inherit">Equipment issued</text>
+                                <text x="62" y="146" font-size="11" fill="#5d7183" font-family="inherit">Tracked in real time</text>
+                            </g>
+                        </g>
+                        <g class="bob b3">
+                            <g class="fc">
+                                <rect x="336" y="330" width="170" height="44" rx="14" fill="#fff"/>
+                                <circle cx="360" cy="352" r="11" fill="#fef3c7"/>
+                                <text x="354.5" y="357" font-size="14" font-weight="800" fill="#b45309" font-family="inherit">!</text>
+                                <text x="380" y="357" font-size="12.5" font-weight="700" fill="#0d2b3e" font-family="inherit">Fines logged for you</text>
+                            </g>
+                        </g>
+                    </svg>
+                </div>
+            </div>
+
+            <div class="features">
+                <div class="feature">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
+                    <h3>Online lab notebooks</h3>
+                    <p>Write, save and edit until the deadline.</p>
+                </div>
+                <div class="feature">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.8 3h10.4a2 2 0 0 0 1.8-3l-5-9V3"/><path d="M7.5 15h9"/></svg>
+                    <h3>Equipment tracking</h3>
+                    <p>Live status and condition of every item.</p>
+                </div>
+                <div class="feature">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2V3z"/><path d="M9.5 8.5h5M9.5 12h5"/></svg>
+                    <h3>Automatic fines</h3>
+                    <p>Damage or loss logged to the right student.</p>
+                </div>
+            </div>
+
+        </div>
+    </aside>
+
+
+    <!-- ============ RIGHT ============ -->
+    <main class="panel">
+        <div class="card">
+
+            <div class="mobile-brand">
+                <span class="brand-mark">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <path d="M12 2.5l8 3v6c0 5-3.3 8.6-8 10-4.7-1.4-8-5-8-10v-6l8-3z" stroke="#08203a" stroke-width="1.9" stroke-linejoin="round"/>
+                        <path d="M10.5 8.5h3M11 8.5v3l-2 3.6a.9.9 0 0 0 .8 1.3h4.4a.9.9 0 0 0 .8-1.3l-2-3.6v-3" stroke="#08203a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </span>
+                LabTrack
+            </div>
+
+            <h1>Sign in to LabTrack</h1>
+            <p class="sub">Use the username and password from your institution.</p>
+
+            <!-- Messages from the existing Django login views -->
+            <div id="alerts" aria-live="assertive">
+                {% if msg %}
+                <div class="alert error" role="alert" data-tag="error">
+                    <svg class="ai" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.01"/></svg>
+                    <p>{{ msg }}</p>
+                    <button type="button" class="alert-x" aria-label="Dismiss message">&times;</button>
+                </div>
+                {% endif %}
+
+                {% if messages %}
+                {% for message in messages %}
+                <div class="alert {{ message.tags }}" role="alert" data-tag="{{ message.tags }}">
+                    <svg class="ai" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.01"/></svg>
+                    <p>{{ message }}</p>
+                    <button type="button" class="alert-x" aria-label="Dismiss message">&times;</button>
+                </div>
+                {% endfor %}
+                {% endif %}
+            </div>
+
+            <!-- Messages created by the page itself (offline, too many attempts, form errors) -->
+            <div class="alert error" id="clientAlert" role="alert" hidden>
+                <svg class="ai" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.01"/></svg>
+                <p id="clientAlertText"></p>
+            </div>
+
+            <div class="assist" id="assist" hidden>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l10 18H2L12 3z"/><path d="M12 10v5M12 18v.01"/></svg>
+                <div>
+                    <strong id="assistTitle">Having trouble signing in?</strong>
+                    <span id="assistText"></span><br>
+                    <a href="/myapp/forgot_password/">Reset your password</a>
+                </div>
+            </div>
+
+            <form method="post" action="/myapp/login_post/" id="loginForm" novalidate>
+                {% csrf_token %}
+
+                <div class="field">
+                    <label for="username">Username</label>
+                    <div class="control" id="userControl">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 20c1.2-3.6 4.2-5.5 8-5.5s6.8 1.9 8 5.5"/></svg>
+                        <input type="text" id="username" name="username" placeholder="Enter your username"
+                               autocomplete="username" autocapitalize="none" spellcheck="false" maxlength="100"
+                               aria-describedby="usernameHint" required autofocus>
+                    </div>
+                    <p class="hint" id="usernameHint" aria-live="polite"></p>
+                </div>
+
+                <div class="field">
+                    <label for="password">Password</label>
+                    <div class="control has-toggle" id="passControl">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+                        <input type="password" id="password" name="password" placeholder="Enter your password"
+                               autocomplete="current-password" maxlength="200" aria-describedby="passwordHint" required>
+                        <button type="button" class="toggle" id="togglePw" aria-label="Show password" aria-pressed="false">Show</button>
+                    </div>
+                    <p class="hint" id="passwordHint" aria-live="polite"></p>
+                </div>
+
+                <div class="row">
+                    <a href="/myapp/forgot_password/">Forgot password?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></a>
+                </div>
+
+                <button type="submit" class="submit" id="submitBtn"><span class="btn-spin" aria-hidden="true"></span><span class="btn-label">Sign in</span></button>
+            </form>
+
+            <div class="help">
+                <strong>Trouble signing in?</strong>
+                Contact your lab coordinator or administrator.
+            </div>
+            <p class="copy">&copy; LabTrack</p>
+        </div>
+    </main>
+
+</div>
+
+<script>
+(function () {
+    var form = document.getElementById('loginForm');
+    var user = document.getElementById('username');
+    var pass = document.getElementById('password');
+    var userHint = document.getElementById('usernameHint');
+    var passHint = document.getElementById('passwordHint');
+    var userCtl = document.getElementById('userControl');
+    var passCtl = document.getElementById('passControl');
+    var toggle = document.getElementById('togglePw');
+    var btn = document.getElementById('submitBtn');
+    var label = btn.querySelector('.btn-label');
+    var clientAlert = document.getElementById('clientAlert');
+    var clientAlertText = document.getElementById('clientAlertText');
+    var assist = document.getElementById('assist');
+    var assistTitle = document.getElementById('assistTitle');
+    var assistText = document.getElementById('assistText');
+
+    var K_ATTEMPTS = 'lt_login_attempts', K_USER = 'lt_login_user', K_LOCK = 'lt_login_lock';
+    var LOCK_AFTER = 5, LOCK_SECONDS = 30, SLOW_MS = 15000;
+    var lockTimer = null, slowTimer = null, locked = false;
+
+    /* sessionStorage can be unavailable (private mode), so every use is guarded */
+    function sget(k) { try { return sessionStorage.getItem(k); } catch (e) { return null; } }
+    function sset(k, v) { try { sessionStorage.setItem(k, v); } catch (e) {} }
+    function sdel(k) { try { sessionStorage.removeItem(k); } catch (e) {} }
+
+    /* ---------- Field states ---------- */
+    function setState(input, ctl, hint, state, msg) {
+        input.classList.remove('invalid', 'valid');
+        ctl.classList.remove('is-invalid', 'is-valid');
+        hint.classList.remove('info');
+        if (state === 'error') {
+            input.classList.add('invalid'); ctl.classList.add('is-invalid');
+            input.setAttribute('aria-invalid', 'true');
+        } else {
+            input.removeAttribute('aria-invalid');
+            if (state === 'ok') { input.classList.add('valid'); ctl.classList.add('is-valid'); }
+        }
+        hint.textContent = msg || '';
+    }
+    function shake(input) {
+        input.classList.remove('shake'); void input.offsetWidth; input.classList.add('shake');
+        setTimeout(function () { input.classList.remove('shake'); }, 400);
+    }
+
+    /* ---------- Validation rules ---------- */
+    function userProblem(v) {
+        if (!v) return 'Enter your username.';
+        if (v.length < 3) return 'Username must be at least 3 characters.';
+        if (v.length > 50) return 'Username cannot be longer than 50 characters.';
+        if (/\s/.test(v)) return 'Username cannot contain spaces.';
+        if (!/^[A-Za-z0-9._@+\-]+$/.test(v)) return 'Use only letters, numbers and . _ - @ + in your username.';
+        return '';
+    }
+    function passProblem(v) {
+        if (!v) return 'Enter your password.';
+        if (!v.trim()) return 'Password cannot be only spaces.';
+        if (v.length < 4) return 'Password must be at least 4 characters.';
+        if (v.length > 128) return 'Password cannot be longer than 128 characters.';
+        if (/[\u0000-\u001F\u007F]/.test(v)) return 'Password contains characters that are not allowed.';
+        return '';
+    }
+    function checkUser(showOk) {
+        var p = userProblem(user.value.trim());
+        if (p) { setState(user, userCtl, userHint, 'error', p); return false; }
+        setState(user, userCtl, userHint, showOk ? 'ok' : 'none', '');
+        return true;
+    }
+    function checkPass(showOk) {
+        var p = passProblem(pass.value);
+        if (p) { setState(pass, passCtl, passHint, 'error', p); return false; }
+        setState(pass, passCtl, passHint, showOk ? 'ok' : 'none', '');
+        return true;
+    }
+
+    user.addEventListener('blur', function () {
+        if (user.value !== user.value.trim()) user.value = user.value.trim();   // drop accidental spaces
+        if (user.value) checkUser(true);
+    });
+    pass.addEventListener('blur', function () { if (pass.value) checkPass(true); });
+    user.addEventListener('input', function () {
+        hideClientAlert();
+        if (user.classList.contains('invalid') || user.classList.contains('valid')) checkUser(user.classList.contains('valid'));
+    });
+    pass.addEventListener('input', function () {
+        hideClientAlert();
+        if (pass.classList.contains('invalid') || pass.classList.contains('valid')) checkPass(pass.classList.contains('valid'));
+    });
+
+    /* ---------- Show / hide password ---------- */
+    toggle.addEventListener('click', function () {
+        var show = pass.type === 'password';
+        pass.type = show ? 'text' : 'password';
+        toggle.textContent = show ? 'Hide' : 'Show';
+        toggle.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
+        toggle.setAttribute('aria-pressed', show ? 'true' : 'false');
+        pass.focus();
+    });
+
+    /* ---------- Caps Lock warning ---------- */
+    function capsCheck(e) {
+        if (!e.getModifierState) return;
+        if (e.getModifierState('CapsLock')) {
+            if (!pass.classList.contains('invalid')) {
+                passHint.classList.add('info');
+                passHint.textContent = 'Caps Lock is on.';
+            }
+        } else if (passHint.classList.contains('info')) {
+            passHint.classList.remove('info');
+            passHint.textContent = '';
+        }
+    }
+    pass.addEventListener('keyup', capsCheck);
+    pass.addEventListener('keydown', capsCheck);
+    pass.addEventListener('blur', function () {
+        if (passHint.classList.contains('info')) { passHint.classList.remove('info'); passHint.textContent = ''; }
+    });
+
+    /* ---------- Page messages ---------- */
+    function showClientAlert(text) { clientAlertText.textContent = text; clientAlert.hidden = false; }
+    function hideClientAlert() { if (!locked) clientAlert.hidden = true; }
+
+    Array.prototype.forEach.call(document.querySelectorAll('.alert-x'), function (x) {
+        x.addEventListener('click', function () {
+            var a = x.closest('.alert');
+            if (a && a.parentNode) a.parentNode.removeChild(a);
+        });
+    });
+
+    /* ---------- Failed sign-in from the server ---------- */
+    var serverAlerts = Array.prototype.slice.call(document.querySelectorAll('#alerts .alert'));
+    var failed = serverAlerts.some(function (a) { var t = a.getAttribute('data-tag') || ''; return !/\b(success|info|debug)\b/.test(t); });
+    var credentialIssue = failed && serverAlerts.some(function (a) {
+        return /invalid|incorrect|wrong|not match|credential|password|username|not found|does not exist|no account|failed/i.test(a.textContent);
+    });
+    var attempts = 0;
+
+    if (failed) {
+        attempts = (parseInt(sget(K_ATTEMPTS), 10) || 0) + 1;
+        sset(K_ATTEMPTS, String(attempts));
+
+        var saved = sget(K_USER);
+        if (saved && !user.value) user.value = saved;
+
+        if (credentialIssue) {
+            setState(user, userCtl, userHint, 'error', 'Check that your username is correct.');
+            setState(pass, passCtl, passHint, 'error', 'Check that your password is correct.');
+            shake(user); shake(pass);
+        }
+        (user.value ? pass : user).focus();
+
+        if (attempts >= 3) {
+            assistTitle.textContent = attempts + ' unsuccessful attempts';
+            assistText.textContent = 'Double-check your username and make sure Caps Lock is off. If you have forgotten your password, you can reset it.';
+            assist.hidden = false;
+        }
+        if (attempts % LOCK_AFTER === 0) sset(K_LOCK, String(Date.now() + LOCK_SECONDS * 1000));
+    } else {
+        sdel(K_ATTEMPTS); sdel(K_USER);          // a clean visit or a successful sign-out resets the counter
+    }
+
+    /* ---------- Short wait after repeated failures (the server must still enforce its own limits) ---------- */
+    function applyLock() {
+        var until = parseInt(sget(K_LOCK), 10) || 0;
+        var left = Math.ceil((until - Date.now()) / 1000);
+        if (left > 0) {
+            locked = true;
+            btn.disabled = true;
+            label.textContent = 'Try again in ' + left + 's';
+            showClientAlert('Too many unsuccessful attempts. Please wait ' + left + ' second' + (left === 1 ? '' : 's') + ' before trying again.');
+            clearTimeout(lockTimer);
+            lockTimer = setTimeout(applyLock, 250);
+        } else {
+            if (locked) { sdel(K_LOCK); locked = false; clientAlert.hidden = true; }
+            btn.disabled = false;
+            btn.classList.remove('loading');
+            label.textContent = 'Sign in';
+        }
+    }
+    applyLock();
+
+    /* ---------- Submit ---------- */
+    form.addEventListener('submit', function (e) {
+        if (locked) { e.preventDefault(); return; }
+
+        user.value = user.value.trim();
+        var okUser = checkUser(false);
+        var okPass = checkPass(false);
+        if (!okUser || !okPass) {
+            e.preventDefault();
+            if (!okUser) shake(user);
+            if (!okPass) shake(pass);
+            showClientAlert('Please correct the highlighted fields and try again.');
+            (okUser ? pass : user).focus();
+            return;
+        }
+        if (navigator.onLine === false) {
+            e.preventDefault();
+            showClientAlert('You appear to be offline. Check your internet connection and try again.');
+            return;
+        }
+
+        clientAlert.hidden = true;
+        sset(K_USER, user.value);               // so the username is still filled in if the sign-in fails
+        btn.disabled = true;
+        btn.classList.add('loading');
+        label.textContent = 'Signing in\u2026';
+        clearTimeout(slowTimer);
+        slowTimer = setTimeout(function () {
+            btn.disabled = false;
+            btn.classList.remove('loading');
+            label.textContent = 'Sign in';
+            showClientAlert('Signing in is taking longer than expected. Check your connection and try again.');
+        }, SLOW_MS);
+    });
+
+    /* Coming back with the browser Back button must not leave the button stuck on "Signing in" */
+    window.addEventListener('pageshow', function (ev) {
+        if (!ev.persisted) return;
+        clearTimeout(slowTimer);
+        pass.value = '';
+        applyLock();
+    });
+})();
+</script>
+
+</body>
+</html>
